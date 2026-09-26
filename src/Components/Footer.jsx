@@ -197,7 +197,7 @@ Lahore Pakistan</span>
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-200">
-          <p>&copy; {new Date().getFullYear()} ABC Autism Behavioral . All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} ABC Autism Behavioral Centers. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link to="/faq" className="hover:text-white transition-colors">FAQ'S</Link>
             <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
