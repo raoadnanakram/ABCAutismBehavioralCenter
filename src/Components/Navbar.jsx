@@ -7,20 +7,19 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
 
-  // All 9 Specialized Services Array for ABC Autism Behavioral Center
+  // All 9 Services exact paths matching your App.js route (/Pages/:serviceId)
   const serviceDropdownLinks = [
-    { name: 'Speech & Language Therapy', path: '/services/speech-therapy' },
-    { name: 'Nutrition Therapy & Dietetics', path: '/services/nutrition-dietetics' },
-    { name: 'Special Education', path: '/services/special-education' },
-    { name: 'Physiotherapy', path: '/services/physiotherapy' },
-    { name: 'Occupational Therapy & Sensory Integration', path: '/services/occupational-therapy' },
-    { name: 'Day Care', path: '/services/day-care' },
-    { name: 'Montessori & Early Childhood Education', path: '/services/montessori-education' },
-    { name: 'Dysphagia Management & NG Tube Feeding', path: '/services/dysphagia-management' },
-    { name: 'ABA Therapy & Psychology', path: '/services/aba-psychology' },
+    { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy' },
+    { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics' },
+    { name: 'Special Education', path: '/Pages/special-education' },
+    { name: 'Physiotherapy', path: '/Pages/physiotherapy' },
+    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy' },
+    { name: 'Day Care', path: '/Pages/day-care' },
+    { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education' },
+    { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management' },
+    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology' },
   ];
 
-  // About Us Dropdown links array
   const aboutDropdownLinks = [
     { name: 'Our Team', path: '/about/our-team' },
   ];
@@ -35,7 +34,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-24">
           
-          {/* Logo Section - Logo.PNG path updated */}
+          {/* Logo Section */}
           <Link to="/" className="flex items-center group">
             <motion.img 
               whileHover={{ scale: 1.03 }}
@@ -48,13 +47,12 @@ function Navbar() {
 
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-8 text-base font-semibold text-[#003B5C]">
-            
             <Link to="/" className="relative group py-1 hover:text-[#00A8CD] transition-colors duration-200">
               Home
               <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            {/* --- About Us Dropdown Section --- */}
+            {/* About Us Dropdown */}
             <div 
               className="relative py-1"
               onMouseEnter={() => setIsAboutDropdownOpen(true)}
@@ -70,7 +68,6 @@ function Navbar() {
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
               </Link>
 
-              {/* Animated About Dropdown Menu Box */}
               <AnimatePresence>
                 {isAboutDropdownOpen && (
                   <motion.div 
@@ -95,7 +92,7 @@ function Navbar() {
               </AnimatePresence>
             </div>
 
-            {/* --- Services Dropdown Section --- */}
+            {/* Services Dropdown */}
             <div 
               className="relative py-1"
               onMouseEnter={() => setIsDropdownOpen(true)}
@@ -111,7 +108,6 @@ function Navbar() {
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
               </Link>
 
-              {/* Animated Services Dropdown Menu Box */}
               <AnimatePresence>
                 {isDropdownOpen && (
                   <motion.div 
@@ -147,7 +143,7 @@ function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Custom CTA Button */}
+          {/* CTA Button */}
           <div className="hidden lg:flex items-center">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
@@ -173,7 +169,7 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -185,7 +181,6 @@ function Navbar() {
           >
             <Link to="/" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Home</Link>
             
-            {/* Mobile About Us & Sub-links */}
             <Link to="/about" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors">About Us</Link>
             <div className="pl-4 border-l-2 border-[#00A8CD]/30 space-y-2 mb-3">
               {aboutDropdownLinks.map((item, index) => (
@@ -200,7 +195,6 @@ function Navbar() {
               ))}
             </div>
             
-            {/* Mobile Services & Sub-links */}
             <Link to="/services" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors">Services</Link>
             <div className="pl-4 border-l-2 border-[#00A8CD]/30 space-y-2 mb-3">
               {serviceDropdownLinks.map((item, index) => (
@@ -218,7 +212,6 @@ function Navbar() {
             <Link to="/conditions" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Conditions</Link>
             <Link to="/contact" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Contact</Link>
             
-            {/* Mobile Button */}
             <div className="pt-3">
               <Link 
                 to="/book-a-free-consult" 

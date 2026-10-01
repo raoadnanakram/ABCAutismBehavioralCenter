@@ -1,55 +1,59 @@
-
 // Image Imports
-import drAliRaza from "../assets/dr-AliRaza.jpg";
+import drAliRaza from "../assets/dr-AliRaza.jpeg";
 import drAtiya from "../assets/dr-Atiya.jpg";
 import drDua from "../assets/dr-Dua.jpg";
 import drMahnoor from "../assets/dr-Mahnoor.jpg";
 import drNamra from "../assets/dr-Namra.jpg";
 import drAlina from "../assets/dr-Alina.jpg";
-import drZobia from "../assets/dr-Zobia.jpg";
+import drZobia from "../assets/dr-Zobia.jpeg";
+import drRimsha from "../assets/dr-Rimsha.jpg";
+import drNaba from '../assets/dr-Naba.jpeg';
+import drMehmood from '../assets/dr-Mehmood.jpeg';
+import drGhafoor from '../assets/dr-Ghafoor.jpeg';
+import drZobiaaba from '../assets/dr-Zobiaaba.jpeg';
+import sirBasit from '../assets/sir-Basit.jpeg';
+import drSidra from '../assets/dr-Sidra.jpeg';
+
+ // Agar drRimsha ka import nahi tha toh upar add kar lein
 
 export const teamMembers = [
   // Speech Therapy Department
   {
     id: 1,
-    slug: "Ms. Zobia Pervaiz",
+    slug: "ms-zobia-pervaiz",
     name: "Ms. Zobia Pervaiz",
     designation: "Senior Speech & Language Pathology",
-    category: "Speech Therapy",
-    image: drZobia,
+    category: "Speech Therapy Department",
+    image: drZobiaaba,
     specialization: "MS Speech & Language Pathology",
     bio: ""
   },
-
   {
     id: 2,
-    slug: "Mr. Ali Raza",
+    slug: "mr-ali-raza",
     name: "Mr. Ali Raza",
     designation: "Special Educator & Speech Therapist",
-    category: "Speech Therapy",
+    category: "Speech Therapy Department",
     image: drAliRaza,
-    specialization:
-      "MA Special Education Intellectual Development Disability Diploma in Behaviour Management Autism Spectrum Disorder PGD Speech and Language Therapy",
+    specialization: "MA Special Education Intellectual Development Disability Diploma in Behaviour Management Autism Spectrum Disorder PGD Speech and Language Therapy",
     bio: ""
   },
-
   {
     id: 3,
-    slug: "Ms. Alina Fatima",
+    slug: "ms-alina-fatima",
     name: "Ms. Alina Fatima",
     designation: "Speech and Language Pathologist",
-    category: "Speech Therapy",
+    category: "Speech Therapy Department",
     image: drAlina,
     specialization: "BS Speech & Language Pathology",
     bio: ""
   },
-
   {
     id: 4,
-    slug: "Ms. Dua Zainab",
+    slug: "ms-dua-zainab",
     name: "Ms. Dua Zainab",
-    designation: "",
-    category: "Speech Therapy",
+    designation: "Speech Therapist",
+    category: "Speech Therapy Department",
     image: drDua,
     specialization: "",
     bio: ""
@@ -58,32 +62,30 @@ export const teamMembers = [
   // Occupational Therapy & Physiotherapy Department
   {
     id: 5,
-    slug: "Dr. Naba Areej",
+    slug: "dr-naba-areej",
     name: "Dr. Naba Areej",
     designation: "Senior Occupational Therapist and Physiotherapist",
-    category: "Occupational Therapy & Physiotherapy",
-    image: "",
-    specialization: "Ms Sports physical therapy",
+    category: "Occupational Therapy & Physiotherapy Department",
+    image: drNaba,
+    specialization: "MS Sports Physical Therapy",
     bio: ""
   },
-
   {
     id: 6,
-    slug: "Dr. Namra Ejaz",
+    slug: "dr-namra-ejaz",
     name: "Dr. Namra Ejaz",
     designation: "Physiotherapist",
-    category: "Occupational Therapy & Physiotherapy",
+    category: "Occupational Therapy & Physiotherapy Department",
     image: drNamra,
     specialization: "Doctor of Physical Therapy (DPT)",
     bio: ""
   },
-
   {
     id: 7,
-    slug: "Ms. Atiya Akbar",
+    slug: "ms-atiya-akbar",
     name: "Ms. Atiya Akbar",
     designation: "Senior Special Educator",
-    category: "Occupational Therapy & Physiotherapy",
+    category: "Occupational Therapy & Physiotherapy Department",
     image: drAtiya,
     specialization: "MA Special Education",
     bio: ""
@@ -92,21 +94,20 @@ export const teamMembers = [
   // ABA Therapy & Psychology Department
   {
     id: 8,
-    slug: "Ms. Zobia",
+    slug: "ms-zobia",
     name: "Ms. Zobia",
-    designation: "",
-    category: "ABA Therapy & Psychology",
+    designation: "ABA Therapist",
+    category: "ABA Therapy & Psychology Department",
     image: drZobia,
     specialization: "",
     bio: ""
   },
-
   {
     id: 9,
-    slug: "Ms. Qandeel Amjad",
+    slug: "ms-qandeel-amjad",
     name: "Ms. Qandeel Amjad",
     designation: "Psychologist & ABA Therapist",
-    category: "ABA Therapy & Psychology",
+    category: "ABA Therapy & Psychology Department",
     image: "",
     specialization: "BS Psychology",
     bio: ""
@@ -115,21 +116,20 @@ export const teamMembers = [
   // Special Education Department
   {
     id: 10,
-    slug: "Ms. Rimsha",
+    slug: "ms-rimsha",
     name: "Ms. Rimsha",
     designation: "Senior Special Educator",
-    category: "Special Education",
-    image: "",
+    category: "Special Education Department",
+    image: drRimsha,
     specialization: "MA Special Education",
     bio: ""
   },
-
   {
     id: 11,
-    slug: "Ms. Mahnoor",
+    slug: "ms-mahnoor",
     name: "Ms. Mahnoor",
     designation: "Special Educator",
-    category: "Special Education",
+    category: "Special Education Department",
     image: drMahnoor,
     specialization: "MA Special Education",
     bio: ""
@@ -150,22 +150,21 @@ export const teamMembers = [
   // Receptionists
   {
     id: 13,
-    slug: "Mr. Ansab Nazeer",
+    slug: "mr-ansab-nazeer",
     name: "Mr. Ansab Nazeer",
-    designation: "",
+    designation: "Receptionist",
     category: "Receptionists",
     image: "",
     specialization: "",
     bio: ""
   },
-
   {
     id: 14,
-    slug: "Ms. Sidra Batool",
+    slug: "ms-sidra-batool",
     name: "Ms. Sidra Batool",
-    designation: "",
+    designation: "Receptionist",
     category: "Receptionists",
-    image: "",
+    image: drSidra,
     specialization: "",
     bio: ""
   },
@@ -173,33 +172,31 @@ export const teamMembers = [
   // Mentors
   {
     id: 15,
-    slug: "Mr. Arshad Mehmood Awan",
+    slug: "mr-arshad-mehmood-awan",
     name: "Mr. Arshad Mehmood Awan",
-    designation: "",
+    designation: "Mentor",
     category: "Mentors",
-    image: "",
+    image: drGhafoor,
     specialization: "",
     bio: ""
   },
-
   {
     id: 16,
-    slug: "Dr. Abdul Basit Rana",
+    slug: "dr-abdul-basit-rana",
     name: "Dr. Abdul Basit Rana",
-    designation: "",
+    designation: "Mentor",
     category: "Mentors",
-    image: "",
+    image: sirBasit,
     specialization: "",
     bio: ""
   },
-
   {
     id: 17,
-    slug: "Mr. Abdul Ghafoor",
+    slug: "mr-abdul-ghafoor",
     name: "Mr. Abdul Ghafoor",
-    designation: "",
+    designation: "Mentor",
     category: "Mentors",
-    image: "",
+    image: drMehmood,
     specialization: "",
     bio: ""
   },

@@ -16,14 +16,9 @@ import { teamMembers } from "../data/teamData";
 
 // Image Imports
 import drBilal from '../assets/dr-Bilal.jpeg';
-import drAliRaza from '../assets/dr-AliRaza.jpg';
-import drAtiya from '../assets/dr-Atiya.jpg';
-import drDua from '../assets/dr-Dua.jpg';
-import drMahnoor from '../assets/dr-Mahnoor.jpg';
 import drMonina from '../assets/dr-Monina.jpeg';
-import drNamra from '../assets/dr-Namra.jpg';
-import drAlina from '../assets/dr-Alina.jpg';
-import drZobia from '../assets/dr-Zobia.jpg';
+
+
 
 
 // Categories
@@ -42,7 +37,7 @@ const categories = [
 const leadershipData = [
   {
     id: "lead-1",
-    name: "Muhammad Bilal Bhatti",
+    name: "Dr. Muhammad Bilal Bhatti",
     designation: "Chairman — ABC Autism Behavioral Center",
     category: "Executive Leadership",
     image: drBilal,
@@ -59,7 +54,7 @@ const leadershipData = [
     ],
     bio: `It is my privilege to welcome you to the Autism Behavioral Center (ABC). As a Speech and Language Pathologist and educator, I have dedicated my professional journey to supporting children and families with communication, developmental, behavioral, and learning needs.
 
-ABC was established with a vision to provide *evidence-based, child-centered, and multidisciplinary services* in a safe, nurturing, and supportive environment. Our goal is not only to address developmental challenges but also to help every child build confidence, independence, communication skills, and meaningful participation in everyday life.
+ABC was established with a vision to provide *evidence-based, child-centered, and multidisciplinary services in a safe, nurturing, and supportive environment. Our goal is not only to address developmental challenges but also to help every child build confidence, independence, communication skills, and meaningful participation in everyday life.
 
 At ABC, we believe that every child has unique strengths and potential. Through collaboration among professionals, parents, caregivers, and educators, we strive to create individualized pathways that support each child's development.
 
@@ -83,7 +78,7 @@ Chairman, Autism Behavioral Center (ABC)`,
        "Weight Management",
        "Pediatric Nutrition & Growth",
     ],
-    bio: `When I envisioned ABC Centre, I wanted to create more than a place where people receive individual services. I wanted to build a centre where nutrition, therapy, rehabilitation, education, and child development come together to provide truly personalized care.
+    bio: `When I envisioned ABC Centre, I wanted to create more than a place where people receive individual services. I wanted to build a centre where medical nutrition therapy, rehabilitation, education and child development come together to provide truly personalized care.
 My journey as a Nutritionist & Dietitian, researcher, and healthcare professional has taught me that every individual is unique, and meaningful progress begins when we understand their needs as a whole. Through ABC Centre, my vision is to create a compassionate, multidisciplinary environment where every child, adult, and family feels supported, understood, and empowered to reach their fullest potential.
 
 For me, ABC Centre is not just a centre—it is a commitment to better health, stronger development, greater independence, and brighter futures.`,
@@ -421,114 +416,124 @@ export default function OurTeam() {
           })}
         </div>
       </section>
+{/* 5. TEAM MEMBERS GRID - Modern Overlay Card Layout */}
+<section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
+  <div className="text-center mb-10">
+    <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+      Active Filter:
+      <span className="font-bold text-[#003B5C] ml-1.5 bg-slate-200/70 px-3 py-1 rounded-full text-xs">
+        {selectedCategory}
+      </span>
+    </p>
+  </div>
 
-      {/* 5. TEAM MEMBERS GRID */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <p className="text-xs text-slate-500">
-            Showing:
-            <span className="font-bold text-[#003B5C] ml-1">
-              {selectedCategory}
-            </span>
-          </p>
-        </div>
+  {filteredMembers.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {filteredMembers.map((member, index) => {
+        // Check if member is a receptionist or mentor
+        const memCat = (member.category || "").toLowerCase();
+        const memDes = (member.designation || "").toLowerCase();
+        const isReceptionistOrMentor = 
+          memCat.includes("receptionist") || 
+          memCat.includes("mentor") || 
+          memDes.includes("receptionist") || 
+          memDes.includes("mentor");
 
-        {filteredMembers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredMembers.map((member, index) => (
-              <motion.div
-                key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.4,
-                  delay: index * 0.05,
-                }}
-                whileHover={{
-                  y: -6,
-                  borderColor: "#00A8CD",
-                }}
-                className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="relative h-64 overflow-hidden bg-slate-100">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    <div className="absolute top-3 right-3 bg-[#003B5C]/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                      {member.category || "Specialist"}
-                    </div>
-                  </div>
-
-                  <div className="p-6 space-y-3">
-                    <div>
-                      <h4 className="font-serif font-bold text-[#003B5C] text-xl group-hover:text-[#00A8CD] transition-colors">
-                        {member.name}
-                      </h4>
-
-                      <p className="text-[#00A8CD] font-bold text-xs uppercase tracking-wider mt-0.5">
-                        {member.designation}
-                      </p>
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-100 text-xs text-slate-600">
-                      <p className="font-semibold text-slate-700">
-                        {member.specialization}
-                      </p>
-                    </div>
-                  </div>
+        return (
+          <motion.div
+            key={member.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.4,
+              delay: index * 0.05,
+            }}
+            whileHover={{
+              y: -6,
+              transition: { duration: 0.2 },
+            }}
+            className="relative bg-slate-900 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_16px_40px_rgb(0,59,92,0.2)] transition-all duration-300 flex flex-col justify-between group h-[440px]"
+          >
+            {/* Background Full Image */}
+            <div className="absolute inset-0 w-full h-full">
+              {member.image ? (
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-800">
+                  <Users className="w-12 h-12 opacity-40" />
                 </div>
-
-                <div className="p-6 pt-0">
-                  <button
-                    onClick={() =>
-                      handleBooking(
-                        member.name,
-                        member.category || "Specialist"
-                      )
-                    }
-                    className="w-full bg-[#FF5271] hover:bg-[#e04360] text-white font-bold py-3 px-4 rounded-xl text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#FF5271]/20 group/btn"
-                  >
-                    <Calendar className="w-4 h-4 text-white" />
-
-                    BOOK APPOINTMENT
-
-                    <span className="group-hover/btn:translate-x-1 transition-transform">
-                      →
-                    </span>
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[#00A8CD]/10 flex items-center justify-center">
-              <Users className="w-7 h-7 text-[#00A8CD]" />
+              )}
+              {/* Subtle Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-40" />
             </div>
 
-            <h3 className="font-serif text-xl font-bold text-[#003B5C] mb-2">
-              No Experts Found
-            </h3>
+            {/* Top Badge (Category) */}
+            <div className="relative z-10 p-4 flex justify-end">
+              <span className="bg-white/90 backdrop-blur-md text-[#003B5C] text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-white/20 shadow-md">
+                {member.category || "Specialist"}
+              </span>
+            </div>
 
-            <p className="text-sm text-slate-500 mb-5">
-              No team member is currently available in this category.
-            </p>
+            {/* Bottom Floating Info Box */}
+            <div className="relative z-10 p-3.5">
+              <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3.5 text-[#003B5C] border border-slate-100 shadow-xl space-y-2.5">
+                <div className="text-center space-y-0.5">
+                  <h4 className="font-serif font-bold text-[#003B5C] text-base sm:text-lg tracking-wide leading-snug">
+                    {member.name}
+                  </h4>
 
-            <button
-              onClick={() => setSelectedCategory("ALL EXPERTS")}
-              className="bg-[#003B5C] hover:bg-[#00A8CD] text-white font-bold px-5 py-3 rounded-full text-xs transition"
-            >
-              VIEW ALL EXPERTS
-            </button>
-          </div>
-        )}
-      </section>
+                  <p className="text-[#00A8CD] font-bold text-[10px] sm:text-[11px] uppercase tracking-wider">
+                    {member.designation}
+                  </p>
 
+                  <p className="text-slate-500 text-[11px] font-light line-clamp-1 pt-1 border-t border-slate-100">
+                    {member.specialization || member.qualification || "Professional Expert Care"}
+                  </p>
+                </div>
+
+                {/* Conditional Rendering: Book Appointment button only shows if NOT Receptionist or Mentor */}
+                {!isReceptionistOrMentor && (
+                  <Link 
+                    to="/book-a-free-consult" 
+                    className="block relative bg-[#003B5C] hover:bg-[#FF5271] text-white text-xs font-bold px-5 py-2.5 rounded-full transition-all duration-300 ease-in-out shadow-md hover:shadow-xl hover:shadow-[#FF5271]/30 text-center"
+                  >
+                    Book Appointment
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  ) : (
+    <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center max-w-lg mx-auto shadow-sm">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#00A8CD]/10 flex items-center justify-center">
+        <Users className="w-8 h-8 text-[#00A8CD]" />
+      </div>
+
+      <h3 className="font-serif text-xl font-bold text-[#003B5C] mb-2">
+        No Experts Found
+      </h3>
+
+      <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+        No team member is currently listed under this category. Please check other categories or view all experts.
+      </p>
+
+      <button
+        onClick={() => setSelectedCategory("ALL EXPERTS")}
+        className="bg-[#003B5C] hover:bg-[#00A8CD] text-white font-bold px-6 py-3.5 rounded-full text-xs transition shadow-md shadow-[#003B5C]/20"
+      >
+        VIEW ALL EXPERTS
+      </button>
+    </div>
+  )}
+</section>
       {/* 6. WHY CHOOSE OUR TEAM */}
       <section className="py-20 bg-[#F1F5F9] border-t border-slate-200 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">

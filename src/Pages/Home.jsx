@@ -6,13 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import heroImg from '../assets/hero-banner.jpg';
 // Exact Image Imports matching your assets folder
 import drBilal from '../assets/dr-Bilal.jpeg';
-import drAliRaza from '../assets/dr-AliRaza.jpg';
+import drAliRaza from '../assets/dr-AliRaza.jpeg';
 import drAtiya from '../assets/dr-Atiya.jpg';
-import drDua from '../assets/dr-Dua.jpg';
 import drMahnoor from '../assets/dr-Mahnoor.jpg';
 import drMonina from '../assets/dr-Monina.jpeg';
-import drNamra from '../assets/dr-Namra.jpg';
-import drAlina from '../assets/dr-Alina.jpg';
+import drRimsha from '../assets/dr-Rimsha.jpg';
+import zobiaPervaiz from '../assets/dr-Zobiaaba.jpeg';
+import drNaba from '../assets/dr-Naba.jpeg';
+
 
 
 
@@ -183,115 +184,90 @@ const whyChooseData = [
 // Our Team Members Data with Local Images
 const teamMembersData = [
   {
-    name: "Muhammad Bilal Bhatti",
+    name: " Dr. Muhammad Bilal Bhatti",
     role: "Chairman -ABC Autism Behavioral Center",
     degree: "PhD Speech therapy from  Tehran University of Medical sciences (Continue)/MS in Speech and language pathology (RCRS)",
     image: drBilal
   },
   {
-    name: "DN Momna",
+    name: "Dn. Momna",
     role: "CEO -Consultant Nutritionist & Dietitian",
     degree: "MPhil Food Science (FST, UET) & Doctor of Nutrition & Dietetics (DND, UVAS)",
     image: drMonina
   },
   {
-    name: "Dr. Atiya",
-    role: " PET & Sports Therapist",
-    degree: "BS Sports Sciences and Physical Education",
-    image: drAtiya
-  },
-  {
-    name: "Dr.Dua Zainab",
-    role: "Speech & Language Pathology ",
-    degree: "BS Speech & Language Pathology ",
-    image: drDua
-  },
-  {
-    name: "Dr.Alina Fatima",
-    role: " Speech & Language Pathology ",
-    degree: " BS Speech & Language Pathology ",
-    image: drAlina
-  },
-  {
-    name: "Dr.Mahnoor Khan",
-    role: " Special Educator",
-    degree: "M.A Special Education",
-    image: drMahnoor
-  },
-  {
-    name: "Dr.Namra Riaz",
-    role: "Physiotherapist",
-    degree: "Doctor of Physical Therapy (DPT)",
-    image: drNamra
-  },
+name: "Ms. Zobia Pervaiz",
+role: "Senior Speech & Language Pathologist",
+degree: "MS Speech & Language Pathology",
+image: zobiaPervaiz
+},
  {
-    name: "Dr.Ali Raza",
+    name: "Mr. Ali Raza",
     role: " Special Educator & Speech Therapist",
     degree: " MA Special Education Intellectual Development Disability Diploma in Behaviour Management Autism Spectrum Disorder PGD Speech and Language Therapy ",
     image: drAliRaza
+  },
+    {
+  
+    name: "Ms. Rimsha",
+    role: "Senior Special Educator",
+    degree: "MA Special Education",
+    image: drRimsha
+  },
+   {
+
+    name: "Dr. Naba Areej",
+    role: "Senior Occupational Therapist and Physiotherapist",
+    degree: "Ms Sports physical therapy",
+    image: drNaba
+  },
+
+  {
+    name: "Ms. Atiya",
+    role: " PET & Sports Therapist",
+    degree: "Ms Sports physical therapy",
+    image: drAtiya
+  },
+
+  {
+    name: "Ms. Mahnoor Khan",
+    role: " Special Educator",
+    degree: "M.A Special Education",
+    image: drMahnoor
   },
 ];
 
 // FAQ Data List
 const faqData = [
   {
-    question: 'What services does Autism Behavioral Center (ABC) Pakistan offer?',
-    answer: 'ABC Pakistan offers individualized behavioral intervention using principles of Applied Behavior Analysis (ABA), including center-based and home-based programs, shadow aide / PLA support, autism screening, diagnostic assessment and evaluation, occupational therapy, adaptive fitness sessions, and speech therapy.'
+    question: "What age groups does ABC Centre cater to?",
+    answer: "ABC Centre provides services for children, adolescents, adults, and families, with programs tailored according to individual needs, developmental stage, abilities, and goals. Our child development services focus on early childhood through school-age years, while our nutrition, speech and language, physiotherapy, rehabilitation, and other specialized services are available for individuals across different age groups."
   },
   {
-    question: 'How do I know if my child needs therapy at Autism Behavioral Center Pakistan?',
-    answer: 'If you have concerns about your child’s communication, social skills, behavior, independence, school readiness, development, or sensory needs, you can contact ABC Pakistan to discuss your concerns and explore appropriate assessment or intervention options.'
+    question: "Does ABC Centre offer support or resources for parents and caregivers?",
+    answer: "Yes. We believe that parents and caregivers are an important part of an individual’s progress. We provide parent and caregiver guidance, education, home-based strategies, and recommendations where appropriate. Our multidisciplinary team also works with families to help them understand their child’s needs and support development and independence at home."
   },
   {
-    question: 'What makes Autism Behavioral Center Pakistan unique compared to other autism centers in Karachi?',
-    answer: 'ABC Pakistan provides individualized programs designed around each child’s unique needs. The center also offers multiple forms of support, including ABA-based intervention, occupational therapy, speech therapy, diagnostic assessment, and school support services.'
+    question: "What is the process for enrolling my child at ABC Centre?",
+    answer: "The process begins with an initial consultation or assessment to understand your child’s developmental, behavioral, communication, sensory, educational, nutritional, or functional needs. Based on the assessment, our professionals develop an individualized plan and recommend the appropriate services and frequency of sessions. Parents and caregivers are involved throughout the process."
   },
   {
-    question: 'Can you provide information on the qualifications and experience of the therapists at Autism Behavioral Center Pakistan?',
-    answer: 'The program is supervised by local and international Board Certified Behavior Analysts (BCBAs) / Qualified Behavior Analysts (QBAs). The team also includes Case Supervisors and Applied Behavior Analysis Technicians (ABATs).'
+    question: "How does ABC Centre collaborate with schools or other professionals involved in my child’s care?",
+    answer: "We believe in coordinated and multidisciplinary care. With appropriate parental consent, our team can communicate with teachers, schools, healthcare professionals, therapists, and other relevant caregivers involved in the child’s care. This helps promote consistency between therapy, education, and everyday environments."
   },
   {
-    question: 'Is Autism Behavioral Center Pakistan equipped to handle children with varying degrees of autism spectrum disorders?',
-    answer: 'ABC Pakistan provides individualized intervention based on the child’s abilities, needs, goals, and level of support required. Programs are tailored to each individual rather than using the same approach for every child.'
+    question: "Are there any support groups or community activities organized by ABC Centre?",
+    answer: "ABC Centre aims to promote family education, awareness, and community support through educational activities, nutrition and health awareness sessions, parent guidance, and developmental initiatives. Details of upcoming workshops, awareness programs, and community activities will be shared through our centre’s official communication channels."
   },
   {
-    question: 'How long does a typical therapy session last at Autism Behavioral Center Pakistan?',
-    answer: 'Session duration depends on the service. For example, occupational therapy is listed as 1 hour per session, speech therapy is listed as 30 minutes per session, and adaptive fitness sessions are 30 minutes once a week.'
+    question: "Does ABC Centre accept insurance or offer financial assistance options?",
+    answer: "Our payment and financial assistance policies may vary depending on the service and individual circumstances. Families are encouraged to contact ABC Centre directly to discuss consultation fees, therapy packages, payment options, and any available concessions or assistance programs."
   },
   {
-    question: 'Are there any specific therapy approaches or techniques used at Autism Behavioral Center Pakistan?',
-    answer: 'ABC Pakistan uses principles of Applied Behavior Analysis (ABA). Programs are individualized and may focus on communication, social skills, behavior, independence, school readiness, and other developmental goals.'
-  },
-  {
-    question: 'What age groups does Autism Behavioral Center Pakistan cater to?',
-    answer: 'ABC Pakistan provides individualized services for children and families. The free autism screening service specifically mentioned by the center is available for children 30 months and below, subject to terms and conditions.'
-  },
-  {
-    question: 'Does Autism Behavioral Center Pakistan offer any support or resources for parents and caregivers?',
-    answer: 'Yes. Services include parent guidance as part of speech therapy, where the therapist works directly with parents to guide home practice. ABC also provides autism awareness talks and education programs for parents and teachers.'
-  },
-  {
-    question: 'What is the process for enrolling my child at Autism Behavioral Center Pakistan?',
-    answer: 'Families can contact ABC Pakistan for inquiries and admissions. Depending on the child’s needs, the appropriate assessment or service can then be discussed with the center’s team.'
-  },
-  {
-    question: 'How does Autism Behavioral Center Pakistan collaborate with schools or other professionals involved in my child’s care?',
-    answer: 'ABC provides Shadow Aide / PLA Support, where a trained ABA therapist can support a child in school with communication, socialization, emotion regulation, academics, instructions, and tasks.'
-  },
-  {
-    question: 'Are there any support groups or community events organized by Autism Behavioral Center Pakistan?',
-    answer: 'The available information highlights autism awareness talks and education programs for parents and teachers. For current community events or support group information, please contact ABC Pakistan directly.'
-  },
-  {
-    question: 'Does Autism Behavioral Center Pakistan accept insurance or offer any financial assistance options?',
-    answer: 'Insurance coverage and financial assistance options are not specified in the available information. Please contact ABC Pakistan directly for the latest information regarding payment, insurance, or available assistance.'
-  },
-  {
-    question: 'Can I schedule a tour of Autism Behavioral Center Pakistan before enrolling my child?',
-    answer: 'For tour availability and scheduling, please contact ABC Pakistan directly. The center can provide the latest information about visiting the facility before enrollment.'
+    question: "Can I schedule a tour of ABC Centre before enrolling my child?",
+    answer: "Yes. Families are welcome to contact ABC Centre to schedule a visit or consultation before starting services. A visit allows parents and caregivers to learn more about our environment, services, multidisciplinary approach, and the support available for their child."
   }
 ];
-
 // Parents & Clients Reviews List
 const reviewsData = [
   {
@@ -362,149 +338,892 @@ const speechVideosData = [
   }
 ];
 
-// Inner Conditions Section (Orbiting Circular Layout)
+// ============================================================
+// PREMIUM CONDITIONS SECTION
+// Bento Cards + Professional Micro Animations
+// ============================================================
+
 const ConditionsSection = () => {
-  const leftConditions = [
-    { title: "Autism Spectrum Support", color: "#FF5271" },
-    { title: "Sensory Integration Challenges", color: "#00A8CD" },
-    { title: "Social Communication Skills", color: "#F5A623" },
-    { title: "Emotional Development", color: "#003B5C" }
+  const conditions = [
+    {
+      number: "01",
+      title: "Speech & Language Therapy",
+      description:
+        "Supporting communication, speech clarity, language development and confident expression.",
+      color: "#FF5271",
+      animation: "left",
+    },
+    {
+      number: "02",
+      title: "Special Education",
+      description:
+        "Personalized learning support designed around each child's individual needs.",
+      color: "#00A8CD",
+      animation: "up",
+    },
+    {
+      number: "03",
+      title: "Occupational Therapy & Sensory Integration",
+      description:
+        "Helping children build independence, coordination and sensory regulation skills.",
+      color: "#003B5C",
+      animation: "right",
+    },
+    {
+      number: "04",
+      title: "Montessori & Early Childhood Education",
+      description:
+        "Encouraging independence, curiosity and meaningful early learning experiences.",
+      color: "#003B5C",
+      animation: "left",
+    },
+    {
+      number: "05",
+      title: "ABA Therapy & Psychology",
+      description:
+        "Evidence-informed behavioral support focused on meaningful developmental progress.",
+      color: "#FF5271",
+      animation: "up",
+    },
+    {
+      number: "06",
+      title: "Nutrition Therapy & Dietetics",
+      description:
+        "Individualized nutrition guidance supporting healthy growth and development.",
+      color: "#00A8CD",
+      animation: "right",
+    },
+    {
+      number: "07",
+      title: "Physiotherapy",
+      description:
+        "Supporting movement, strength, balance, mobility and physical independence.",
+      color: "#FF5271",
+      animation: "left",
+    },
+    {
+      number: "08",
+      title: "Day Care",
+      description:
+        "A supportive environment where children can learn, play and develop confidently.",
+      color: "#00A8CD",
+      animation: "up",
+    },
+    {
+      number: "09",
+      title: "Dysphagia Management & NG Tube Feeding",
+      description:
+        "Specialized feeding support designed around safety, comfort and individual needs.",
+      color: "#003B5C",
+      animation: "right",
+    },
   ];
 
-  const rightConditions = [
-    { title: "Speech & Language Delays", color: "#00A8CD" },
-    { title: "Behavioral Development", color: "#FF5271" },
-    { title: "Learning & Attention Support", color: "#F5A623" },
-    { title: "Daily Living Skills", color: "#003B5C" }
-  ];
+  // ----------------------------------------------------------
+  // Icons
+  // ----------------------------------------------------------
+
+  const CheckIcon = () => (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+  );
+
+  const ArrowIcon = () => (
+    <svg
+      className="w-4 h-4"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 12h14M13 6l6 6-6 6"
+      />
+    </svg>
+  );
+
+  // ----------------------------------------------------------
+  // Animation variants
+  // ----------------------------------------------------------
+
+  const getAnimation = (type) => {
+    if (type === "left") {
+      return {
+        initial: {
+          opacity: 0,
+          x: -45,
+        },
+        whileInView: {
+          opacity: 1,
+          x: 0,
+        },
+      };
+    }
+
+    if (type === "right") {
+      return {
+        initial: {
+          opacity: 0,
+          x: 45,
+        },
+        whileInView: {
+          opacity: 1,
+          x: 0,
+        },
+      };
+    }
+
+    return {
+      initial: {
+        opacity: 0,
+        y: 40,
+      },
+      whileInView: {
+        opacity: 1,
+        y: 0,
+      },
+    };
+  };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden relative border-t border-slate-100">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#00A8CD]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#FF5271]/5 rounded-full blur-3xl pointer-events-none" />
+    <section
+      className="
+        relative
+        overflow-hidden
+        py-20
+        sm:py-24
+        lg:py-28
+        bg-[#F8FAFC]
+      "
+    >
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 space-y-2"
-        >
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#003B5C] tracking-tight">
-            Conditions We <span className="italic font-bold text-[#FF5271]">Support</span>
-          </h2>
-          <p className="text-xs sm:text-sm tracking-widest uppercase text-[#00A8CD] font-bold">
-            COMPREHENSIVE CHILD DEVELOPMENT CARE
-          </p>
-        </motion.div>
+      {/* ========================================================
+          BACKGROUND DECORATION
+      ======================================================== */}
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16 max-w-6xl mx-auto">
-          <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full border border-dashed border-[#00A8CD]/25 pointer-events-none" />
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-4 space-y-5 text-left lg:text-right relative z-20"
-          >
-            {leftConditions.map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.03, x: 8 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-md shadow-slate-900/5 border border-slate-100/80 flex items-center justify-between lg:justify-end gap-4 cursor-pointer group hover:border-[#00A8CD] hover:shadow-xl hover:shadow-slate-900/10 transition-all duration-300"
-              >
-                <span className="font-semibold text-slate-700 text-sm sm:text-base group-hover:text-[#003B5C] transition-colors">
-                  {item.title}
-                </span>
-                <div 
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:rotate-12"
-                  style={{ backgroundColor: `${item.color}15`, color: item.color }}
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+      <div
+        className="
+          absolute
+          -top-40
+          -left-40
+          w-[450px]
+          h-[450px]
+          rounded-full
+          bg-[#00A8CD]/[0.035]
+          blur-3xl
+          pointer-events-none
+        "
+      />
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-4 flex justify-center relative py-6 z-20"
-          >
-            <motion.div 
-              animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute inset-2 rounded-full bg-gradient-to-tr from-[#00A8CD]/30 via-[#FF5271]/20 to-[#F5A623]/30 blur-2xl -z-10"
-            />
-            
-            <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full overflow-hidden border-8 border-white shadow-2xl shadow-slate-900/15 relative group">
-              <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800"
-                alt="Therapist consulting a child"
-                className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </div>
-          </motion.div>
+      <div
+        className="
+          absolute
+          -bottom-40
+          -right-40
+          w-[450px]
+          h-[450px]
+          rounded-full
+          bg-[#FF5271]/[0.04]
+          blur-3xl
+          pointer-events-none
+        "
+      />
 
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-4 space-y-5 text-left relative z-20"
-          >
-            {rightConditions.map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.03, x: -8 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-md shadow-slate-900/5 border border-slate-100/80 flex items-center gap-4 cursor-pointer group hover:border-[#00A8CD] hover:shadow-xl hover:shadow-slate-900/10 transition-all duration-300"
-              >
-                <div 
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:-rotate-12"
-                  style={{ backgroundColor: `${item.color}15`, color: item.color }}
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="font-semibold text-slate-700 text-sm sm:text-base group-hover:text-[#003B5C] transition-colors">
-                  {item.title}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+      {/* Subtle center glow */}
+      <div
+        className="
+          absolute
+          top-1/2
+          left-1/2
+          -translate-x-1/2
+          -translate-y-1/2
+          w-[500px]
+          h-[500px]
+          rounded-full
+          bg-[#003B5C]/[0.02]
+          blur-3xl
+          pointer-events-none
+        "
+      />
+
+      {/* ========================================================
+          CONTAINER
+      ======================================================== */}
+
+      <div
+        className="
+          relative
+          z-10
+          max-w-7xl
+          mx-auto
+          px-4
+          sm:px-6
+          lg:px-8
+        "
+      >
+
+        {/* ======================================================
+            HEADER
+        ====================================================== */}
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex justify-center"
+          initial={{
+            opacity: 0,
+            y: -25,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.7,
+          }}
+          className="
+            text-center
+            max-w-3xl
+            mx-auto
+            mb-14
+            lg:mb-16
+          "
         >
-          <motion.div whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Link
-              to="/conditions"
-              className="bg-[#003B5C] hover:bg-[#FF5271] text-white text-xs sm:text-sm font-bold px-7 py-3 rounded-full shadow-md shadow-[#003B5C]/20 transition-all duration-300 text-center inline-block"
+
+          {/* Label */}
+
+          <div
+            className="
+              inline-flex
+              items-center
+              gap-3
+              mb-5
+            "
+          >
+
+            <span
+              className="
+                w-9
+                h-[2px]
+                bg-[#FF5271]
+                rounded-full
+              "
+            />
+
+            <span
+              className="
+                text-[10px]
+                sm:text-xs
+                font-extrabold
+                tracking-[0.25em]
+                uppercase
+                text-[#003B5C]
+              "
             >
-              Learn More
-            </Link>
-          </motion.div>
+              Our Expertise
+            </span>
+
+            <span
+              className="
+                w-9
+                h-[2px]
+                bg-[#00A8CD]
+                rounded-full
+              "
+            />
+
+          </div>
+
+          {/* Heading */}
+
+          <h2
+            className="
+              font-serif
+              text-4xl
+              sm:text-5xl
+              lg:text-[56px]
+              leading-tight
+              font-extrabold
+              text-[#003B5C]
+              tracking-tight
+            "
+          >
+            Conditions We{" "}
+            <span
+              className="
+                italic
+                text-[#FF5271]
+              "
+            >
+              Support
+            </span>
+          </h2>
+
+          <p
+            className="
+              mt-5
+              text-sm
+              sm:text-base
+              text-slate-500
+              leading-7
+              max-w-2xl
+              mx-auto
+            "
+          >
+            Comprehensive multidisciplinary care designed to support
+            communication, learning, independence and every stage of
+            your child's development.
+          </p>
+
         </motion.div>
+
+        {/* ======================================================
+            CARDS GRID
+        ====================================================== */}
+
+        <div
+          className="
+            grid
+            grid-cols-1
+            md:grid-cols-2
+            lg:grid-cols-3
+            gap-5
+            lg:gap-6
+            max-w-6xl
+            mx-auto
+          "
+        >
+
+          {conditions.map((item, index) => {
+
+            const animation = getAnimation(item.animation);
+
+            return (
+              <motion.div
+                key={item.number}
+
+                initial={animation.initial}
+
+                whileInView={animation.whileInView}
+
+                viewport={{
+                  once: true,
+                  amount: 0.15,
+                }}
+
+                transition={{
+                  duration: 0.65,
+                  delay: index * 0.07,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+
+                whileHover={{
+                  y: -8,
+                }}
+
+                className="
+                  group
+                  relative
+                  cursor-pointer
+                "
+              >
+
+                {/* =================================================
+                    MAIN CARD
+                ================================================= */}
+
+                <div
+                  className="
+                    relative
+                    h-full
+                    min-h-[235px]
+                    p-6
+                    sm:p-7
+                    rounded-[24px]
+                    bg-white
+                    border
+                    border-slate-100
+                    shadow-[0_10px_35px_rgba(15,23,42,0.055)]
+                    overflow-hidden
+                    transition-all
+                    duration-500
+                    group-hover:shadow-[0_22px_50px_rgba(15,23,42,0.11)]
+                  "
+                >
+
+                  {/* =================================================
+                      COLORED TOP LINE
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      top-0
+                      left-0
+                      w-full
+                      h-[3px]
+                      scale-x-0
+                      origin-left
+                      group-hover:scale-x-100
+                      transition-transform
+                      duration-500
+                    "
+                    style={{
+                      backgroundColor: item.color,
+                    }}
+                  />
+
+                  {/* =================================================
+                      SOFT HOVER GLOW
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      -top-20
+                      -right-20
+                      w-40
+                      h-40
+                      rounded-full
+                      opacity-0
+                      group-hover:opacity-100
+                      blur-3xl
+                      transition-opacity
+                      duration-700
+                      pointer-events-none
+                    "
+                    style={{
+                      backgroundColor: `${item.color}20`,
+                    }}
+                  />
+
+                  {/* =================================================
+                      NUMBER
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      top-5
+                      right-6
+                      text-5xl
+                      font-black
+                      leading-none
+                      select-none
+                      opacity-[0.045]
+                      group-hover:opacity-[0.10]
+                      transition-all
+                      duration-500
+                    "
+                    style={{
+                      color: item.color,
+                    }}
+                  >
+                    {item.number}
+                  </div>
+
+                  {/* =================================================
+                      ICON
+                  ================================================= */}
+
+                  <motion.div
+                    whileHover={{
+                      rotate: 8,
+                      scale: 1.08,
+                    }}
+
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 12,
+                    }}
+
+                    className="
+                      relative
+                      w-12
+                      h-12
+                      rounded-2xl
+                      flex
+                      items-center
+                      justify-center
+                      mb-6
+                      transition-all
+                      duration-300
+                      group-hover:shadow-lg
+                    "
+                    style={{
+                      backgroundColor: `${item.color}12`,
+                      color: item.color,
+                    }}
+                  >
+
+                    {/* Icon inner ring */}
+
+                    <div
+                      className="
+                        absolute
+                        inset-[5px]
+                        rounded-xl
+                        border
+                        border-current
+                        opacity-10
+                        group-hover:opacity-30
+                        transition-opacity
+                      "
+                    />
+
+                    <CheckIcon />
+
+                  </motion.div>
+
+                  {/* =================================================
+                      CONTENT
+                  ================================================= */}
+
+                  <div className="relative z-10">
+
+                    <h3
+                      className="
+                        text-base
+                        sm:text-[17px]
+                        font-extrabold
+                        leading-snug
+                        text-[#003B5C]
+                        pr-10
+                        group-hover:translate-x-1
+                        transition-transform
+                        duration-300
+                      "
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      className="
+                        mt-3
+                        text-xs
+                        sm:text-[13px]
+                        leading-6
+                        text-slate-500
+                        group-hover:text-slate-600
+                        transition-colors
+                      "
+                    >
+                      {item.description}
+                    </p>
+
+                  </div>
+
+                  {/* =================================================
+                      BOTTOM ACTION
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      bottom-6
+                      left-6
+                      right-6
+                      flex
+                      items-center
+                      justify-between
+                    "
+                  >
+
+                    {/* Accent line */}
+
+                    <div className="flex items-center gap-2">
+
+                      <span
+                        className="
+                          w-7
+                          h-[2px]
+                          rounded-full
+                          group-hover:w-12
+                          transition-all
+                          duration-500
+                        "
+                        style={{
+                          backgroundColor: item.color,
+                        }}
+                      />
+
+                      <span
+                        className="
+                          w-1.5
+                          h-1.5
+                          rounded-full
+                          opacity-30
+                        "
+                        style={{
+                          backgroundColor: item.color,
+                        }}
+                      />
+
+                    </div>
+
+                    {/* Arrow */}
+
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        x: -8,
+                      }}
+
+                      whileHover={{
+                        opacity: 1,
+                        x: 0,
+                      }}
+
+                      className="
+                        w-8
+                        h-8
+                        rounded-full
+                        flex
+                        items-center
+                        justify-center
+                        bg-slate-50
+                        group-hover:bg-[#003B5C]
+                        transition-all
+                        duration-300
+                      "
+                    >
+
+                      <svg
+                        className="
+                          w-4
+                          h-4
+                          text-slate-400
+                          group-hover:text-white
+                          transition-colors
+                        "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 12h14M13 6l6 6-6 6"
+                        />
+                      </svg>
+
+                    </motion.div>
+
+                  </div>
+
+                  {/* =================================================
+                      CORNER DECORATION
+                  ================================================= */}
+
+                  <div
+                    className="
+                      absolute
+                      bottom-0
+                      right-0
+                      w-16
+                      h-16
+                      rounded-tl-[60px]
+                      opacity-[0.035]
+                      group-hover:opacity-[0.08]
+                      transition-opacity
+                      duration-500
+                    "
+                    style={{
+                      backgroundColor: item.color,
+                    }}
+                  />
+
+                </div>
+
+              </motion.div>
+            );
+          })}
+
+        </div>
+
+        {/* ======================================================
+            BOTTOM FEATURE STRIP
+        ====================================================== */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+
+          viewport={{
+            once: true,
+          }}
+
+          transition={{
+            duration: 0.7,
+            delay: 0.25,
+          }}
+
+          className="
+            max-w-6xl
+            mx-auto
+            mt-10
+            p-5
+            sm:p-6
+            rounded-[24px]
+            bg-[#003B5C]
+            relative
+            overflow-hidden
+            shadow-xl
+            shadow-[#003B5C]/15
+          "
+        >
+
+          {/* Background decoration */}
+
+          <div
+            className="
+              absolute
+              -right-10
+              -top-20
+              w-56
+              h-56
+              rounded-full
+              bg-[#00A8CD]/20
+              blur-3xl
+            "
+          />
+
+          <div
+            className="
+              absolute
+              -left-10
+              -bottom-20
+              w-48
+              h-48
+              rounded-full
+              bg-[#FF5271]/15
+              blur-3xl
+            "
+          />
+
+          <div
+            className="
+              relative
+              z-10
+              flex
+              flex-col
+              md:flex-row
+              items-center
+              justify-between
+              gap-5
+            "
+          >
+
+            {/* Text */}
+
+            <div className="text-center md:text-left">
+
+              <p
+                className="
+                  text-white
+                  font-bold
+                  text-sm
+                  sm:text-base
+                "
+              >
+                Every child deserves personalized care.
+              </p>
+
+              <p
+                className="
+                  mt-1
+                  text-white/60
+                  text-xs
+                  sm:text-sm
+                "
+              >
+                Our multidisciplinary team works together
+                for meaningful developmental progress.
+              </p>
+
+            </div>
+
+            {/* Button */}
+
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+              }}
+
+              whileTap={{
+                scale: 0.97,
+              }}
+            >
+
+              <Link
+                to="/conditions"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  gap-3
+                  whitespace-nowrap
+                  bg-white
+                  text-[#003B5C]
+                  px-6
+                  py-3
+                  rounded-full
+                  text-xs
+                  sm:text-sm
+                  font-extrabold
+                  shadow-lg
+                  hover:bg-[#FF5271]
+                  hover:text-white
+                  transition-all
+                  duration-300
+                "
+              >
+
+                Explore Our Services
+
+                <span
+                  className="
+                    group-hover:translate-x-1
+                    transition-transform
+                  "
+                >
+                  <ArrowIcon />
+                </span>
+
+              </Link>
+
+            </motion.div>
+
+          </div>
+
+        </motion.div>
+
       </div>
     </section>
   );
 };
-
 // ================= PROFESSIONAL DUAL CARE SHOWCASE SECTION =================
 const DualCareShowcaseSection = () => {
   const childServicesList = [
@@ -550,7 +1269,7 @@ const DualCareShowcaseSection = () => {
             Specialized Care for All Ages
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Personalized, multidisciplinary support tailored specifically for children and adults under one roof[cite: 1, 2].
+            Personalized, multidisciplinary support tailored specifically for children and adults under one roof.
           </p>
         </motion.div>
 
@@ -842,9 +1561,9 @@ const OurTeamSection = () => {
               OUR TEAM
             </span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#003B5C]">
-            Meet the experts behind your personalized treatment
-          </h2>
+        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#003B5C] leading-tight">
+  Meet the experts behind your <span className="text-[#FF5271] italic">personalized treatment</span>
+</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -905,7 +1624,6 @@ const OurTeamSection = () => {
     </section>
   );
 };
-
 // ================= FAQ SECTION =================
 const FaqSection = () => {
   const [openIndex, setOpenIndex] = useState(0);
@@ -913,9 +1631,6 @@ const FaqSection = () => {
   const toggleFaq = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-
-  const leftFaqs = faqData.slice(0, 7);
-  const rightFaqs = faqData.slice(7, 14);
 
   const renderFaqCard = (faq, index) => {
     const isOpen = openIndex === index;
@@ -926,26 +1641,24 @@ const FaqSection = () => {
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: (index % 7) * 0.05 }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
         className="rounded-2xl overflow-hidden border border-[#FF5271]/30 bg-white shadow-sm transition-all duration-300"
       >
         <button
           onClick={() => toggleFaq(index)}
-          className={`w-full flex items-center gap-4 text-left p-4 sm:p-5 transition-all duration-300 cursor-pointer ${
-            isOpen ? 'bg-[#FF5271] text-white' : 'bg-[#FF5271] text-black hover:bg-[#e04360] hover:text-white'
-          }`}
+          className="w-full flex items-center gap-4 text-left p-4 sm:p-5 transition-all duration-300 cursor-pointer bg-[#FF5271] text-white hover:bg-[#e04360]"
         >
           <span
             className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-base transition-transform duration-300 ${
               isOpen 
                 ? 'bg-white text-[#FF5271] rotate-180' 
-                : 'bg-white text-black border border-black/20'
+                : 'bg-white text-[#003B5C]'
             }`}
           >
             {isOpen ? '−' : '+'}
           </span>
 
-          <span className="font-bold text-sm sm:text-base leading-snug flex-1">
+          <span className="font-bold text-sm sm:text-base leading-snug flex-1 text-white">
             {faq.question}
           </span>
         </button>
@@ -970,7 +1683,7 @@ const FaqSection = () => {
 
   return (
     <section className="py-24 bg-[#F8F9FA] relative border-t border-slate-200/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -991,20 +1704,13 @@ const FaqSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          <div className="space-y-4">
-            {leftFaqs.map((faq, i) => renderFaqCard(faq, i))}
-          </div>
-
-          <div className="space-y-4">
-            {rightFaqs.map((faq, i) => renderFaqCard(faq, i + 7))}
-          </div>
+        <div className="space-y-4">
+          {faqData.map((faq, i) => renderFaqCard(faq, i))}
         </div>
       </div>
     </section>
   );
 };
-
 // ================= WHAT PARENTS & CLIENTS SAY (INFINITE SLOW MARQUEE LOOP) =================
 const ReviewsCarouselSection = () => {
   const doubleReviews = [...reviewsData, ...reviewsData];
@@ -1191,12 +1897,33 @@ function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="w-full lg:w-1/2 p-6 sm:p-12 lg:pl-16 xl:pl-24 lg:pr-10 z-20 flex flex-col justify-center py-12"
           >
-            <div className="mb-4">
-              <span className="inline-flex items-center gap-2 bg-[#F5A623]/20 border border-[#F5A623]/40 text-[#F5A623] text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm shadow-slate-950/20">
-                <span className="w-2 h-2 rounded-full bg-[#F5A623] animate-pulse" />
-                Specialized ABA & Child Therapy
-              </span>
-            </div>
+         <div className="mb-4">
+  <span className="inline-flex items-center gap-3 bg-white/10 border border-white/20 text-xs font-bold px-5 py-2 rounded-full shadow-sm shadow-slate-950/20 backdrop-blur-sm">
+    
+    {/* Support - Yellow */}
+    <span className="inline-flex items-center gap-1.5 text-[#F5A623]">
+      <span className="w-2 h-2 rounded-full bg-[#F5A623] animate-pulse" />
+      Support
+    </span>
+
+    <span className="text-white/30"></span>
+
+    {/* Learn - Pink */}
+    <span className="inline-flex items-center gap-1.5 text-[#FF5271]">
+      <span className="w-2 h-2 rounded-full bg-[#FF5271] animate-pulse" />
+      Learn
+    </span>
+
+    <span className="text-white/30"></span>
+
+    {/* Grow - Blue */}
+    <span className="inline-flex items-center gap-1.5 text-[#00A8CD]">
+      <span className="w-2 h-2 rounded-full bg-[#00A8CD] animate-pulse" />
+      Grow
+    </span>
+
+  </span>
+</div>
 
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}

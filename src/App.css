@@ -1,7 +1,16 @@
 /* Layout Reset For Full Width Stretching */
-html, body, #root {
+html {
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body, #root {
+  width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -23,4 +32,5 @@ html, body, #root {
   max-width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
+  box-sizing: border-box;
 }

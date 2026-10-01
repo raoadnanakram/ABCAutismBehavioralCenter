@@ -5,7 +5,7 @@ import { motion, useInView } from "framer-motion";
 // Hero background
 import heroBg from "../assets/hero-banner.jpg";
 import drBilal from '../assets/dr-Bilal.jpeg';
-import drAliRaza from '../assets/dr-AliRaza.jpg';
+import drAliRaza from '../assets/dr-AliRaza.jpeg';
 import drAtiya from '../assets/dr-Atiya.jpg';
 import drMonina from '../assets/dr-Monina.jpeg';
 

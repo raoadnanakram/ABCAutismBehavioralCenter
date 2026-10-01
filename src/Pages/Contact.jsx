@@ -140,275 +140,337 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* ================= 2. QUICK CONTACT CARDS ================= */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-12 relative z-20">
-        <motion.div 
-          variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {/* Card 1 - Phone */}
-          <motion.a 
-            href={`tel:${contactInfo.phone}`}
-            variants={fadeUp}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-100 flex flex-col justify-between group transition-all duration-300 hover:border-[#00A8CD]"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-[#00A8CD]/10 text-[#00A8CD] group-hover:bg-[#00A8CD] group-hover:text-white transition duration-300 flex items-center justify-center text-xl mb-4">
-                📞
-              </div>
-              <h3 className="font-bold text-[#003B5C] text-lg mb-1">Phone Call</h3>
-              <p className="text-slate-600 text-xs font-semibold">{contactInfo.phone}</p>
-              <p className="text-slate-400 text-xs mt-1">Call our clinical desk</p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#00A8CD]">
-              <span>Call Now</span>
-              <span className="transform group-hover:translate-x-1 transition">→</span>
-            </div>
-          </motion.a>
+      {/* ================= 2. MODERN QUICK CONTACT CARDS ================= */}
+<section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto -mt-12 relative z-20">
+  <motion.div
+    variants={staggerContainer}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, margin: "-80px" }}
+    className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
+  >
 
-          {/* Card 2 - WhatsApp */}
-          <motion.a 
-            href={`https://wa.me/${contactInfo.whatsapp}`}
-            target="_blank" rel="noreferrer"
-            variants={fadeUp}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-100 flex flex-col justify-between group transition-all duration-300 hover:border-[#25D366]"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-[#25D366]/10 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition duration-300 flex items-center justify-center text-xl mb-4">
-                💬
-              </div>
-              <h3 className="font-bold text-[#003B5C] text-lg mb-1">WhatsApp Desk</h3>
-              <p className="text-slate-600 text-xs font-semibold">Chat With Us</p>
-              <p className="text-slate-400 text-xs mt-1">Quick response support</p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#25D366]">
-              <span>Start Chat</span>
-              <span className="transform group-hover:translate-x-1 transition">→</span>
-            </div>
-          </motion.a>
+    {/* ================= WHATSAPP ================= */}
+    <motion.a
+      href={`https://wa.me/${contactInfo.whatsapp}`}
+      target="_blank"
+      rel="noreferrer"
+      variants={fadeUp}
+      whileHover={{ y: -10 }}
+      className="group relative overflow-hidden bg-white rounded-[28px] p-7
+      border border-slate-200/80
+      shadow-[0_15px_45px_rgba(0,59,92,0.08)]
+      hover:shadow-[0_25px_60px_rgba(37,211,102,0.16)]
+      transition-all duration-500"
+    >
+      {/* Animated background glow */}
+      <div
+        className="absolute -right-16 -top-16 w-40 h-40 rounded-full
+        bg-[#25D366]/10 blur-3xl
+        group-hover:bg-[#25D366]/20 transition-all duration-500"
+      />
 
-          {/* Card 3 - Email */}
-          <motion.a 
-            href={`mailto:${contactInfo.email}`}
-            variants={fadeUp}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-100 flex flex-col justify-between group transition-all duration-300 hover:border-[#FF5271]"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-[#FF5271]/10 text-[#FF5271] group-hover:bg-[#FF5271] group-hover:text-white transition duration-300 flex items-center justify-center text-xl mb-4">
-                ✉️
-              </div>
-              <h3 className="font-bold text-[#003B5C] text-lg mb-1">Email Center</h3>
-              <p className="text-slate-600 text-xs font-semibold truncate">{contactInfo.email}</p>
-              <p className="text-slate-400 text-xs mt-1">Send us your inquiry</p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#FF5271]">
-              <span>Send Mail</span>
-              <span className="transform group-hover:translate-x-1 transition">→</span>
-            </div>
-          </motion.a>
+      {/* Top accent */}
+      <div
+        className="absolute top-0 left-8 right-8 h-[3px]
+        bg-gradient-to-r from-transparent via-[#25D366] to-transparent
+        opacity-60 group-hover:opacity-100 transition-opacity"
+      />
 
-          {/* Card 4 - Opening Hours Status */}
-          <motion.div 
-            variants={fadeUp}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white p-6 rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-100 flex flex-col justify-between group transition-all duration-300 hover:border-[#F5A623]"
-          >
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-[#F5A623]/20 text-[#003B5C] group-hover:bg-[#F5A623] transition duration-300 flex items-center justify-center text-xl mb-4">
-                ⏰
-              </div>
-              <h3 className="font-bold text-[#003B5C] text-lg mb-1">Center Timings</h3>
-              <p className="text-slate-600 text-xs font-semibold">Mon – Sat: 09 AM – 07 PM</p>
-              <p className="text-slate-400 text-xs mt-1">{contactInfo.sundayHours}</p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
-              <span>● Open Mon - Sat</span>
-              <span className="text-slate-400">PKT</span>
-            </div>
-          </motion.div>
-        </motion.div>
-      </section>
+      <div className="relative z-10">
 
-      {/* ================= 3. CONTACT FORM + IMAGE ================= */}
-      <section id="contact-form" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* Left Side Image Composition */}
-          <motion.div 
-            variants={fadeLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="lg:col-span-5 relative"
+        {/* Icon */}
+        <div className="flex items-center justify-between mb-7">
+          <div
+            className="w-14 h-14 rounded-2xl
+            bg-[#25D366]/10
+            text-[#25D366]
+            flex items-center justify-center
+            group-hover:bg-[#25D366]
+            group-hover:text-white
+            group-hover:scale-110
+            group-hover:rotate-3
+            transition-all duration-500
+            shadow-sm"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-              <img 
-                src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=800" 
-                alt="Therapist with child" 
-                className="w-full h-[450px] sm:h-[550px] object-cover hover:scale-105 transition duration-700"
-              />
-            </div>
-
-            {/* Floating Glass Badges */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-6 left-6 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-lg border border-white/50 text-xs font-bold text-[#003B5C] z-20 flex items-center gap-2"
+            <svg
+              viewBox="0 0 24 24"
+              className="w-7 h-7"
+              fill="currentColor"
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-[#00A8CD] animate-pulse" />
-              <span>Compassionate Child Care</span>
-            </motion.div>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.007-.372-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+              <path d="M20.52 3.449C18.24 1.245 15.24.032 12.049.032 5.425.032.03 5.426.03 12.05c0 2.126.555 4.202 1.61 6.032L.022 23.978l6.042-1.585a12.014 12.014 0 005.985 1.526h.005c6.623 0 12.018-5.394 12.018-12.018 0-3.191-1.213-6.191-3.552-8.452zm-8.471 18.443h-.004a9.998 9.998 0 01-5.099-1.395l-.366-.217-3.586.94.957-3.497-.238-.36a9.97 9.97 0 01-1.528-5.313c0-5.507 4.481-9.988 9.988-9.988 2.669 0 5.179 1.04 7.065 2.926a9.935 9.935 0 012.923 7.067c-.003 5.507-4.484 9.987-9.992 9.987z" />
+            </svg>
+          </div>
 
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-2 sm:right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 z-20"
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#F5A623]/20 text-[#F5A623] flex items-center justify-center font-bold text-xl">
-                💛
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 font-bold uppercase">Dedicated Support</p>
-                <p className="text-sm font-extrabold text-[#003B5C]">Here For Your Family</p>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Side Contact Form */}
-          <motion.div 
-            variants={fadeRight} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-100 relative overflow-hidden"
+          <span
+            className="px-3 py-1 rounded-full text-[10px] font-bold
+            uppercase tracking-widest
+            bg-emerald-50 text-emerald-600
+            border border-emerald-100"
           >
-            <AnimatePresence mode="wait">
-              {isSubmitted ? (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center py-12 space-y-4"
-                >
-                  <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner">
-                    ✓
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-[#003B5C]">Thank You!</h3>
-                  <p className="text-slate-600 max-w-md mx-auto text-sm leading-relaxed">
-                    Your message has been received. Our clinical support team will review your inquiry and contact you shortly.
-                  </p>
-                  <button 
-                    onClick={() => { setIsSubmitted(false); setFormValues({ fullName: '', email: '', phone: '', service: '', contactMethod: 'Phone Call', message: '' }); }}
-                    className="mt-4 bg-[#003B5C] text-white font-bold px-6 py-2.5 rounded-full text-xs hover:bg-[#002840] transition"
-                  >
-                    Send Another Message
-                  </button>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <span className="text-[#FF5271] font-extrabold text-xs uppercase tracking-widest bg-[#FF5271]/10 px-3 py-1 rounded-full">
-                      GET IN TOUCH
-                    </span>
-                    <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#003B5C] mt-2">
-                      Tell us how we can help
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. Sarah Ahmed"
-                        value={formValues.fullName}
-                        onChange={(e) => setFormValues({ ...formValues, fullName: e.target.value })}
-                        className={`w-full p-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#003B5C]/20 ${formErrors.fullName ? 'border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#003B5C]'}`}
-                      />
-                      {formErrors.fullName && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{formErrors.fullName}</p>}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
-                      <input 
-                        type="tel" 
-                        placeholder="+92 300 1234567"
-                        value={formValues.phone}
-                        onChange={(e) => setFormValues({ ...formValues, phone: e.target.value })}
-                        className={`w-full p-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#003B5C]/20 ${formErrors.phone ? 'border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#003B5C]'}`}
-                      />
-                      {formErrors.phone && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{formErrors.phone}</p>}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
-                      <input 
-                        type="email" 
-                        placeholder="sarah@example.com"
-                        value={formValues.email}
-                        onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
-                        className="w-full p-3.5 rounded-xl border border-slate-200 focus:border-[#003B5C] text-sm focus:outline-none focus:ring-2 focus:ring-[#003B5C]/20 transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Select Service *</label>
-                      <select 
-                        value={formValues.service}
-                        onChange={(e) => setFormValues({ ...formValues, service: e.target.value })}
-                        className={`w-full p-3.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-[#003B5C]/20 transition-all ${formErrors.service ? 'border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#003B5C] text-slate-700'}`}
-                      >
-                        <option value="">-- Choose Therapy / Assessment --</option>
-                        {servicesList.map((srv, idx) => (
-                          <option key={idx} value={srv}>{srv}</option>
-                        ))}
-                      </select>
-                      {formErrors.service && <p className="text-rose-500 text-[11px] mt-1 font-semibold">{formErrors.service}</p>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Preferred Contact Method</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {['Phone Call', 'WhatsApp', 'Email'].map((method) => (
-                        <button
-                          key={method}
-                          type="button"
-                          onClick={() => setFormValues({ ...formValues, contactMethod: method })}
-                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all ${formValues.contactMethod === method ? 'bg-[#003B5C] text-white border-[#003B5C] shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}`}
-                        >
-                          {method}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Message</label>
-                    <textarea 
-                      rows="3" 
-                      placeholder="Tell us a little about how we can help your child..."
-                      value={formValues.message}
-                      onChange={(e) => setFormValues({ ...formValues, message: e.target.value })}
-                      className="w-full p-3.5 rounded-xl border border-slate-200 focus:border-[#003B5C] text-sm focus:outline-none focus:ring-2 focus:ring-[#003B5C]/20 transition-all"
-                    />
-                  </div>
-
-                  <motion.button 
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit" 
-                    className="w-full bg-[#FF5271] hover:bg-[#e04360] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#FF5271]/25 transition duration-300 flex items-center justify-center gap-2 group"
-                  >
-                    <span>SEND MESSAGE</span>
-                    <span className="transform group-hover:translate-x-1 transition">→</span>
-                  </motion.button>
-                </form>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
+            Online
+          </span>
         </div>
-      </section>
+
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#25D366] mb-2">
+          Instant Support
+        </p>
+
+        <h3 className="text-xl font-extrabold text-[#003B5C] mb-2">
+          WhatsApp Desk
+        </h3>
+
+        <p className="text-sm text-slate-500 leading-relaxed">
+          Connect with our support team quickly for appointments,
+          questions and general assistance.
+        </p>
+
+        <div
+          className="mt-7 pt-5 border-t border-slate-100
+          flex items-center justify-between"
+        >
+          <span className="text-sm font-bold text-[#25D366]">
+            Start a Conversation
+          </span>
+
+          <span
+            className="w-9 h-9 rounded-full bg-[#25D366]/10
+            flex items-center justify-center
+            text-[#25D366]
+            group-hover:bg-[#25D366]
+            group-hover:text-white
+            transition-all duration-300
+            group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </div>
+      </div>
+    </motion.a>
+
+
+    {/* ================= EMAIL ================= */}
+    <motion.a
+      href={`mailto:${contactInfo.email}`}
+      variants={fadeUp}
+      whileHover={{ y: -10 }}
+      className="group relative overflow-hidden bg-white rounded-[28px] p-7
+      border border-slate-200/80
+      shadow-[0_15px_45px_rgba(0,59,92,0.08)]
+      hover:shadow-[0_25px_60px_rgba(255,82,113,0.16)]
+      transition-all duration-500"
+    >
+      {/* Background glow */}
+      <div
+        className="absolute -right-16 -top-16 w-40 h-40 rounded-full
+        bg-[#FF5271]/10 blur-3xl
+        group-hover:bg-[#FF5271]/20 transition-all duration-500"
+      />
+
+      {/* Accent */}
+      <div
+        className="absolute top-0 left-8 right-8 h-[3px]
+        bg-gradient-to-r from-transparent via-[#FF5271] to-transparent
+        opacity-60 group-hover:opacity-100 transition-opacity"
+      />
+
+      <div className="relative z-10">
+
+        {/* Icon */}
+        <div className="flex items-center justify-between mb-7">
+          <div
+            className="w-14 h-14 rounded-2xl
+            bg-[#FF5271]/10
+            text-[#FF5271]
+            flex items-center justify-center
+            group-hover:bg-[#FF5271]
+            group-hover:text-white
+            group-hover:scale-110
+            group-hover:-rotate-3
+            transition-all duration-500"
+          >
+            {/* Real Email SVG icon */}
+            <svg
+              className="w-7 h-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m3 7 8.05 5.367a1.7 1.7 0 0 0 1.9 0L21 7"
+              />
+            </svg>
+          </div>
+
+          <span
+            className="px-3 py-1 rounded-full text-[10px] font-bold
+            uppercase tracking-widest
+            bg-rose-50 text-[#FF5271]
+            border border-rose-100"
+          >
+            Email
+          </span>
+        </div>
+
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FF5271] mb-2">
+          Contact Center
+        </p>
+
+        <h3 className="text-xl font-extrabold text-[#003B5C] mb-2">
+          Email Center
+        </h3>
+
+        <p className="text-sm text-slate-500 leading-relaxed">
+          Send your questions, appointment requests or detailed
+          inquiries directly to our team.
+        </p>
+
+        <p
+          className="mt-4 text-xs font-semibold text-slate-400
+          truncate max-w-full"
+        >
+          {contactInfo.email}
+        </p>
+
+        <div
+          className="mt-5 pt-5 border-t border-slate-100
+          flex items-center justify-between"
+        >
+          <span className="text-sm font-bold text-[#FF5271]">
+            Send an Email
+          </span>
+
+          <span
+            className="w-9 h-9 rounded-full bg-[#FF5271]/10
+            flex items-center justify-center
+            text-[#FF5271]
+            group-hover:bg-[#FF5271]
+            group-hover:text-white
+            transition-all duration-300
+            group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </div>
+      </div>
+    </motion.a>
+
+
+    {/* ================= OPENING HOURS ================= */}
+    <motion.div
+      variants={fadeUp}
+      whileHover={{ y: -10 }}
+      className="group relative overflow-hidden bg-white rounded-[28px] p-7
+      border border-slate-200/80
+      shadow-[0_15px_45px_rgba(0,59,92,0.08)]
+      hover:shadow-[0_25px_60px_rgba(245,166,35,0.18)]
+      transition-all duration-500"
+    >
+      {/* Background glow */}
+      <div
+        className="absolute -right-16 -top-16 w-40 h-40 rounded-full
+        bg-[#F5A623]/10 blur-3xl
+        group-hover:bg-[#F5A623]/20 transition-all duration-500"
+      />
+
+      {/* Accent */}
+      <div
+        className="absolute top-0 left-8 right-8 h-[3px]
+        bg-gradient-to-r from-transparent via-[#F5A623] to-transparent
+        opacity-60 group-hover:opacity-100 transition-opacity"
+      />
+
+      <div className="relative z-10">
+
+        {/* Icon */}
+        <div className="flex items-center justify-between mb-7">
+          <div
+            className="w-14 h-14 rounded-2xl
+            bg-[#F5A623]/10
+            text-[#F5A623]
+            flex items-center justify-center
+            group-hover:bg-[#F5A623]
+            group-hover:text-white
+            group-hover:scale-110
+            transition-all duration-500"
+          >
+            {/* Real Clock SVG icon */}
+            <svg
+              className="w-7 h-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 7v5l3 2"
+              />
+            </svg>
+          </div>
+
+          <span
+            className="flex items-center gap-2 px-3 py-1 rounded-full
+            text-[10px] font-bold uppercase tracking-widest
+            bg-emerald-50 text-emerald-600
+            border border-emerald-100"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Open
+          </span>
+        </div>
+
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#F5A623] mb-2">
+          Clinic Schedule
+        </p>
+
+        <h3 className="text-xl font-extrabold text-[#003B5C] mb-2">
+          Center Timings
+        </h3>
+
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-slate-600">
+              Monday – Saturday
+            </span>
+
+            <span className="text-sm font-bold text-[#003B5C]">
+              09 AM – 07 PM
+            </span>
+          </div>
+
+          <div className="h-px bg-slate-100" />
+
+          <p className="text-xs text-slate-400">
+            {contactInfo.sundayHours}
+          </p>
+        </div>
+
+        <div
+          className="mt-5 pt-5 border-t border-slate-100
+          flex items-center justify-between"
+        >
+          <span className="text-sm font-bold text-emerald-600">
+            ● Open Mon – Sat
+          </span>
+
+          <span className="text-xs font-bold text-slate-400">
+            PKT
+          </span>
+        </div>
+      </div>
+    </motion.div>
+
+  </motion.div>
+</section>
+
 
       {/* ================= 4. CLINIC LOCATION & TIMINGS ================= */}
       <section className="py-20 bg-slate-100/70 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
