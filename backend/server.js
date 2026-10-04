@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer'); // Nodemailer import kiya gaya hai
+const nodemailer = require('nodemailer');
+const path = require('path');
 require('dotenv').config();
 
 const Contact = require('./models/Contact');
@@ -26,8 +27,8 @@ mongoose.connect(process.env.MONGO_URI)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Aapki official email (.env mein hogi)
-    pass: process.env.EMAIL_PASS  // Gmail App Password (.env mein hoga)
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
@@ -46,9 +47,7 @@ app.post('/api/contact', async (req, res) => {
     });
     await newContact.save();
 
-    // Emails bhejne ka logic
     try {
-      // User ko confirmation email
       if (email) {
         await transporter.sendMail({
           from: process.env.EMAIL_USER,
@@ -58,7 +57,6 @@ app.post('/api/contact', async (req, res) => {
         });
       }
 
-      // Owner ko notification email
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: process.env.OWNER_EMAIL || process.env.EMAIL_USER,
@@ -91,9 +89,7 @@ app.post('/api/appointment', async (req, res) => {
     });
     await newAppointment.save();
 
-    // Appointment emails bhejne ka logic
     try {
-      // User ko confirmation email
       if (email) {
         await transporter.sendMail({
           from: process.env.EMAIL_USER,
@@ -103,7 +99,6 @@ app.post('/api/appointment', async (req, res) => {
         });
       }
 
-      // Owner ko notification email
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: process.env.OWNER_EMAIL || process.env.EMAIL_USER,
@@ -120,27 +115,24 @@ app.post('/api/appointment', async (req, res) => {
   }
 });
 
-// 3. Admin Login API (Phone Number & Password)
+// 3. Admin Login API
 app.post('/api/admin/login', async (req, res) => {
   try {
     const { phone, password } = req.body;
 
-    // Check admin exists
     const admin = await Admin.findOne({ phone });
     if (!admin) {
       return res.status(400).json({ success: false, message: 'Invalid Phone Number or Password!' });
     }
 
-    // Match Password securely using bcrypt
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid Phone Number or Password!' });
     }
 
-    // Create JWT Token (Expires in 2 hours for high security)
     const token = jwt.sign({ id: admin._id, phone: admin.phone }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
-    res.status(250).json({ // standard 200 ok status
+    res.status(200).json({
       success: true,
       message: 'Admin logged in successfully!',
       token
@@ -150,9 +142,8 @@ app.post('/api/admin/login', async (req, res) => {
   }
 });
 
-// ==================== ADMIN PROTECTED APIs (Dashboard) ====================
+// ==================== ADMIN PROTECTED APIs ====================
 
-// 4. Get All Contacts for Admin Dashboard
 app.get('/api/admin/contacts', verifyToken, async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });
@@ -162,7 +153,6 @@ app.get('/api/admin/contacts', verifyToken, async (req, res) => {
   }
 });
 
-// 5. Get All Appointments for Admin Dashboard
 app.get('/api/admin/appointments', verifyToken, async (req, res) => {
   try {
     const appointments = await Appointment.find().sort({ createdAt: -1 });
@@ -172,8 +162,16 @@ app.get('/api/admin/appointments', verifyToken, async (req, res) => {
   }
 });
 
+// ==================== FRONTEND STATIC SERVING ====================
+// Yeh APIs ke baad rakha hai taaki pehle APIs handle hon aur baaki sab routes par frontend load ho
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+});
+
 // Server Start
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server port ${PORT} par chal raha hai.`);
+  console.log(`Server is running on port ${PORT}`);
 });
