@@ -38,13 +38,7 @@ const transporter = nodemailer.createTransport({
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, phone, service, message } = req.body;
-    const newContact = new Contact({ 
-      name, 
-      email, 
-      phone, 
-      service, 
-      message 
-    });
+    const newContact = new Contact({ name, email, phone, service, message });
     await newContact.save();
 
     try {
@@ -77,16 +71,7 @@ app.post('/api/contact', async (req, res) => {
 app.post('/api/appointment', async (req, res) => {
   try {
     const { name, email, phone, childName, service, date, time, additionalInfo } = req.body;
-    const newAppointment = new Appointment({ 
-      name, 
-      email, 
-      phone, 
-      childName, 
-      service, 
-      date, 
-      time,
-      additionalInfo
-    });
+    const newAppointment = new Appointment({ name, email, phone, childName, service, date, time, additionalInfo });
     await newAppointment.save();
 
     try {
@@ -163,15 +148,14 @@ app.get('/api/admin/appointments', verifyToken, async (req, res) => {
 });
 
 // ==================== FRONTEND STATIC SERVING ====================
-// Yeh APIs ke baad rakha hai taaki pehle APIs handle hon aur baaki sab routes par frontend load ho
 app.use(express.static(path.join(__dirname, 'frontend/dist')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
 });
 
-// Server Start
+// Server Start with dynamic process.env.PORT
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
