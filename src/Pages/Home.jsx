@@ -27,63 +27,63 @@ const servicesData = [
     desc: "Improving articulation, expressive/receptive language capabilities, and functional communication skills.",
     color: "#00A8CD",
     img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=600",
-    path: "/services/speech-therapy"
+    path: "/Pages/speech-therapy"
   },
   {
     title: "Nutrition Therapy & Dietetics",
     desc: "Specialized pediatric dietary plans and nutritional guidance tailored to support growth and sensory needs.",
     color: "#FF5271",
     img: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600",
-    path: "/services/nutrition-dietetics"
+    path: "/Pages/nutrition-dietetics"
   },
   {
     title: "Special Education",
     desc: "Customized academic and cognitive learning frameworks designed to unlock every child's unique potential.",
     color: "#F5A623",
     img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=600",
-    path: "/services/special-education"
+    path: "/Pages/special-education"
   },
   {
     title: "Physiotherapy",
     desc: "Improving gross motor skills, core posture, physical strength, and overall bodily coordination.",
     color: "#003B5C",
     img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600",
-    path: "/services/physiotherapy"
+    path: "/Pages/physiotherapy"
   },
   {
     title: "Occupational Therapy & Sensory Integration",
     desc: "Developing fine motor skills, independence in daily routines, and healthy sensory regulation.",
     color: "#00A8CD",
     img: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=600",
-    path: "/services/occupational-therapy"
+    path: "/Pages/occupational-therapy"
   },
   {
     title: "Day Care",
     desc: "A secure, nurturing, and highly structured environment designed for safe supervision and holistic care.",
     color: "#FF5271",
     img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
-    path: "/services/day-care"
+    path: "/Pages/day-care"
   },
   {
     title: "Montessori & Early Childhood Education",
     desc: "Guided interactive learning that promotes natural confidence, attention spans, and self-reliance.",
     color: "#F5A623",
     img: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=600",
-    path: "/services/montessori-education"
+    path: "/Pages/montessori-education"
   },
   {
     title: "Dysphagia Management & NG Tube Feeding",
     desc: "Specialized clinical swallowing therapy and tube feeding support administered by expert practitioners.",
     color: "#003B5C",
     img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600",
-    path: "/services/dysphagia-management"
+    path: "/Pages/dysphagia-management"
   },
   {
     title: "ABA Therapy & Psychology",
     desc: "Evidence-based behavior analysis and psychological counseling fostering positive reinforcement and emotional health.",
     color: "#FF5271",
     img: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600",
-    path: "/services/aba-psychology"
+    path: "/Pages/aba-psychology"
   }
 ];
 
@@ -1244,8 +1244,6 @@ const DualCareShowcaseSection = () => {
     "Special Education",
     "Physiotherapy",
     "Occupational Therapy & Sensory Integration",
-    "Day Care",
-    "Montessori & Early Childhood Education",
     "Dysphagia Management & NG Tube Feeding",
     "ABA Therapy & Psychology"
   ];
@@ -1547,25 +1545,41 @@ const WhyChooseSection = () => {
 const OurTeamSection = () => {
   return (
     <section className="py-24 bg-white relative overflow-hidden border-t border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 relative">
-        <motion.div 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+
+        {/* Section Heading */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16 space-y-2"
+          className="mb-16 space-y-3"
         >
           <div className="flex items-center justify-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#FF5271]" />
+
             <span className="text-[#FF5271] font-bold text-xs uppercase tracking-widest">
               OUR TEAM
             </span>
+
+            <span className="w-2 h-2 rounded-full bg-[#FF5271]" />
           </div>
-        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#003B5C] leading-tight">
-  Meet the experts behind your <span className="text-[#FF5271] italic">personalized treatment</span>
-</h2>
+
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#003B5C] leading-tight">
+            Meet the experts behind your{" "}
+            <span className="text-[#FF5271] italic">
+              personalized treatment
+            </span>
+          </h2>
+
+          <p className="max-w-2xl mx-auto text-slate-500 text-sm sm:text-base leading-relaxed">
+            Our multidisciplinary team of experienced professionals is
+            dedicated to providing personalized care and helping every child
+            reach their full potential.
+          </p>
         </motion.div>
 
+        {/* Team Members */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {teamMembersData.map((doctor, index) => (
             <motion.div
@@ -1573,33 +1587,48 @@ const OurTeamSection = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.08,
+              }}
               whileHover={{ y: -8 }}
-              className="relative rounded-2xl overflow-hidden bg-[#EAE8DF]/60 border border-slate-200/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group h-[380px]"
+              className="relative rounded-2xl overflow-hidden bg-[#EAE8DF]/60 border border-slate-200/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group h-[400px]"
             >
+
+              {/* Doctor Image */}
               <div className="w-full h-full overflow-hidden relative">
                 <img
                   src={doctor.image}
                   alt={doctor.name}
+                  loading="lazy"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
+
+                {/* Image Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/70 via-transparent to-transparent opacity-60" />
               </div>
 
-              <div className="absolute bottom-3 left-3 right-3 bg-[#0F2A4A] backdrop-blur-md rounded-xl p-4 text-center border border-white/10 shadow-lg group-hover:bg-[#003B5C] transition-colors duration-300">
+              {/* Doctor Information */}
+              <div className="absolute bottom-3 left-3 right-3 bg-[#0F2A4A]/95 backdrop-blur-md rounded-xl p-4 text-center border border-white/10 shadow-lg group-hover:bg-[#003B5C] transition-colors duration-300">
+
                 <h3 className="font-serif font-bold text-white text-base leading-tight mb-1">
                   {doctor.name}
                 </h3>
-                <p className="text-[#38BDF8] text-xs font-semibold mb-1">
+
+                <p className="text-[#38BDF8] text-xs font-semibold mb-2">
                   {doctor.role}
                 </p>
-                <p className="text-slate-300 text-[10px] leading-tight font-normal line-clamp-2">
+
+                <p className="text-slate-300 text-[10px] leading-relaxed font-normal line-clamp-3">
                   {doctor.degree}
                 </p>
+
               </div>
             </motion.div>
           ))}
         </div>
 
+        {/* View All Team Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1610,16 +1639,20 @@ const OurTeamSection = () => {
           <motion.div
             whileHover={{ y: -4, scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+            }}
           >
             <Link
-              to="/our-team"
+              to="/about/our-team"
               className="bg-[#003B5C] hover:bg-[#FF5271] text-white text-xs sm:text-sm font-bold px-7 py-3 rounded-full shadow-md shadow-[#003B5C]/20 transition-all duration-300 text-center inline-block"
             >
               View All Team Members
             </Link>
           </motion.div>
         </motion.div>
+
       </div>
     </section>
   );

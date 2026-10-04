@@ -653,7 +653,7 @@ export default function SpeechTherapyPage() {
             >
               {/* Requested Button */}
               <Link
-                to="/book-a-free-consult"
+                to="/services"
                 className="bg-[#003B5C] hover:bg-[#FF5271] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-[#003B5C]/20 transition-all duration-300 text-center block border border-white/20"
               >
                 Explore Services
@@ -661,7 +661,7 @@ export default function SpeechTherapyPage() {
               
 
               <a
-                href="/book-appointment"
+                href="/book-a-free-consult"
                 className="inline-flex items-center justify-center gap-2 border-2 border-white/30 hover:bg-white hover:text-[#003B5C] text-white font-black text-xs uppercase tracking-wider px-8 py-3.5 rounded-full backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg"
               >
                 Book Consultation

@@ -182,7 +182,7 @@ export default function OurTeam() {
     const serviceSlug = category.replace(/\s+/g, "-");
 
     navigate(
-      `/book-appointment?expert=${expertSlug}&service=${serviceSlug}`
+      `/book-a-free-consult?expert=${expertSlug}&service=${serviceSlug}`
     );
   };
 

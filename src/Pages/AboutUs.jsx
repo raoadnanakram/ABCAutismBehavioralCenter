@@ -6,7 +6,7 @@ import { motion, useInView } from "framer-motion";
 import heroBg from "../assets/hero-banner.jpg";
 import drBilal from '../assets/dr-Bilal.jpeg';
 import drAliRaza from '../assets/dr-AliRaza.jpeg';
-import drAtiya from '../assets/dr-Atiya.jpg';
+import drZobia from '../assets/dr-Zobia.jpeg';
 import drMonina from '../assets/dr-Monina.jpeg';
 
 /* =========================================================
@@ -42,35 +42,36 @@ const statsData = [
 
 const teamMembersData = [
   {
-    name: "Imran Malik",
-    role: "CEO | Speech & Language Pathologist",
-    degree: "M.Phil (Speech & Language Therapy)",
-    image:
-      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
+    name: "Dr. Muhammad Bilal Bhatti",
+    role: "Chairman - ABC Autism Behavioral Center",
+    degree:
+      "PhD Speech Therapy from Tehran University of Medical Sciences (Continue) / MS in Speech and Language Pathology (RCRS)",
+    image: drBilal,
   },
+
   {
-    name: "Aarsa Saeed",
-    role: "Speech Pathologist",
-    degree: "MS (Speech & Language Pathology)",
-    image:
-      "https://images.unsplash.com/photo-1594824813566-78a933758f46?auto=format&fit=crop&q=80&w=800",
+    name: "Dn. Momna",
+    role: "CEO - Consultant Nutritionist & Dietitian",
+    degree:
+      "MPhil Food Science (FST, UET) & Doctor of Nutrition and Dietetics (DND, UVAS)",
+    image: drMonina,
   },
+
   {
-    name: "Dr. Muhammad Arqam",
-    role: "Physiotherapist",
-    degree: "DPT, MSPT - MSK",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    name: "Ms. Zobia Pervaiz",
+    role: "Senior Speech & Language Pathologist",
+    degree: "MS Speech & Language Pathology",
+    image: drZobia,
   },
+
   {
-    name: "Dr. Aasma Munir",
-    role: "Child Psychologist",
-    degree: "PhD (Applied Psychology)",
-    image:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=800",
+    name: "Mr. Ali Raza",
+    role: "Special Educator & Speech Therapist",
+    degree:
+      "MA Special Education - Intellectual Development Disability, Diploma in Behaviour Management & Autism Spectrum Disorder, PGD Speech and Language Therapy",
+    image: drAliRaza,
   },
 ];
-
 /* =========================================================
    REUSABLE ANIMATION VARIANTS
 ========================================================= */
@@ -884,7 +885,7 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-256 object-contain transition-transform duration-500 hover:scale-105"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/30 to-transparent pointer-events-none" />
@@ -909,7 +910,7 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
 
           <div className="text-center mt-10">
             <Link
-              to="/team"
+              to="/about/our-team"
               className="inline-block bg-[#003B5C] hover:bg-[#002840] text-white font-bold px-8 py-3.5 rounded-full shadow-lg transition-all duration-300 hover:-translate-y-1"
             >
               More Team Members
@@ -918,213 +919,7 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
         </div>
       </section>
 
-      {/* =====================================================
-          10. APPOINTMENT FORM
-      ===================================================== */}
 
-      <section
-        id="appointment"
-        className="py-20 lg:py-24 px-5 sm:px-8 bg-slate-100/70 border-t border-slate-200"
-      >
-        <div className="max-w-7xl mx-auto">
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 bg-white p-6 sm:p-10 lg:p-12 rounded-[32px] shadow-xl border border-slate-200">
-
-            {/* Contact Information */}
-            <motion.div
-              variants={fadeLeft}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="lg:col-span-5 flex flex-col justify-center"
-            >
-              <span className="text-[#FF5271] font-extrabold text-xs uppercase tracking-[0.18em]">
-                GET IN TOUCH
-              </span>
-
-              <h2 className="mt-4 font-serif text-3xl sm:text-4xl font-extrabold text-[#003B5C] leading-tight">
-                Let's Talk About Your Child's Journey
-              </h2>
-
-              <p className="mt-5 text-sm text-slate-600 leading-7">
-                We are here to support you every step of the way. Contact us
-                to discuss your child's needs, schedule an assessment or learn
-                more about our services.
-              </p>
-
-              <div className="mt-8 space-y-5">
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#00A8CD]/10 text-[#00A8CD] flex items-center justify-center flex-shrink-0">
-                    📞
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wide">
-                      Phone
-                    </p>
-
-                    <a
-                      href="tel:+923238864026"
-                      className="text-sm font-bold text-[#003B5C] hover:text-[#00A8CD] transition"
-                    >
-                      +92 323 8864026
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF5271]/10 text-[#FF5271] flex items-center justify-center flex-shrink-0">
-                    ✉
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wide">
-                      Email
-                    </p>
-
-                    <a
-                      href="mailto:abcautismbehaviouralcenter@gmail.com"
-                      className="text-sm font-bold text-[#003B5C] hover:text-[#00A8CD] transition break-all"
-                    >
-                      abcautismbehaviouralcenter@gmail.com
-                    </a>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-
-            {/* Form */}
-            <motion.div
-              variants={fadeRight}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="lg:col-span-7 bg-slate-50 p-5 sm:p-7 lg:p-8 rounded-2xl border border-slate-200"
-            >
-              <form
-                onSubmit={handleFormSubmit}
-                className="space-y-4"
-              >
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                  <input
-                    type="text"
-                    placeholder="Full Name *"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        name: e.target.value,
-                      })
-                    }
-                    className="w-full p-3.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 focus:border-[#00A8CD] transition"
-                  />
-
-                  <input
-                    type="tel"
-                    placeholder="Phone Number *"
-                    required
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        phone: e.target.value,
-                      })
-                    }
-                    className="w-full p-3.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 focus:border-[#00A8CD] transition"
-                  />
-
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        email: e.target.value,
-                      })
-                    }
-                    className="w-full p-3.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 focus:border-[#00A8CD] transition"
-                  />
-
-                  <select
-                    value={formData.service}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        service: e.target.value,
-                      })
-                    }
-                    className="w-full p-3.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 focus:border-[#00A8CD] transition"
-                  >
-                    <option value="">
-                      Select Service
-                    </option>
-
-                    <option value="speech">
-                      Speech Therapy
-                    </option>
-
-                    <option value="aba">
-                      ABA Therapy
-                    </option>
-
-                    <option value="occupational">
-                      Occupational Therapy
-                    </option>
-
-                    <option value="physiotherapy">
-                      Physiotherapy
-                    </option>
-
-                    <option value="assessment">
-                      Diagnostic Assessment
-                    </option>
-
-                    <option value="montessori">
-                      Montessori
-                    </option>
-
-                    <option value="early-childhood">
-                      Early Childhood Education
-                    </option>
-                  </select>
-
-                </div>
-
-                <textarea
-                  rows="5"
-                  placeholder="Message / Details about your child"
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      message: e.target.value,
-                    })
-                  }
-                  className="w-full p-3.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 focus:border-[#00A8CD] transition"
-                />
-
-                <button
-                  type="submit"
-                  className="w-full bg-[#FF5271] hover:bg-[#e04360] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#FF5271]/20 transition-all duration-300 hover:-translate-y-0.5"
-                >
-                  Book an Appointment
-                </button>
-
-              </form>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
     </main>
   );

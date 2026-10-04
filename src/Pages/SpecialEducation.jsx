@@ -499,7 +499,7 @@ const SpecialEducation = () => {
             </Link>
 
             <Link
-              to="/book-appointment"
+              to="/about/our-team"
               className="group inline-flex items-center justify-center px-7 py-4 rounded-2xl border border-white/20 bg-white/[0.05] text-white font-bold backdrop-blur-md hover:bg-white/12 hover:border-white/35 hover:-translate-y-0.5 transition-all duration-300"
             >
               Talk to Our Team

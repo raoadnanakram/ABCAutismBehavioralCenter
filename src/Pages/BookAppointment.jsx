@@ -41,6 +41,7 @@ const BookingAppointment = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -50,7 +51,7 @@ const BookingAppointment = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.service || !formData.date || !formData.time || !formData.consent) {
       alert("Kripya sabhi anivarya (required) fields bharein aur consent check karein.");
@@ -58,12 +59,39 @@ const BookingAppointment = () => {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
-  };
+    setErrorMessage("");
 
+    try {
+      // Backend API call
+      const response = await fetch("http://localhost:5000/api/appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          childName: formData.childName,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          additionalInfo: formData.additionalInfo || formData.message // Yahan additionalInfo add kar diya gaya hai
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSuccess(true);
+      } else {
+        setErrorMessage(data.message || "Kuch ghalat ho gaya, dobara koshish karein.");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setErrorMessage("Server ke sath connection nahi ho saka.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="w-full font-sans text-[#334155] bg-[#F8F9FA] overflow-x-hidden">
 
@@ -142,7 +170,7 @@ const BookingAppointment = () => {
         </div>
       </section>
 
-      {/* 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9. APPOINTMENT BOOKING SECTION */}
+      {/* APPOINTMENT BOOKING SECTION */}
       <section id="booking-form" className="py-20 px-5 sm:px-8 max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
@@ -213,6 +241,12 @@ const BookingAppointment = () => {
               <h3 className="font-serif text-2xl font-bold text-[#003B5C] mb-6">
                 Appointment Booking Form
               </h3>
+
+              {errorMessage && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl">
+                  {errorMessage}
+                </div>
+              )}
 
               <AnimatePresence mode="wait">
                 {isSuccess ? (
@@ -431,7 +465,7 @@ const BookingAppointment = () => {
         </motion.div>
       </section>
 
-      {/* ================= BOTTOM CLINIC SHOWCASE (Exact Match as Requested) ================= */}
+      {/* BOTTOM CLINIC SHOWCASE */}
       <section className="py-20 px-5 sm:px-8 max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}

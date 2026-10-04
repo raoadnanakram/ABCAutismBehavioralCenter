@@ -1,1737 +1,2002 @@
-import React, { useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  motion,
-  AnimatePresence,
-  useReducedMotion,
-} from "framer-motion";
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Heart,
+  Users,
+  Brain,
+  MessageCircle,
+  Activity,
+  CalendarCheck,
+  Phone,
+  CheckCircle2,
+  Star,
+  BookOpen,
+  Smile,
+  Compass,
+  Award,
+  Target,
+  SmilePlus,
+  Zap,
+  Feather,
+  HelpCircle,
+  Utensils
+} from "lucide-react";
 
+/* =========================================================
+    ANIMATION SYSTEM
+========================================================= */
 
-// REX MEDICAL CENTER
-// NUTRITION THERAPY & DIETETICS
-// PREMIUM NAVY + TEAL + CORAL + GOLD COLOR SCHEME
-// ========================================================
+const ease = [0.22, 1, 0.36, 1];
 
-// ========================================================
-// PREMIUM COLOR PALETTE
-// ================================
-const COLORS = {
-  navy: "#003B5C",
-  navyDark: "#002238",
-  navyLight: "#015C7F",
-
-  teal: "#00A8CD",
-  tealDark: "#0089A8",
-  tealLight: "#EAF8FB",
-
-  coral: "#FF5271",
-  coralLight: "#FFF0F3",
-
-  gold: "#F5A623",
-  goldLight: "#FFF7E6",
-
-  orange: "#FF8C42",
-  orangeLight: "#FFF3EC",
-
-  pink: "#FF8EA3",
-
-  background: "#F8F9FA",
-  cyanBg: "#F0F8FA",
-
-  white: "#FFFFFF",
-  text: "#1E293B",
-  muted: "#64748B",
+const fadeUp = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease },
+  },
 };
 
-// ========================================================
-// ICONS
-// ========================================================
-
-const IconSparkles = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="2"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-    />
-  </svg>
-);
-
-const IconCheck = () => (
-  <svg
-    className="w-4 h-4"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="2.5"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5 13l4 4L19 7"
-    />
-  </svg>
-);
-
-const IconArrow = () => (
-  <svg
-    className="w-4 h-4"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="2"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5 12h14M13 6l6 6-6 6"
-    />
-  </svg>
-);
-
-const IconClose = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="2"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 6l12 12M18 6L6 18"
-    />
-  </svg>
-);
-
-const IconSalad = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3 12h18M5 12c.6 4.2 3.5 7 7 7s6.4-2.8 7-7M8 8c.5-2.5 2-4 4-4s3.5 1.5 4 4"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 4V2"
-    />
-  </svg>
-);
-
-const IconStethoscope = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 3v6a3 3 0 006 0V3"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 3H4v6a6 6 0 0012 0V3h-2"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M18 13v3a3 3 0 003 3"
-    />
-    <circle cx="21" cy="19" r="1" />
-  </svg>
-);
-
-const IconBrain = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9.5 4.5A3.5 3.5 0 006 8v.5A3.5 3.5 0 004.5 15 3.5 3.5 0 008 18.5h1.5A3.5 3.5 0 0013 15V8a3.5 3.5 0 00-3.5-3.5z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M14.5 4.5A3.5 3.5 0 0118 8v.5a3.5 3.5 0 011.5 6.5 3.5 3.5 0 01-3.5 3.5h-1.5A3.5 3.5 0 0111 15V8a3.5 3.5 0 013.5-3.5z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M8 8h2m-2 4h2m4-4h2m-2 4h2M12 3v18"
-    />
-  </svg>
-);
-
-const IconActivity = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M22 12h-4l-3 9L9 3l-3 9H2"
-    />
-  </svg>
-);
-
-const IconPill = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M7.05 17.95l9.9-9.9a4.95 4.95 0 117 7l-9.9 9.9a4.95 4.95 0 01-7-7z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9.5 15.5l7-7"
-    />
-  </svg>
-);
-
-const IconVideo = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14"
-    />
-    <rect
-      x="3"
-      y="6"
-      width="12"
-      height="12"
-      rx="2"
-    />
-  </svg>
-);
-
-const IconHeart = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-    />
-  </svg>
-);
-
-const IconShield = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    strokeWidth="1.8"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 3l7 4v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V7l7-4z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 12l2 2 4-4"
-    />
-  </svg>
-);
-
-// ========================================================
-// SERVICES DATA
-// ========================================================
-
-const servicesList = [
-  {
-    title: "Clinical Nutrition & Dietetics",
-    desc: "Personalized nutrition plans for health conditions, weight management, and nutritional deficiencies.",
-    icon: IconSalad,
-    color: COLORS.teal,
-    lightColor: COLORS.tealLight,
-    points: [
-      "Weight management",
-      "Nutritional deficiencies",
-      "Metabolic health support",
-      "Custom clinical meal planning",
-    ],
+const fadeLeft = {
+  hidden: { opacity: 0, x: -45 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.75, ease },
   },
-  {
-    title: "Therapeutic Nutrition",
-    desc: "Dietary management designed around your specific medical condition and nutritional requirements.",
-    icon: IconStethoscope,
-    color: COLORS.navy,
-    lightColor: "#EAF2F6",
-    points: [
-      "Diabetes & Prediabetes",
-      "PCOS & Thyroid disorders",
-      "Hypertension & Kidney health",
-      "Gastrointestinal care",
-    ],
-  },
-  {
-    title: "Behavioral Nutrition",
-    desc: "Understand your eating patterns, cravings, emotional triggers, and barriers to maintaining healthy habits.",
-    icon: IconBrain,
-    color: COLORS.coral,
-    lightColor: COLORS.coralLight,
-    points: [
-      "Emotional eating guidance",
-      "Overcoming food cravings",
-      "Mindful eating strategies",
-      "Long-term habit formation",
-    ],
-  },
-  {
-    title: "Physiotherapy",
-    desc: "Personalized physiotherapy and movement support as part of an integrated approach to health and wellness.",
-    icon: IconActivity,
-    color: COLORS.gold,
-    lightColor: COLORS.goldLight,
-    points: [
-      "Mobility enhancement",
-      "Targeted movement plans",
-      "Post-injury support",
-      "Active lifestyle guidance",
-    ],
-  },
-  {
-    title: "Supplement Guidance",
-    desc: "Individualized supplement recommendations based on nutritional assessment and appropriate clinical information.",
-    icon: IconPill,
-    color: COLORS.tealDark,
-    lightColor: COLORS.tealLight,
-    points: [
-      "Evidence-based dosing",
-      "Deficiency correction",
-      "Clinical safety check",
-      "Tailored micronutrients",
-    ],
-  },
-  {
-    title: "Online Consultation",
-    desc: "Receive personalized nutrition guidance from the comfort of your home through secure video calls.",
-    icon: IconVideo,
-    color: COLORS.orange,
-    lightColor: COLORS.orangeLight,
-    points: [
-      "Global remote access",
-      "Full dietary assessment",
-      "Digital meal plans",
-      "Continuous follow-ups",
-    ],
-  },
-];
+};
 
-// ========================================================
-// CONDITIONS
-// ========================================================
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.94 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.75, ease },
+  },
+};
 
-const diseaseConditions = [
-  "Diabetes",
-  "Prediabetes",
-  "PCOS",
-  "Thyroid Disorders",
-  "Hypertension",
-  "Dyslipidemia",
-  "Kidney Disease",
-  "Gastrointestinal Conditions",
-  "Fatty Liver",
-  "Anemia",
-  "Obesity",
-];
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08 },
+  },
+};
 
-// ========================================================
-// JOURNEY STEPS
-// ========================================================
+const viewport = { once: true, amount: 0.12 };
 
-const howItWorksSteps = [
-  {
-    step: "01",
-    title: "Assessment",
-    desc: "We begin by understanding your health history, nutrition, lifestyle, goals, and concerns.",
-  },
-  {
-    step: "02",
-    title: "Personalized Plan",
-    desc: "Your nutrition and lifestyle plan is developed according to your individual needs.",
-  },
-  {
-    step: "03",
-    title: "Behavioral Support",
-    desc: "We identify barriers, eating patterns, cravings, and habits that may affect your progress.",
-  },
-  {
-    step: "04",
-    title: "Movement & Physiotherapy",
-    desc: "Where appropriate, physiotherapy and physical activity support are incorporated.",
-  },
-  {
-    step: "05",
-    title: "Monitor",
-    desc: "Your progress is regularly reviewed and your plan adjusted when needed.",
-  },
-  {
-    step: "06",
-    title: "Sustain",
-    desc: "The ultimate goal is to help you develop habits that continue beyond the program.",
-  },
-];
+/* =========================================================
+    REUSABLE SECTION HEADER
+========================================================= */
 
-// ========================================================
-// FAQ
-// ========================================================
-
-const faqData = [
-  {
-    q: "Do you provide customized diet plans?",
-    a: "Yes. Nutrition plans are individualized according to health status, nutritional requirements, lifestyle, food preferences, and goals.",
-  },
-  {
-    q: "Can I have an online consultation?",
-    a: "Yes. Online consultations can be provided seamlessly for appropriate clients worldwide.",
-  },
-  {
-    q: "Do you treat medical conditions?",
-    a: "We provide nutrition and dietetic management as part of healthcare. Medical diagnosis, medication prescribing, and medical treatment remain under the care of the appropriate licensed medical professional.",
-  },
-  {
-    q: "Are supplements included?",
-    a: "Supplement recommendations are individualized. Supplements may be included separately depending on the client's requirements.",
-  },
-  {
-    q: "How often will my diet plan be changed?",
-    a: "This depends on your condition, progress, goals, and clinical requirements. Plans are reviewed during follow-ups and modified when appropriate.",
-  },
-  {
-    q: "Can I get physiotherapy and nutrition together?",
-    a: "Yes. Our integrated packages can combine nutrition care with physiotherapy where appropriate.",
-  },
-];
-
-// ========================================================
-// SECTION HEADING
-// ========================================================
-
-const SectionHeading = ({
-  eyebrow,
-  title,
-  description,
-  light = false,
-}) => (
-  <div className="text-center max-w-3xl mx-auto mb-16">
-    <motion.span
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4 ${
-        light
-          ? "bg-[#00A8CD]/10 text-[#8DE8F7] border border-[#00A8CD]/30"
-          : "bg-[#EAF8FB] text-[#0089A8] border border-[#BCECF5]"
-      }`}
+const SectionHeader = ({ eyebrow, title, description }) => {
+  return (
+    <motion.div
+      className="ot-section-header"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewport}
     >
-      <IconSparkles />
-      {eyebrow}
-    </motion.span>
+      <span className="ot-eyebrow">
+        <Sparkles size={14} />
+        {eyebrow}
+      </span>
+      <h2>{title}</h2>
+      {description && <p>{description}</p>}
+    </motion.div>
+  );
+};
 
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.1 }}
-      className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-serif ${
-        light ? "text-white" : "text-[#003B5C]"
-      }`}
-    >
-      {title}
-    </motion.h2>
+/* =========================================================
+    1. COMPACT & ULTRA-ATTRACTIVE HERO SECTION
+========================================================= */
 
-    {description && (
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className={`mt-4 text-base sm:text-lg leading-relaxed ${
-          light ? "text-slate-300" : "text-slate-600"
-        }`}
-      >
-        {description}
-      </motion.p>
-    )}
-  </div>
-);
+const HeroSection = () => {
+  return (
+    <section className="ot-hero-modern">
+      {/* Dynamic Background Glows & Shapes */}
+      <div className="ot-hero-glow-accent ot-glow-cyan" />
+      <div className="ot-hero-glow-accent ot-glow-coral" />
+      <div className="ot-hero-grid-pattern" />
 
-// ========================================================
-// MAIN COMPONENT
-// ========================================================
+      <div className="ot-container ot-hero-layout">
+        {/* Left Content Column */}
+        <motion.div
+          className="ot-hero-text-content"
+          variants={fadeLeft}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div
+            className="ot-hero-pill-badge"
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <Sparkles size={15} className="ot-pulse-icon" />
+            <span>ABC CENTER • PEDIATRIC CARE</span>
+          </motion.div>
 
-export default function NutritiontherapyDietetics() {
-  const [activeService, setActiveService] = useState(null);
-  const [openFaq, setOpenFaq] = useState(null);
-  const shouldReduceMotion = useReducedMotion();
+          <h1>
+            Building Skills. <br />
+            <span className="ot-gradient-text-teal">Supporting Independence.</span> <br />
+            <span className="ot-gradient-text-coral">Empowering Every Child.</span>
+          </h1>
 
-  const fadeUp = shouldReduceMotion
-    ? {}
-    : {
-        initial: { opacity: 0, y: 30 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-80px" },
-      };
+          <p>
+            Our Occupational Therapy program supports children in developing the skills they need to participate, learn, play, and become more independent in everyday life.
+          </p>
+
+          <div className="ot-hero-btn-group">
+            <motion.a 
+              href="#approach" 
+              className="ot-btn ot-btn-glow-primary"
+              whileHover={{ scale: 1.05, y: -3 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span>Explore Our Approach</span>
+              <ArrowRight size={16} />
+            </motion.a>
+
+            <motion.div
+              whileHover={{ scale: 1.05, y: -3 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Link
+                to="/book-a-free-consult"
+                className="ot-btn ot-btn-frosted"
+              >
+                <CalendarCheck size={16} />
+                <span>Book Assessment</span>
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Right Visual Composition Column */}
+        <motion.div
+          className="ot-hero-visual-composition"
+          variants={scaleIn}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="ot-hero-main-photo-frame">
+            <img
+              src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1000&q=85"
+              alt="Child engaged in occupational therapy"
+              loading="lazy"
+            />
+            <div className="ot-photo-vignette" />
+          </div>
+
+          {/* Floating Interactive Glass Cards */}
+          <motion.div 
+            className="ot-hero-float-tag ot-tag-top-left"
+            animate={{ y: [0, -8, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          >
+            <div className="ot-tag-icon-wrap cyan">
+              <Activity size={16} />
+            </div>
+            <div>
+              <strong>Fine Motor</strong>
+              <span>Dexterity & Strength</span>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="ot-hero-float-tag ot-tag-top-right"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+          >
+            <div className="ot-tag-icon-wrap coral">
+              <Brain size={16} />
+            </div>
+            <div>
+              <strong>Sensory Regulation</strong>
+              <span>Processing & Balance</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    2. INTRODUCTION / WHAT IS OCCUPATIONAL THERAPY
+========================================================= */
+
+const IntroSection = () => {
+  const skillCards = [
+    { title: "Fine Motor Development", desc: "Building hand and finger strength for grasping and manipulation.", icon: Zap },
+    { title: "Gross Motor Coordination", desc: "Enhancing balance, posture, and large muscle group control.", icon: Activity },
+    { title: "Hand-Eye Coordination", desc: "Connecting visual information with precise motor actions.", icon: Target },
+    { title: "Visual-Motor Skills", desc: "Translating visual perceptions into accurate physical movements.", icon: Sparkles },
+    { title: "Pre-Writing & Handwriting", desc: "Developing foundational strokes, letter formation, and legibility.", icon: BookOpen },
+    { title: "Self-Care Skills", desc: "Fostering autonomy in dressing, grooming, and hygiene routines.", icon: Smile },
+    { title: "Feeding Functional Skills", desc: "Supporting comfortable mealtime participation and utensil handling.", icon: Utensils },
+    { title: "Attention & Participation", desc: "Improving focus, task persistence, and classroom engagement.", icon: Brain },
+    { title: "Play Skills", desc: "Promoting imaginative play, sharing, and peer collaboration.", icon: Users },
+    { title: "School Readiness", desc: "Preparing children with executive function and classroom habits.", icon: Award },
+    { title: "Sensory Processing", desc: "Helping children interpret and respond to environmental stimuli.", icon: Feather },
+    { title: "Independence", desc: "Empowering children to accomplish daily tasks with confidence.", icon: Star },
+  ];
 
   return (
-    <div className="w-full bg-[#F8F9FA] text-slate-800 font-sans overflow-x-hidden antialiased">
-
-      {/* ==================================================
-          HERO
-      ================================================== */}
-
-      <section className="relative min-h-[90vh] flex items-center justify-center bg-[#003B5C] px-4 sm:px-6 lg:px-8 py-24 overflow-hidden">
-
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#002238] via-[#003B5C] to-[#015C7F]" />
-
-        {/* Decorative Glow */}
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  x: [0, 30, 0],
-                  y: [0, -20, 0],
-                }
-          }
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -top-40 -left-40 w-96 h-96 bg-[#00A8CD]/20 rounded-full blur-3xl pointer-events-none"
-        />
-
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  x: [0, -30, 0],
-                  y: [0, 20, 0],
-                }
-          }
-          transition={{
-            duration: 9,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#FF5271]/15 rounded-full blur-3xl pointer-events-none"
-        />
-
-        <div className="absolute top-1/3 right-10 w-40 h-40 bg-[#F5A623]/10 rounded-full blur-3xl" />
-
-        {/* Floating circles */}
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  y: [0, -18, 0],
-                  rotate: [0, 8, 0],
-                }
-          }
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-24 right-[12%] hidden lg:block w-16 h-16 rounded-full border border-[#00A8CD]/30 bg-[#00A8CD]/5"
-        />
-
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  y: [0, 15, 0],
-                  rotate: [0, -8, 0],
-                }
-          }
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-32 left-[12%] hidden lg:block w-10 h-10 rounded-full border border-[#F5A623]/40 bg-[#F5A623]/5"
-        />
-
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#00A8CD]/10 border border-[#00A8CD]/30 text-[#8DE8F7] text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-lg"
+    <section className="ot-section ot-intro-section" id="approach">
+      <div className="ot-container">
+        <div className="ot-intro-bento-hero">
+          <motion.div 
+            className="ot-intro-text-box"
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
           >
-            <IconSparkles />
-            Complete Clinical Nutrition & Dietetics
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold font-serif text-white tracking-tight leading-[1.1]"
-          >
-            Nourish Your Body.
-            <br />
-
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A8CD] via-[#8DE8F7] to-[#F5A623]">
-              Transform Your Health.
+            <span className="ot-eyebrow">
+              <Sparkles size={14} /> UNDERSTANDING OCCUPATIONAL THERAPY
             </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-6 max-w-2xl mx-auto text-slate-300 text-lg sm:text-xl leading-relaxed"
-          >
-            Programs designed around your individual health needs.
-            Evidence-based clinical nutrition, therapeutic diet planning,
-            behavioral nutrition, and personalized wellness.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link
-              to="/book-a-free-consult"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#00A8CD] hover:bg-[#0089A8] text-white font-bold px-8 py-4 rounded-full shadow-xl shadow-[#002238]/40 hover:-translate-y-1 transition-all duration-300 text-base"
-            >
-              Book a Consultation
-              <IconArrow />
-            </Link>
-
-            <a
-              href="#services"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-4 rounded-full backdrop-blur-md border border-white/20 transition-all duration-300 text-base"
-            >
-              Explore Our Services
-            </a>
-          </motion.div>
-
-          {/* Trust badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-12 flex flex-wrap justify-center gap-3"
-          >
-            <span className="flex items-center gap-2 text-xs text-slate-300 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-              <span className="text-[#00A8CD]">
-                <IconShield />
-              </span>
-              Evidence-Based Care
-            </span>
-
-            <span className="flex items-center gap-2 text-xs text-slate-300 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-              <span className="text-[#FF5271]">
-                <IconHeart />
-              </span>
-              Personalized Support
-            </span>
-
-            <span className="flex items-center gap-2 text-xs text-slate-300 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-              <span className="text-[#F5A623]">
-                <IconSparkles />
-              </span>
-              Sustainable Wellness
-            </span>
-          </motion.div>
-        </div>
-
-        {/* Bottom Curve */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#F8F9FA] rounded-t-[50%] scale-x-110" />
-      </section>
-
-      {/* ==================================================
-          WELCOME SECTION
-      ================================================== */}
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-
-          <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.7 }}
-            className="lg:col-span-6 space-y-6"
-          >
-            <span className="inline-block text-[#0089A8] font-bold text-xs uppercase tracking-widest bg-[#EAF8FB] px-4 py-2 rounded-full border border-[#BCECF5]">
-              Your Goals. Your Personalized Plan.
-            </span>
-
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#003B5C] leading-tight">
-              Every person has different nutritional needs.
-            </h2>
-
-            <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-              Whether your goal is weight management, better blood sugar
-              control, recovery from illness, improved digestion, or simply
-              developing healthier eating habits, we provide personalized
-              nutrition care based on your health status, lifestyle,
-              preferences, and goals.
+            <h2>What Is Occupational Therapy?</h2>
+            <p className="ot-lead">
+              Occupational therapy helps children develop skills required for everyday activities and meaningful participation at home, school, and in the community.
             </p>
-
-            <p className="text-slate-600 text-base leading-relaxed">
-              Our approach combines nutrition science, behavioral change,
-              lifestyle modification, and multidisciplinary support to help
-              you achieve sustainable results.
+            <p className="ot-subtext">
+              Through structured guidance, play, and evidence-based interventions, our specialists enable children to overcome developmental hurdles and reach their full potential.
             </p>
+          </motion.div>
 
-            <div className="flex flex-wrap gap-3 pt-2">
-              <span className="px-4 py-2 rounded-full bg-[#EAF8FB] text-[#0089A8] text-xs font-bold">
-                Clinical Nutrition
-              </span>
-
-              <span className="px-4 py-2 rounded-full bg-[#FFF0F3] text-[#FF5271] text-xs font-bold">
-                Behavioral Support
-              </span>
-
-              <span className="px-4 py-2 rounded-full bg-[#FFF7E6] text-[#C57B00] text-xs font-bold">
-                Lifestyle Care
-              </span>
+          <motion.div 
+            className="ot-intro-media-box"
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+          >
+            <div className="ot-media-card-inner">
+              <img
+                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=85"
+                alt="Occupational therapy session with children"
+                loading="lazy"
+              />
+              <div className="ot-media-floating-badge">
+                <Award size={22} />
+                <div>
+                  <strong>ABC Autism Behavioral Center</strong>
+                  <span>Pediatric Excellence</span>
+                </div>
+              </div>
             </div>
           </motion.div>
-
-          <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="lg:col-span-6 bg-gradient-to-br from-[#003B5C] to-[#015C7F] rounded-[35px] p-8 sm:p-10 text-white shadow-2xl relative overflow-hidden border border-[#015C7F]"
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A8CD]/10 rounded-full blur-3xl" />
-
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#FF5271]/10 rounded-full blur-3xl" />
-
-            <h3 className="relative text-2xl font-serif font-bold text-[#8DE8F7] mb-6">
-              Core Pillars of Care
-            </h3>
-
-            <ul className="relative space-y-4">
-              {[
-                "Evidence-based clinical nutrition standards",
-                "Behavioral guidance for emotional & stress eating",
-                "Physiotherapy & movement integration",
-                "Continuous tracking, monitoring & support",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="w-7 h-7 rounded-full bg-[#00A8CD]/15 text-[#00A8CD] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <IconCheck />
-                  </span>
-
-                  <span className="text-slate-200 text-sm sm:text-base leading-relaxed">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
         </div>
-      </section>
 
-      {/* ==================================================
-          SERVICES
-      ================================================== */}
+        <motion.div 
+          className="ot-bento-skills-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {skillCards.map((card, index) => {
+            const IconComp = card.icon;
+            return (
+              <motion.div
+                className="ot-modern-skill-card"
+                key={index}
+                variants={fadeUp}
+                whileHover={{ y: -6, scale: 1.015 }}
+              >
+                <div className="ot-modern-skill-top">
+                  <div className="ot-modern-skill-icon">
+                    <IconComp size={20} />
+                  </div>
+                  <span className="ot-skill-num">0{index + 1}</span>
+                </div>
+                <h3>{card.title}</h3>
+                <p>{card.desc}</p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
-      <section
-        id="services"
-        className="py-24 bg-white relative border-y border-slate-100"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+/* =========================================================
+    3. SENSORY INTEGRATION — FEATURE SECTION
+========================================================= */
 
-          <SectionHeading
-            eyebrow="Comprehensive Offerings"
-            title="Our Specialized Services"
-            description="Tailored nutrition, therapeutic protocols, and multidisciplinary support designed around your lifestyle."
-          />
+const SensoryIntegrationSection = () => {
+  const sensoryItems = [
+    { title: "Touch", desc: "Processing tactile inputs from textures, temperatures, and physical contact safely.", icon: Feather },
+    { title: "Movement & Balance", desc: "Understanding body position in space and gravitational security through vestibular input.", icon: Activity },
+    { title: "Body Awareness", desc: "Proprioceptive feedback from muscles and joints for coordinated movement.", icon: Users },
+    { title: "Visual Processing", desc: "Interpreting visual details, spatial orientation, and environmental tracking.", icon: Sparkles },
+    { title: "Auditory Processing", desc: "Filtering sounds, responding to verbal cues, and tolerating ambient noise levels.", icon: MessageCircle },
+    { title: "Oral Sensory Experiences", desc: "Managing different food textures, temperatures, and oral motor feedback.", icon: Utensils },
+  ];
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  return (
+    <section className="ot-section ot-sensory-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Sensory Integration"
+          title="Sensory Integration"
+          description="Helping Children Understand & Respond to Their World"
+        />
 
-            {servicesList.map((service, index) => {
-              const Icon = service.icon;
+        <div className="ot-sensory-orbit-container">
+          <div className="ot-orbit-center-card">
+            <div className="ot-orbit-pulse" />
+            <Brain size={42} />
+            <strong>Sensory Processing</strong>
+            <span>Core Integration</span>
+          </div>
 
+          <div className="ot-sensory-cards-wrapper">
+            {sensoryItems.map((item, idx) => {
+              const IconComp = item.icon;
               return (
                 <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 35 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.08,
-                  }}
-                  whileHover={{
-                    y: -10,
-                    scale: 1.015,
-                  }}
-                  className="group bg-white rounded-[30px] p-8 border border-slate-200/70 shadow-[0_8px_30px_rgba(0,59,92,0.06)] hover:shadow-[0_20px_45px_rgba(0,59,92,0.14)] transition-all duration-500 flex flex-col justify-between relative overflow-hidden"
-                >
-
-                  {/* Top Accent */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1 group-hover:h-2 transition-all duration-500"
-                    style={{
-                      background: `linear-gradient(90deg, ${service.color}, ${service.color}99)`,
-                    }}
-                  />
-
-                  {/* Decorative circle */}
-                  <div
-                    className="absolute -right-16 -top-16 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{
-                      backgroundColor: `${service.color}10`,
-                    }}
-                  />
-
-                  <div className="relative">
-
-                    <div className="flex items-center justify-between mb-6">
-
-                      <div
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                        style={{
-                          backgroundColor: service.lightColor,
-                          color: service.color,
-                        }}
-                      >
-                        <Icon />
-                      </div>
-
-                      <span
-                        className="text-xs font-black"
-                        style={{
-                          color: `${service.color}70`,
-                        }}
-                      >
-                        0{index + 1}
-                      </span>
-                    </div>
-
-                    <h3
-                      className="text-xl font-serif font-bold text-[#003B5C] group-hover:text-[#00A8CD] transition-colors duration-300"
-                    >
-                      {service.title}
-                    </h3>
-
-                    <p className="mt-3 text-slate-600 text-sm leading-relaxed">
-                      {service.desc}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => setActiveService(service)}
-                    className="mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#00A8CD] hover:text-[#003B5C] transition-all duration-300 group/btn cursor-pointer"
-                  >
-                    Learn More
-
-                    <span className="transition-transform duration-300 group-hover/btn:translate-x-1">
-                      <IconArrow />
-                    </span>
-                  </button>
-
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================================
-          PROFESSIONAL SECTION
-      ================================================== */}
-
-      <section className="py-24 bg-[#F8F9FA]">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="bg-white rounded-[40px] p-8 sm:p-12 lg:p-16 border border-slate-200/80 shadow-xl grid lg:grid-cols-12 gap-12 items-center">
-
-            <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.7 }}
-              className="lg:col-span-5 space-y-6"
-            >
-              <span className="inline-block text-[#0089A8] font-bold text-xs uppercase tracking-widest bg-[#EAF8FB] px-4 py-2 rounded-full border border-[#BCECF5]">
-                Meet Your Expert
-              </span>
-
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#003B5C]">
-                Dn. Momna
-              </h2>
-
-              <p className="text-[#00A8CD] font-semibold text-base">
-               CEO Consultant Nutritionist & Dietitian
-              </p>
-
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                With advanced education in Food Science, Nutrition and
-                Dietetics, our approach combines scientific knowledge with
-                practical, individualized nutrition care. Our goal is not
-                simply to give you a diet chart—it is to help you understand
-                your body and build sustainable habits.
-              </p>
-
-              <div className="space-y-3 pt-4 border-t border-slate-100">
-
-                <div className="flex items-center gap-3 text-sm text-slate-700">
-                  <span className="text-[#00A8CD] font-bold">✓</span>
-                  MPhil Food Science (UET)
-                </div>
-
-                <div className="flex items-center gap-3 text-sm text-slate-700">
-                  <span className="text-[#FF5271] font-bold">✓</span>
-                  Doctor of Nutrition & Dietetics (DND) UVAS
-                </div>
-
-                <div className="flex items-center gap-3 text-sm text-slate-700">
-                  <span className="text-[#F5A623] font-bold">✓</span>
-                  Clinical experience at Sir Ganga Ram Hospital, Lahore
-                </div>
-
-              </div>
-            </motion.div>
-
-            <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="lg:col-span-7 bg-gradient-to-br from-[#003B5C] to-[#015C7F] rounded-[35px] p-8 sm:p-10 text-white shadow-2xl relative border border-[#015C7F] overflow-hidden"
-            >
-
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#00A8CD]/10 rounded-full blur-3xl" />
-
-              <span className="relative text-[#8DE8F7] text-xs font-bold uppercase tracking-widest">
-                Our Philosophy
-              </span>
-
-              <blockquote className="relative mt-4 text-xl sm:text-2xl font-serif italic text-slate-100 leading-relaxed">
-                “A healthy diet should not be a temporary restriction. It
-                should become a sustainable part of your lifestyle.”
-              </blockquote>
-
-              <div className="relative mt-8 grid sm:grid-cols-2 gap-4">
-
-                {[
-                  "Evidence-based recommendations",
-                  "Individualized meal planning",
-                  "Sustainable lifestyle changes",
-                  "Cultural and dietary preferences",
-                  "Practical food choices",
-                  "Continuous monitoring & support",
-                ].map((phil, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-3 bg-white/10 px-4 py-3 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-[#00A8CD]/10 transition-colors duration-300"
-                  >
-                    <span className="text-[#00A8CD]">✓</span>
-                    <span className="text-xs sm:text-sm font-medium">
-                      {phil}
-                    </span>
-                  </div>
-                ))}
-
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================================
-          CONDITIONS
-      ================================================== */}
-
-      <section className="py-24 bg-white border-t border-slate-100">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <SectionHeading
-            eyebrow="Targeted Care"
-            title="Disease-Specific & Therapeutic Nutrition"
-            description="Specialized nutrition care for clients requiring dietary management of specific health conditions, complementing your medical treatment."
-          />
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-16">
-
-            {diseaseConditions.map((condition, idx) => {
-
-              const accents = [
-                COLORS.teal,
-                COLORS.navy,
-                COLORS.coral,
-                COLORS.gold,
-              ];
-
-              const accent = accents[idx % accents.length];
-
-              return (
-                <motion.div
-                  key={condition}
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.04 }}
-                  whileHover={{
-                    y: -5,
-                    scale: 1.02,
-                  }}
-                  className="bg-[#F8F9FA] border border-slate-200/80 rounded-2xl p-5 text-center shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden"
-                >
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1"
-                    style={{ backgroundColor: accent }}
-                  />
-
-                  <p className="font-bold text-[#003B5C] text-sm sm:text-base">
-                    {condition}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-
-            <motion.div
-              whileHover={{ y: -6 }}
-              className="bg-[#FFF0F3] rounded-[30px] p-8 border border-[#FFD4DC] transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-white text-[#FF5271] flex items-center justify-center mb-5 shadow-sm">
-                <IconHeart />
-              </div>
-
-              <h3 className="text-xl font-bold font-serif text-[#003B5C] mb-3">
-                Pregnancy & Lactation Nutrition
-              </h3>
-
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Personalized nutritional guidance to support maternal
-                nutritional needs, fetal development, and healthy
-                breastfeeding throughout all trimesters.
-              </p>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ y: -6 }}
-              className="bg-[#EAF8FB] rounded-[30px] p-8 border border-[#BCECF5] transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-white text-[#00A8CD] flex items-center justify-center mb-5 shadow-sm">
-                <IconSparkles />
-              </div>
-
-              <h3 className="text-xl font-bold font-serif text-[#003B5C] mb-3">
-                Pediatric Nutrition
-              </h3>
-
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Age-appropriate nutrition guidance for children's healthy
-                growth, robust development, building healthy eating habits,
-                and addressing nutritional concerns.
-              </p>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================================
-          BEHAVIORAL NUTRITION
-      ================================================== */}
-
-      <section className="py-24 bg-[#003B5C] text-white relative overflow-hidden">
-
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#002238] via-[#003B5C] to-[#015C7F]" />
-
-        <div className="absolute -top-32 right-0 w-96 h-96 bg-[#FF5271]/10 rounded-full blur-3xl" />
-
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#00A8CD]/10 rounded-full blur-3xl" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <SectionHeading
-            light
-            eyebrow="Behavioral Nutrition & Psychology"
-            title="It's Not Always About Knowing What to Eat."
-            description="Sometimes you already know what you should eat—but changing your eating behavior is the difficult part."
-          />
-
-          <div className="grid lg:grid-cols-12 gap-12 items-center mt-12">
-
-            <div className="lg:col-span-6 space-y-6">
-
-              <p className="text-slate-300 text-base leading-relaxed">
-                Our Behavioral Nutrition sessions focus on the relationship
-                between your thoughts, emotions, habits, environment, and
-                eating behavior.
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-3">
-
-                {[
-                  "Emotional eating",
-                  "Food cravings",
-                  "Mindless eating",
-                  "Stress-related eating",
-                  "Eating triggers",
-                  "Portion awareness",
-                  "Mindful eating",
-                  "Motivation & Adherence",
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ x: 5 }}
-                    className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-3 rounded-xl backdrop-blur-sm transition-all"
-                  >
-                    <span className="text-[#00A8CD]">✓</span>
-                    <span className="text-xs sm:text-sm text-slate-200">
-                      {item}
-                    </span>
-                  </motion.div>
-                ))}
-
-              </div>
-            </div>
-
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="lg:col-span-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[35px] p-8 sm:p-10 shadow-2xl"
-            >
-
-              <span className="text-[#8DE8F7] font-bold text-xs uppercase tracking-widest">
-                The Ultimate Goal
-              </span>
-
-              <h3 className="text-2xl font-serif font-bold text-white mt-2 mb-4">
-                Not a perfect diet. A healthier relationship with food.
-              </h3>
-
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                We help you build sustainable patterns that you can maintain
-                long-term without feeling deprived or restricted.
-              </p>
-
-              <div className="mt-6 pt-6 border-t border-white/10 text-xs text-slate-400">
-                Note: For significant psychological concerns or diagnosed
-                eating disorders, appropriate referral to a qualified
-                mental-health professional will be recommended.
-              </div>
-
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================================
-          INTEGRATED CARE
-      ================================================== */}
-
-      <section className="py-24 bg-[#F8F9FA]">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-
-          <SectionHeading
-            eyebrow="Multidisciplinary Wellness"
-            title="Nutrition + Physiotherapy + Behavioral Support"
-            description="Health is more than just food. Our integrated approach brings together complete lifestyle modification."
-          />
-
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-4 max-w-5xl mx-auto">
-
-            {[
-              {
-                title: "Nutrition",
-                color: COLORS.teal,
-              },
-              {
-                title: "Behavioral Change",
-                color: COLORS.coral,
-              },
-              {
-                title: "Movement & Physiotherapy",
-                color: COLORS.gold,
-              },
-              {
-                title: "Lifestyle Modification",
-                color: COLORS.orange,
-              },
-              {
-                title: "Long-Term Health",
-                color: COLORS.navy,
-              },
-            ].map((step, idx, arr) => (
-              <React.Fragment key={step.title}>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  className="ot-sensory-card"
+                  key={idx}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewport}
                   transition={{ delay: idx * 0.1 }}
-                  whileHover={{
-                    y: -7,
-                    scale: 1.03,
-                  }}
-                  className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm w-full md:w-auto flex-1 text-center transition-all duration-300"
+                  whileHover={{ scale: 1.05, y: -5 }}
                 >
-
-                  <span
-                    className="font-bold text-xs"
-                    style={{ color: step.color }}
-                  >
-                    Step 0{idx + 1}
-                  </span>
-
-                  <h4 className="font-bold text-[#003B5C] mt-1 text-sm sm:text-base">
-                    {step.title}
-                  </h4>
-
-                </motion.div>
-
-                {idx < arr.length - 1 && (
-                  <div className="text-[#00A8CD] font-black text-lg md:rotate-0 rotate-90 my-2 md:my-0">
-                    →
+                  <div className="ot-sensory-icon">
+                    <IconComp size={22} />
                   </div>
-                )}
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-              </React.Fragment>
+/* =========================================================
+    4. WHO MAY BENEFIT?
+========================================================= */
+
+const WhoMayBenefitSection = () => {
+  const benefits = [
+    "Fine Motor Skills",
+    "Handwriting",
+    "Coordination",
+    "Attention & Participation",
+    "Self-Care",
+    "Dressing & Grooming",
+    "Feeding-Related Functional Skills",
+    "Sensory Processing",
+    "Play Skills",
+    "School Readiness",
+    "Motor Planning",
+    "Daily Routines",
+    "Functional Independence"
+  ];
+
+  return (
+    <section className="ot-section ot-benefit-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Targeted Support"
+          title="Who May Benefit?"
+          description="Support Designed Around Real-Life Needs"
+        />
+
+        <motion.div 
+          className="ot-benefit-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {benefits.map((benefit, i) => (
+            <motion.div
+              className="ot-benefit-item"
+              key={i}
+              variants={fadeUp}
+              whileHover={{ scale: 1.03, y: -4 }}
+            >
+              <div className="ot-benefit-dot">
+                <CheckCircle2 size={18} />
+              </div>
+              <span>{benefit}</span>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div 
+          className="ot-multidisciplinary-panel"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <div className="ot-panel-icon">
+            <ShieldCheck size={28} />
+          </div>
+          <div>
+            <h4>Comprehensive Multidisciplinary Care</h4>
+            <p>
+              Occupational therapy may be incorporated into multidisciplinary support for children with developmental delays, autism, learning difficulties, neurological conditions, or other developmental needs following appropriate professional assessment.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    5. FINE MOTOR & PRE-WRITING SECTION
+========================================================= */
+
+const FineMotorSection = () => {
+  const fineMotorSkills = [
+    "Hand Strength",
+    "Finger Coordination",
+    "Pencil Grasp",
+    "Hand-Eye Coordination",
+    "Bilateral Hand Use",
+    "Cutting Skills",
+    "Drawing",
+    "Tracing",
+    "Coloring",
+    "Pre-Writing Patterns",
+    "Handwriting Readiness"
+  ];
+
+  const stages = [
+    { title: "GRIP", desc: "Finger and thumb foundation" },
+    { title: "CONTROL", desc: "Pencil manipulation and pressure" },
+    { title: "COORDINATION", desc: "Two-handed harmony" },
+    { title: "PRE-WRITING", desc: "Shapes, strokes, and lines" },
+    { title: "HANDWRITING", desc: "Fluent letter formation" },
+  ];
+
+  return (
+    <section className="ot-section ot-finemotor-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Little Hands, Big Skills"
+          title="Fine Motor & Pre-Writing Skills"
+          description="Targeted exercises and play activities designed to build precision, strength, and confidence in writing."
+        />
+
+        <motion.div 
+          className="ot-fm-chips-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {fineMotorSkills.map((skill, idx) => (
+            <motion.div
+              className="ot-fm-chip"
+              key={idx}
+              variants={fadeUp}
+              whileHover={{ scale: 1.05, y: -3 }}
+            >
+              <Zap size={16} />
+              <span>{skill}</span>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <div className="ot-progress-roadmap">
+          <h3>Progression Pathway</h3>
+          <div className="ot-roadmap-steps">
+            {stages.map((stage, sIdx) => (
+              <motion.div
+                className="ot-roadmap-step"
+                key={sIdx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewport}
+                transition={{ delay: sIdx * 0.15 }}
+              >
+                <div className="ot-roadmap-badge">0{sIdx + 1}</div>
+                <strong>{stage.title}</strong>
+                <span>{stage.desc}</span>
+                {sIdx < stages.length - 1 && <div className="ot-roadmap-connector" />}
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+};
 
-      {/* ==================================================
-          CARE PLANS
-      ================================================== */}
+/* =========================================================
+    6. PLAY & DEVELOPMENT
+========================================================= */
 
-      <section className="py-24 bg-white border-t border-slate-100">
+const PlayDevelopmentSection = () => {
+  const playCards = [
+    { title: "Exploration", desc: "Discovering textures, objects, and spatial surroundings.", icon: Compass },
+    { title: "Imagination", desc: "Fostering creative thinking and role-play scenarios.", icon: Sparkles },
+    { title: "Problem-Solving", desc: "Navigating puzzles, obstacles, and cognitive challenges.", icon: Brain },
+    { title: "Social Interaction", desc: "Engaging in cooperative play, sharing, and communication.", icon: Users },
+    { title: "Motor Development", desc: "Building agility, endurance, and physical confidence.", icon: Activity },
+    { title: "Communication", desc: "Expressing ideas, emotions, and needs through interactive play.", icon: MessageCircle },
+    { title: "Attention", desc: "Sustaining focus during preferred and guided play tasks.", icon: Target },
+    { title: "Independence", desc: "Making choices and leading activities with self-assurance.", icon: SmilePlus },
+  ];
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  return (
+    <section className="ot-section ot-play-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Learning Through Play"
+          title="Play & Development"
+          description="Play provides children with natural opportunities to learn, grow, and interact."
+        />
 
-          <SectionHeading
-            eyebrow="Flexible Packages"
-            title="Choose the Level of Support You Need"
-            description="Structured care plans designed to give you optimal guidance depending on your specific health requirements."
-          />
-
-          <div className="grid lg:grid-cols-2 gap-8">
-
-            {/* Disease Care Plan */}
-
-            <motion.div
-              whileHover={{ y: -7 }}
-              className="bg-[#F8F9FA] border border-slate-200 rounded-[35px] p-8 sm:p-10 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-            >
-
-              <div>
-
-                <span className="inline-block px-4 py-1.5 rounded-full bg-[#EAF8FB] text-[#0089A8] text-xs font-bold uppercase tracking-wider mb-4">
-                  🌱 Disease Care Plan
-                </span>
-
-                <h3 className="text-2xl font-serif font-bold text-[#003B5C] mb-2">
-                  For clients with one primary health condition
-                </h3>
-
-                <ul className="mt-6 space-y-3">
-
-                  {[
-                    "Comprehensive nutrition assessment",
-                    "Disease-specific personalized diet plan",
-                    "Calorie & macronutrient planning",
-                    "Meal and portion guidance",
-                    "1 Behavioral Nutrition session/month",
-                    "2 physiotherapy sessions/month",
-                    "Supplement assessment & lab review",
-                    "2 nutrition follow-ups/month + WhatsApp support",
-                  ].map((feat, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-sm text-slate-700"
-                    >
-                      <span className="text-[#00A8CD] font-bold">✓</span>
-                      {feat}
-                    </li>
-                  ))}
-
-                </ul>
-              </div>
-
-              <div className="mt-10">
-
-                <Link
-                  to="/book-a-free-consult"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#003B5C] hover:bg-[#00A8CD] text-white font-bold py-4 rounded-full transition-all duration-300 text-sm"
-                >
-                  Book Disease Care Plan
-                  <IconArrow />
-                </Link>
-
-              </div>
-            </motion.div>
-
-            {/* Comprehensive Care */}
-
-            <motion.div
-              whileHover={{ y: -7 }}
-              className="bg-gradient-to-br from-[#003B5C] to-[#015C7F] text-white rounded-[35px] p-8 sm:p-10 shadow-2xl flex flex-col justify-between relative overflow-hidden border border-[#015C7F]"
-            >
-
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#00A8CD]/10 rounded-full blur-3xl" />
-
-              <div className="relative">
-
-                <span className="inline-block px-4 py-1.5 rounded-full bg-[#00A8CD]/15 text-[#8DE8F7] text-xs font-bold uppercase tracking-wider mb-4 border border-[#00A8CD]/30">
-                  🏥 Disease + Complication Plan
-                </span>
-
-                <h3 className="text-2xl font-serif font-bold text-white mb-2">
-                  For comprehensive care & multiple health concerns
-                </h3>
-
-                <ul className="mt-6 space-y-3">
-
-                  {[
-                    "Everything in Disease Care Plan, plus:",
-                    "Advanced therapeutic meal planning",
-                    "Management of multiple nutritional requirements",
-                    "2 Behavioral Nutrition sessions/month",
-                    "4–8 physiotherapy sessions according to need",
-                    "Detailed laboratory & body-composition review",
-                    "Physician coordination/referral when required",
-                    "Priority follow-up & monthly progress review",
-                  ].map((feat, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-sm text-slate-200"
-                    >
-                      <span className="text-[#00A8CD] font-bold">✓</span>
-                      {feat}
-                    </li>
-                  ))}
-
-                </ul>
-              </div>
-
-              <div className="relative mt-10">
-
-                <Link
-                  to="/book-a-free-consult"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#00A8CD] hover:bg-[#8DE8F7] text-[#002238] font-bold py-4 rounded-full transition-all duration-300 text-sm shadow-lg"
-                >
-                  Book Comprehensive Care
-                  <IconArrow />
-                </Link>
-
-              </div>
-            </motion.div>
-          </div>
+        <div className="ot-play-statement-box">
+          <Smile size={32} />
+          <h3>“Play is an important occupation of childhood.”</h3>
         </div>
-      </section>
 
-      {/* ==================================================
-          HOW IT WORKS
-      ================================================== */}
-
-      <section className="py-24 bg-[#F8F9FA]">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <SectionHeading
-            eyebrow="Step-by-Step Journey"
-            title="Your Journey to Better Health"
-            description="A clear and structured path designed to take you from initial assessment to sustained lifelong wellness."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-
-            {howItWorksSteps.map((step, index) => {
-
-              const colors = [
-                COLORS.teal,
-                COLORS.navy,
-                COLORS.coral,
-                COLORS.gold,
-                COLORS.orange,
-                COLORS.tealDark,
-              ];
-
-              const stepColor = colors[index];
-
-              return (
-                <motion.div
-                  key={step.step}
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.08 }}
-                  whileHover={{
-                    y: -7,
-                    scale: 1.01,
-                  }}
-                  className="bg-white rounded-[30px] p-8 border border-slate-200/80 shadow-sm hover:shadow-xl relative overflow-hidden transition-all duration-300"
-                >
-
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1"
-                    style={{ backgroundColor: stepColor }}
-                  />
-
-                  <span
-                    className="text-4xl font-serif font-extrabold"
-                    style={{ color: `${stepColor}45` }}
-                  >
-                    {step.step}
-                  </span>
-
-                  <h3 className="text-xl font-serif font-bold text-[#003B5C] mt-2 mb-3">
-                    {step.title}
-                  </h3>
-
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {step.desc}
-                  </p>
-
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================================
-          ONLINE CONSULTATION
-      ================================================== */}
-
-      <section className="py-24 bg-white border-t border-slate-100">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="bg-gradient-to-r from-[#003B5C] to-[#002238] rounded-[40px] p-8 sm:p-12 lg:p-16 text-white shadow-2xl grid lg:grid-cols-12 gap-8 items-center border border-[#015C7F] relative overflow-hidden"
-          >
-
-            <div className="absolute right-0 top-0 w-72 h-72 bg-[#00A8CD]/10 rounded-full blur-3xl" />
-
-            <div className="relative lg:col-span-8 space-y-6">
-
-              <span className="inline-block px-4 py-1.5 rounded-full bg-[#00A8CD]/10 text-[#8DE8F7] text-xs font-bold uppercase tracking-widest border border-[#00A8CD]/30">
-                Online Consultation
-              </span>
-
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold">
-                Nutrition Care From Wherever You Are
-              </h2>
-
-              <p className="text-slate-300 text-base leading-relaxed max-w-2xl">
-                Can't visit the clinic? Receive personalized nutrition
-                guidance securely through online consultations including
-                dietary history, custom meal plans, lab discussions, and
-                behavioral support.
-              </p>
-
-              <div className="flex flex-wrap gap-3 pt-2">
-
-                {[
-                  "Nutrition Assessment",
-                  "Custom Meal Plan",
-                  "Disease Nutrition",
-                  "Lab Discussion",
-                  "Behavioral Support",
-                ].map((item, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-white/10 px-3 py-1.5 rounded-full text-xs text-slate-200 border border-white/10"
-                  >
-                    <span className="text-[#00A8CD]">✓</span>{" "}
-                    {item}
-                  </span>
-                ))}
-
-              </div>
-            </div>
-
-            <div className="relative lg:col-span-4 flex justify-center">
-
-              <Link
-                to="/book-a-free-consult"
-                className="inline-flex items-center gap-2 bg-[#00A8CD] hover:bg-[#8DE8F7] text-[#002238] font-bold px-8 py-5 rounded-full shadow-2xl transition-all duration-300 text-base hover:-translate-y-1"
+        <motion.div 
+          className="ot-play-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {playCards.map((card, idx) => {
+            const Icon = card.icon;
+            return (
+              <motion.div
+                className="ot-play-card"
+                key={idx}
+                variants={fadeUp}
+                whileHover={{ y: -6, scale: 1.02 }}
               >
-                Book Online Consultation
-                <IconArrow />
-              </Link>
+                <div className="ot-play-icon">
+                  <Icon size={22} />
+                </div>
+                <h4>{card.title}</h4>
+                <p>{card.desc}</p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
-            </div>
+/* =========================================================
+    7. FEEDING & ORAL-MOTOR SUPPORT
+========================================================= */
+
+const FeedingSection = () => {
+  return (
+    <section className="ot-section ot-feeding-section">
+      <div className="ot-container ot-two-column">
+        <motion.div
+          className="ot-feeding-content"
+          variants={fadeLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <span className="ot-eyebrow">
+            <Utensils size={14} /> CLINICAL SUPPORT
+          </span>
+          <h2>Feeding & Oral-Motor Support</h2>
+          <p className="ot-lead">
+            Occupational therapy may contribute to functional feeding skills, postural positioning, self-feeding mechanics, and sensory aspects of eating where appropriate and within professional scope.
+          </p>
+          <p className="ot-subtext">
+            We collaborate closely with families to ensure mealtime is a comfortable, stress-free, and nourishing experience for every child.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="ot-feeding-alert-card"
+          variants={fadeLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <div className="ot-alert-icon">
+            <HelpCircle size={28} />
+          </div>
+          <h3>Important Clinical Notice</h3>
+          <p>
+            Children with swallowing difficulties, feeding safety concerns, or suspected dysphagia should be assessed and managed by an appropriately qualified <strong>Speech & Language Pathologist</strong> / feeding and swallowing professional, with dietitian support where needed.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    8. FAMILY-CENTERED THERAPY
+========================================================= */
+
+const FamilyTherapySection = () => {
+  const familyCards = [
+    { title: "Home Activities", desc: "Practical exercises tailored for home environments." },
+    { title: "Sensory Support Strategies", desc: "Managing sensory overload in daily settings." },
+    { title: "Fine Motor Activities", desc: "Fun games using everyday household items." },
+    { title: "Self-Care Practice", desc: "Steps toward dressing and hygiene autonomy." },
+    { title: "Play Ideas", desc: "Engaging games that build developmental milestones." },
+    { title: "Routine Development", desc: "Establishing predictable, calm daily schedules." },
+    { title: "Supporting Independence", desc: "Encouraging self-reliance in age-appropriate tasks." },
+  ];
+
+  return (
+    <section className="ot-section ot-family-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Family Partnership"
+          title="Therapy Doesn't Stop When the Session Ends"
+          description="Parents and caregivers are an essential part of every child's developmental journey."
+        />
+
+        <motion.div 
+          className="ot-family-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {familyCards.map((item, idx) => (
+            <motion.div
+              className="ot-family-card"
+              key={idx}
+              variants={fadeUp}
+              whileHover={{ y: -6, scale: 1.02 }}
+            >
+              <div className="ot-family-check">
+                <CheckCircle2 size={18} />
+              </div>
+              <div>
+                <h4>{item.title}</h4>
+                <p>{item.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div 
+          className="ot-family-quote-banner"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <Heart size={26} />
+          <p>Parents and caregivers are an important part of a child's developmental journey.</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    9. MULTIDISCIPLINARY CHILD DEVELOPMENT
+========================================================= */
+
+const MultidisciplinarySection = () => {
+  const teamServices = [
+    { title: "Special Education", icon: BookOpen },
+    { title: "Speech & Language Pathology", icon: MessageCircle },
+    { title: "Physiotherapy", icon: Activity },
+    { title: "Nutrition & Dietetics", icon: Utensils },
+    { title: "Psychology", icon: Brain },
+    { title: "Parents & Family", icon: Users },
+  ];
+
+  return (
+    <section className="ot-section ot-multidisciplinary-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Collaborative Care"
+          title="One Child. One Team. A Coordinated Approach."
+          description="Our specialists work hand-in-hand to provide seamless, holistic care tailored to your child's needs."
+        />
+
+        <div className="ot-hub-container">
+          <motion.div 
+            className="ot-hub-center"
+            animate={{ scale: [1, 1.04, 1] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          >
+            <Smile size={32} />
+            <strong>The Child</strong>
+            <span>Center of Care</span>
           </motion.div>
-        </div>
-      </section>
 
-      {/* ==================================================
-          FAQ
-      ================================================== */}
-
-      <section className="py-24 bg-[#F8F9FA]">
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <SectionHeading
-            eyebrow="Got Questions?"
-            title="Frequently Asked Questions"
-            description="Find clear answers regarding our customized plans, online appointments, and medical nutrition services."
-          />
-
-          <div className="space-y-4 mt-12">
-
-            {faqData.map((faq, index) => {
-
-              const isOpen = openFaq === index;
-
+          <div className="ot-hub-services-grid">
+            {teamServices.map((svc, i) => {
+              const IconComp = svc.icon;
               return (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 ${
-                    isOpen
-                      ? "border-[#00A8CD]/40 shadow-lg"
-                      : "border-slate-200/80 shadow-sm"
-                  }`}
+                  className="ot-hub-service-card"
+                  key={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewport}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                 >
-
-                  <button
-                    onClick={() =>
-                      setOpenFaq(isOpen ? null : index)
-                    }
-                    className="w-full flex items-center justify-between gap-4 p-6 text-left font-serif font-bold text-[#003B5C] hover:text-[#00A8CD] transition-colors cursor-pointer"
-                  >
-
-                    <span className="text-base sm:text-lg">
-                      {faq.q}
-                    </span>
-
-                    <span
-                      className={`flex-shrink-0 transform transition-transform duration-300 text-[#00A8CD] font-bold text-xl ${
-                        isOpen ? "rotate-45" : ""
-                      }`}
-                    >
-                      +
-                    </span>
-
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{
-                          height: 0,
-                          opacity: 0,
-                        }}
-                        animate={{
-                          height: "auto",
-                          opacity: 1,
-                        }}
-                        exit={{
-                          height: 0,
-                          opacity: 0,
-                        }}
-                        transition={{
-                          duration: 0.3,
-                        }}
-                      >
-                        <div className="px-6 pb-6 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-100 pt-4">
-                          {faq.a}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
+                  <div className="ot-hub-icon">
+                    <IconComp size={22} />
+                  </div>
+                  <span>{svc.title}</span>
                 </motion.div>
               );
             })}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+};
 
-      {/* ==================================================
-          SERVICE MODAL
-      ================================================== */}
+/* =========================================================
+    10. OUR OCCUPATIONAL THERAPY JOURNEY
+========================================================= */
 
-      <AnimatePresence>
+const JourneySection = () => {
+  const steps = [
+    { num: "01", title: "Initial Assessment", desc: "Understand the child's developmental strengths, challenges, routines, and functional needs." },
+    { num: "02", title: "Goal Setting", desc: "Develop individualized and meaningful goals together with parents/caregivers." },
+    { num: "03", title: "Individualized Therapy", desc: "Provide structured, play-based occupational therapy and sensory-focused activities." },
+    { num: "04", title: "Family Education", desc: "Provide practical strategies for supporting skills at home." },
+    { num: "05", title: "Progress Monitoring", desc: "Track functional progress and participation." },
+    { num: "06", title: "Review & Adaptation", desc: "Modify goals and intervention strategies according to the child's changing needs." },
+  ];
 
-        {activeService && (
-          <div
-            className="fixed inset-0 z-50 bg-[#002238]/80 backdrop-blur-md flex items-center justify-center p-4"
-            onClick={() => setActiveService(null)}
-          >
+  return (
+    <section className="ot-section ot-journey-section">
+      <div className="ot-container">
+        <SectionHeader
+          eyebrow="Step-by-Step Path"
+          title="Our Occupational Therapy Journey"
+          description="A clear, collaborative roadmap designed to guide your child toward independence and success."
+        />
 
+        <div className="ot-journey-grid">
+          {steps.map((st, idx) => (
             <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.9,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.9,
-                y: 20,
-              }}
-              transition={{
-                duration: 0.3,
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white w-full max-w-xl rounded-[35px] shadow-2xl overflow-hidden relative border border-slate-100"
+              className="ot-journey-card"
+              key={idx}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              transition={{ delay: idx * 0.1 }}
+              whileHover={{ y: -6, scale: 1.02 }}
             >
-
-              {/* Modal top accent */}
-              <div
-                className="h-2"
-                style={{
-                  background: `linear-gradient(90deg, ${activeService.color}, ${activeService.color}70)`,
-                }}
-              />
-
-              <div className="p-8 sm:p-10">
-
-                <div className="flex items-start justify-between gap-4 mb-6">
-
-                  <div>
-
-                    <span
-                      className="text-xs font-bold uppercase tracking-wider"
-                      style={{
-                        color: activeService.color,
-                      }}
-                    >
-                      Service Detail
-                    </span>
-
-                    <h3 className="text-2xl font-serif font-bold text-[#003B5C] mt-1">
-                      {activeService.title}
-                    </h3>
-
-                  </div>
-
-                  <button
-                    onClick={() => setActiveService(null)}
-                    className="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#FFF0F3] hover:text-[#FF5271] text-slate-700 flex items-center justify-center transition-all cursor-pointer"
-                  >
-                    <IconClose />
-                  </button>
-
-                </div>
-
-                <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
-                  {activeService.desc}
-                </p>
-
-                <div className="space-y-3 mb-8">
-
-                  {activeService.points.map((pt, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-3 bg-[#F8F9FA] p-3 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors"
-                    >
-                      <span
-                        className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{
-                          backgroundColor: activeService.lightColor,
-                          color: activeService.color,
-                        }}
-                      >
-                        <IconCheck />
-                      </span>
-
-                      <span className="text-sm font-medium text-slate-800">
-                        {pt}
-                      </span>
-                    </div>
-                  ))}
-
-                </div>
-
-                <Link
-                  to="/book-a-free-consult"
-                  onClick={() => setActiveService(null)}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#003B5C] hover:bg-[#00A8CD] text-white font-bold py-4 rounded-full transition-all duration-300 text-sm text-center"
-                >
-                  Book Consultation for this Service
-                  <IconArrow />
-                </Link>
-
-              </div>
+              <div className="ot-journey-number">{st.num}</div>
+              <h3>{st.title}</h3>
+              <p>{st.desc}</p>
             </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    11. INDIVIDUALIZED OCCUPATIONAL THERAPY
+========================================================= */
+
+const IndividualizedSection = () => {
+  const chips = [
+    "Age",
+    "Developmental Level",
+    "Functional Abilities",
+    "Sensory Needs",
+    "Learning Style",
+    "Family Priorities",
+    "School Requirements",
+    "Individual Goals"
+  ];
+
+  return (
+    <section className="ot-section ot-individualized-section">
+      <div className="ot-container ot-two-column">
+        <motion.div
+          className="ot-ind-content"
+          variants={fadeLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <span className="ot-eyebrow">
+            <Compass size={14} /> TAILORED INTERVENTION
+          </span>
+          <h2>Every Child Has Different Strengths.</h2>
+          <p className="ot-lead">
+            There is no single therapy approach that works identically for every child.
+          </p>
+
+          <div className="ot-ind-chips-wrap">
+            {chips.map((chip, i) => (
+              <span className="ot-ind-chip" key={i}>
+                <CheckCircle2 size={14} />
+                {chip}
+              </span>
+            ))}
           </div>
-        )}
+        </motion.div>
 
-      </AnimatePresence>
+        <motion.div
+          className="ot-ind-quote-card"
+          variants={fadeLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          <span className="ot-big-quote-mark">“</span>
+          <p>
+            The focus is not simply on completing exercises — it is on helping children participate more successfully in real-life activities.
+          </p>
+          <strong>ABC CENTER Therapy Team</strong>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
-     
-    </div>
+/* =========================================================
+    MAIN COMPONENT WITH EMBEDDED STYLES
+========================================================= */
+
+export default function OccupationalTherapyPage() {
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        .ot-page {
+          --navy: #003B5C;
+          --teal: #00A8CD;
+          --cyan: #E8F8FB;
+          --coral: #FF5271;
+          --yellow: #FFF4C7;
+          --white: #FFFFFF;
+          --bg-light: #F7FBFC;
+          --text-dark: #183B4D;
+          --border: rgba(0, 168, 205, 0.15);
+
+          font-family: "Plus Jakarta Sans", sans-serif;
+          color: var(--text-dark);
+          background: var(--bg-light);
+          overflow-x: hidden;
+          line-height: 1.7;
+        }
+
+        .ot-page *, .ot-page *::before, .ot-page *::after {
+          box-sizing: border-box;
+        }
+
+        .ot-page img {
+          display: block;
+          width: 100%;
+        }
+
+        .ot-page a {
+          text-decoration: none;
+        }
+
+        .ot-container {
+          width: min(1200px, calc(100% - 40px));
+          margin: 0 auto;
+          position: relative;
+          z-index: 3;
+        }
+
+        .ot-section {
+          position: relative;
+          padding: 85px 0;
+        }
+
+        .ot-two-column {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 65px;
+          align-items: center;
+        }
+
+        /* SECTION HEADER */
+        .ot-section-header {
+          max-width: 780px;
+          margin: 0 auto 50px;
+          text-align: center;
+        }
+
+        .ot-section-header h2 {
+          margin: 10px 0 14px;
+          font-size: clamp(28px, 3.5vw, 40px);
+          line-height: 1.18;
+          font-weight: 800;
+          letter-spacing: -1.2px;
+          color: var(--navy);
+        }
+
+        .ot-section-header p {
+          margin: 0 auto;
+          max-width: 700px;
+          color: #556c78;
+          font-size: 15px;
+          line-height: 1.7;
+        }
+
+        .ot-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: var(--teal);
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+
+        .ot-eyebrow svg {
+          color: var(--coral);
+        }
+
+        /* BUTTONS */
+        .ot-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          min-height: 48px;
+          padding: 0 22px;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 800;
+          overflow: hidden;
+          isolation: isolate;
+          transition: transform .3s ease, box-shadow .3s ease, background .3s ease, border-color .3s ease, color .3s ease;
+        }
+
+        .ot-btn-glow-primary {
+          color: white;
+          background: linear-gradient(135deg, var(--teal), #007a99);
+          box-shadow: 0 12px 25px rgba(0,168,205,0.3);
+        }
+
+        .ot-btn-glow-primary:hover {
+          background: linear-gradient(135deg, var(--navy), var(--teal));
+          box-shadow: 0 16px 35px rgba(0,59,92,0.35);
+        }
+
+        .ot-btn-frosted {
+          color: var(--navy);
+          border: 1px solid rgba(0,59,92,0.15);
+          background: white;
+          box-shadow: 0 8px 20px rgba(0,59,92,0.05);
+        }
+
+        .ot-btn-frosted:hover {
+          background: var(--cyan);
+          border-color: var(--teal);
+        }
+
+        .ot-btn-white {
+          color: var(--teal);
+          background: white;
+          box-shadow: 0 12px 30px rgba(0,0,0,.15);
+        }
+
+        .ot-btn-transparent {
+          color: white;
+          border: 1px solid rgba(255,255,255,.4);
+          background: rgba(255,255,255,.08);
+          backdrop-filter: blur(10px);
+        }
+
+        /* =========================================================
+           1. COMPACT & ULTRA-ATTRACTIVE HERO STYLES
+        ========================================================= */
+        .ot-hero-modern {
+          position: relative;
+          min-height: auto;
+          padding: 70px 0 75px;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+          background: linear-gradient(135deg, #002235 0%, var(--navy) 50%, #004973 100%);
+        }
+
+        .ot-hero-glow-accent {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(70px);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .ot-glow-cyan {
+          width: 400px;
+          height: 400px;
+          background: rgba(0, 168, 205, 0.2);
+          top: -120px;
+          right: -80px;
+        }
+
+        .ot-glow-coral {
+          width: 320px;
+          height: 320px;
+          background: rgba(255, 82, 113, 0.15);
+          bottom: -80px;
+          left: -80px;
+        }
+
+        .ot-hero-grid-pattern {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+          background-size: 28px 28px;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .ot-hero-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.85fr);
+          align-items: center;
+          gap: 50px;
+          z-index: 2;
+        }
+
+        .ot-hero-pill-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 6px 14px;
+          border: 1px solid rgba(0, 168, 205, 0.35);
+          border-radius: 50px;
+          color: #4cd5f5;
+          background: rgba(0, 168, 205, 0.1);
+          backdrop-filter: blur(10px);
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+        }
+
+        .ot-pulse-icon {
+          animation: pulseIcon 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseIcon {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.15); }
+        }
+
+        .ot-hero-text-content h1 {
+          margin: 16px 0 14px;
+          color: white;
+          font-size: clamp(32px, 4vw, 48px);
+          line-height: 1.12;
+          font-weight: 800;
+          letter-spacing: -1.5px;
+        }
+
+        .ot-gradient-text-teal {
+          background: linear-gradient(135deg, #4cd5f5 0%, #00a8cd 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .ot-gradient-text-coral {
+          background: linear-gradient(135deg, #ff8fa3 0%, var(--coral) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .ot-hero-text-content > p {
+          max-width: 540px;
+          margin: 0 0 24px 0;
+          color: rgba(255, 255, 255, 0.82);
+          font-size: 14px;
+          line-height: 1.7;
+        }
+
+        .ot-hero-btn-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        /* Right Composition Styles */
+        .ot-hero-visual-composition {
+          position: relative;
+          width: 100%;
+        }
+
+        .ot-hero-main-photo-frame {
+          position: relative;
+          border-radius: 28px;
+          overflow: hidden;
+          box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ot-hero-main-photo-frame img {
+          height: 380px;
+          object-fit: cover;
+          transform: scale(1.02);
+          transition: transform 0.5s ease;
+        }
+
+        .ot-hero-main-photo-frame:hover img {
+          transform: scale(1.05);
+        }
+
+        .ot-photo-vignette {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(0, 34, 53, 0.4), transparent 60%);
+          pointer-events: none;
+        }
+
+        .ot-hero-float-tag {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 14px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(15px);
+          border-radius: 16px;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          z-index: 5;
+        }
+
+        .ot-tag-icon-wrap {
+          width: 36px;
+          height: 36px;
+          display: grid;
+          place-items: center;
+          border-radius: 10px;
+          color: white;
+        }
+
+        .ot-tag-icon-wrap.cyan { background: var(--teal); box-shadow: 0 6px 15px rgba(0,168,205,0.3); }
+        .ot-tag-icon-wrap.coral { background: var(--coral); box-shadow: 0 6px 15px rgba(255,82,113,0.3); }
+
+        .ot-hero-float-tag strong {
+          display: block;
+          font-size: 12px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-hero-float-tag span {
+          display: block;
+          font-size: 10px;
+          color: #607d8b;
+          font-weight: 600;
+        }
+
+        .ot-tag-top-left { top: 20px; left: -25px; }
+        .ot-tag-top-right { bottom: 20px; right: -25px; }
+
+        /* 2. REDESIGNED INTRO & BENTO SKILLS SECTION */
+        .ot-intro-section { background: white; }
+        .ot-intro-bento-hero {
+          display: grid;
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+          gap: 50px;
+          align-items: center;
+          margin-bottom: 60px;
+          background: linear-gradient(135deg, var(--cyan), #f4fbfd);
+          padding: 45px;
+          border-radius: 28px;
+          border: 1px solid rgba(0,168,205,0.2);
+          box-shadow: 0 15px 40px rgba(0,59,92,0.04);
+        }
+
+        .ot-intro-text-box h2 {
+          font-size: clamp(26px, 3.2vw, 38px);
+          font-weight: 800;
+          letter-spacing: -1px;
+          line-height: 1.18;
+          margin: 10px 0 14px 0;
+          color: var(--navy);
+        }
+
+        .ot-lead {
+          margin: 0 0 16px 0;
+          color: #4a6572;
+          font-size: 15px;
+          line-height: 1.75;
+          font-weight: 600;
+        }
+
+        .ot-subtext {
+          margin: 0;
+          color: #607d8b;
+          font-size: 14px;
+          line-height: 1.75;
+        }
+
+        .ot-intro-media-box {
+          position: relative;
+        }
+
+        .ot-media-card-inner {
+          position: relative;
+          border-radius: 22px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(0,59,92,0.12);
+        }
+
+        .ot-media-card-inner img {
+          height: 340px;
+          object-fit: cover;
+        }
+
+        .ot-media-floating-badge {
+          position: absolute;
+          bottom: 16px;
+          left: 16px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 16px;
+          background: rgba(255,255,255,0.95);
+          backdrop-filter: blur(10px);
+          border-radius: 12px;
+          box-shadow: 0 8px 20px rgba(0,59,92,0.12);
+          color: var(--teal);
+        }
+
+        .ot-media-floating-badge strong {
+          display: block;
+          font-size: 11px;
+          color: var(--navy);
+        }
+
+        .ot-media-floating-badge span {
+          display: block;
+          font-size: 10px;
+          color: #607d8b;
+        }
+
+        .ot-bento-skills-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 18px;
+        }
+
+        .ot-modern-skill-card {
+          padding: 22px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          box-shadow: 0 8px 25px rgba(0,59,92,0.03);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .ot-modern-skill-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 14px;
+        }
+
+        .ot-modern-skill-icon {
+          width: 40px;
+          height: 40px;
+          display: grid;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          border-radius: 12px;
+        }
+
+        .ot-skill-num {
+          font-size: 11px;
+          font-weight: 800;
+          color: #a0b2be;
+          letter-spacing: 1px;
+        }
+
+        .ot-modern-skill-card h3 {
+          margin: 0 0 6px;
+          font-size: 15px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-modern-skill-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #607d8b;
+          line-height: 1.6;
+        }
+
+        /* 3. SENSORY INTEGRATION */
+        .ot-sensory-section { background: var(--cyan); }
+        .ot-sensory-orbit-container {
+          position: relative;
+          max-width: 900px;
+          margin: 35px auto 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 35px;
+        }
+
+        .ot-orbit-center-card {
+          position: relative;
+          width: 180px;
+          height: 180px;
+          background: linear-gradient(135deg, var(--navy), var(--teal));
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          text-align: center;
+          box-shadow: 0 20px 45px rgba(0,59,92,0.2);
+          z-index: 3;
+        }
+
+        .ot-orbit-pulse {
+          position: absolute;
+          inset: -8px;
+          border-radius: 50%;
+          border: 2px dashed rgba(0,168,205,0.4);
+          animation: spinOrb 20s linear infinite;
+        }
+
+        @keyframes spinOrb {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        .ot-orbit-center-card strong { font-size: 14px; margin-top: 4px; }
+        .ot-orbit-center-card span { font-size: 11px; opacity: 0.85; }
+
+        .ot-sensory-cards-wrapper {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+          width: 100%;
+        }
+
+        .ot-sensory-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 20px;
+          background: white;
+          border-radius: 18px;
+          border: 1px solid var(--border);
+          box-shadow: 0 8px 25px rgba(0,59,92,0.04);
+        }
+
+        .ot-sensory-icon {
+          display: grid;
+          width: 42px;
+          height: 42px;
+          flex: 0 0 42px;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          border-radius: 12px;
+        }
+
+        .ot-sensory-card h3 {
+          margin: 0 0 4px;
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-sensory-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #607d8b;
+          line-height: 1.6;
+        }
+
+        /* 4. WHO MAY BENEFIT? */
+        .ot-benefit-section { background: white; }
+        .ot-benefit-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+        }
+
+        .ot-benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 15px 18px;
+          background: var(--bg-light);
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--navy);
+          box-shadow: 0 4px 12px rgba(0,59,92,0.02);
+        }
+
+        .ot-benefit-dot {
+          display: grid;
+          place-items: center;
+          color: var(--teal);
+        }
+
+        .ot-multidisciplinary-panel {
+          display: flex;
+          align-items: center;
+          gap: 22px;
+          margin-top: 40px;
+          padding: 26px;
+          background: linear-gradient(135deg, var(--cyan), #f0fbff);
+          border: 1px solid rgba(0,168,205,0.25);
+          border-radius: 22px;
+          box-shadow: 0 12px 30px rgba(0,59,92,0.04);
+        }
+
+        .ot-panel-icon {
+          display: grid;
+          width: 58px;
+          height: 58px;
+          flex: 0 0 58px;
+          place-items: center;
+          background: var(--teal);
+          color: white;
+          border-radius: 16px;
+          box-shadow: 0 8px 18px rgba(0,168,205,0.25);
+        }
+
+        .ot-multidisciplinary-panel h4 {
+          margin: 0 0 6px;
+          font-size: 17px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-multidisciplinary-panel p {
+          margin: 0;
+          font-size: 13px;
+          color: #4a6572;
+          line-height: 1.65;
+        }
+
+        /* 5. FINE MOTOR & PRE-WRITING */
+        .ot-finemotor-section { background: var(--bg-light); }
+        .ot-fm-chips-grid {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          max-width: 850px;
+          margin: 0 auto 40px;
+        }
+
+        .ot-fm-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 18px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 50px;
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--navy);
+          box-shadow: 0 4px 12px rgba(0,59,92,0.03);
+        }
+
+        .ot-fm-chip svg {
+          color: var(--teal);
+        }
+
+        .ot-progress-roadmap {
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 24px;
+          padding: 30px;
+          box-shadow: 0 12px 35px rgba(0,59,92,0.04);
+        }
+
+        .ot-progress-roadmap h3 {
+          text-align: center;
+          margin: 0 0 25px;
+          font-size: 18px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-roadmap-steps {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 12px;
+          position: relative;
+        }
+
+        .ot-roadmap-step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          position: relative;
+          padding: 8px;
+        }
+
+        .ot-roadmap-badge {
+          width: 38px;
+          height: 38px;
+          display: grid;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          font-weight: 800;
+          font-size: 12px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+          box-shadow: 0 4px 12px rgba(0,168,205,0.12);
+        }
+
+        .ot-roadmap-step strong {
+          font-size: 12px;
+          color: var(--navy);
+          margin-bottom: 4px;
+        }
+
+        .ot-roadmap-step span {
+          font-size: 11px;
+          color: #607d8b;
+          line-height: 1.4;
+        }
+
+        .ot-roadmap-connector {
+          position: absolute;
+          top: 19px;
+          right: -50%;
+          width: 100%;
+          height: 2px;
+          background: rgba(0,168,205,0.25);
+          z-index: 1;
+        }
+
+        /* 6. PLAY & DEVELOPMENT */
+        .ot-play-section { background: white; }
+        .ot-play-statement-box {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          max-width: 700px;
+          margin: 0 auto 40px;
+          padding: 20px 26px;
+          background: linear-gradient(135deg, var(--yellow), #fff9e6);
+          border: 1px solid rgba(255,183,3,0.3);
+          border-radius: 18px;
+          text-align: center;
+          color: #856404;
+          box-shadow: 0 8px 25px rgba(255,183,3,0.08);
+        }
+
+        .ot-play-statement-box h3 {
+          margin: 0;
+          font-size: 17px;
+          font-weight: 800;
+        }
+
+        .ot-play-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 18px;
+        }
+
+        .ot-play-card {
+          padding: 22px;
+          background: var(--bg-light);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          box-shadow: 0 6px 20px rgba(0,59,92,0.03);
+        }
+
+        .ot-play-icon {
+          display: grid;
+          width: 42px;
+          height: 42px;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          border-radius: 12px;
+          margin-bottom: 14px;
+        }
+
+        .ot-play-card h4 {
+          margin: 0 0 6px;
+          font-size: 15px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-play-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #607d8b;
+          line-height: 1.6;
+        }
+
+        /* 7. FEEDING & ORAL-MOTOR SUPPORT */
+        .ot-feeding-section { background: var(--bg-light); }
+        .ot-feeding-content h2 {
+          font-size: clamp(26px, 3.2vw, 38px);
+          font-weight: 800;
+          letter-spacing: -1px;
+          line-height: 1.18;
+          margin: 10px 0 14px 0;
+          color: var(--navy);
+        }
+
+        .ot-feeding-alert-card {
+          padding: 30px;
+          background: white;
+          border: 1px solid rgba(255,82,113,0.25);
+          border-left: 5px solid var(--coral);
+          border-radius: 22px;
+          box-shadow: 0 12px 35px rgba(0,59,92,0.05);
+        }
+
+        .ot-alert-icon {
+          display: grid;
+          width: 48px;
+          height: 48px;
+          place-items: center;
+          background: rgba(255,82,113,0.12);
+          color: var(--coral);
+          border-radius: 12px;
+          margin-bottom: 14px;
+        }
+
+        .ot-feeding-alert-card h3 {
+          margin: 0 0 8px;
+          font-size: 17px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-feeding-alert-card p {
+          margin: 0;
+          font-size: 13px;
+          color: #556c78;
+          line-height: 1.7;
+        }
+
+        /* 8. FAMILY-CENTERED THERAPY */
+        .ot-family-section { background: white; }
+        .ot-family-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+          margin-bottom: 35px;
+        }
+
+        .ot-family-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 20px;
+          background: var(--bg-light);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          box-shadow: 0 6px 20px rgba(0,59,92,0.02);
+        }
+
+        .ot-family-check {
+          display: grid;
+          width: 34px;
+          height: 34px;
+          flex: 0 0 34px;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          border-radius: 10px;
+        }
+
+        .ot-family-card h4 {
+          margin: 0 0 4px;
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-family-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #607d8b;
+          line-height: 1.55;
+        }
+
+        .ot-family-quote-banner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          max-width: 750px;
+          margin: 0 auto;
+          padding: 20px 26px;
+          background: linear-gradient(135deg, var(--navy), #00507a);
+          border-radius: 18px;
+          color: white;
+          text-align: center;
+          box-shadow: 0 12px 35px rgba(0,59,92,0.18);
+        }
+
+        .ot-family-quote-banner svg {
+          color: var(--coral);
+          flex: 0 0 24px;
+        }
+
+        .ot-family-quote-banner p {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 700;
+          font-style: italic;
+        }
+
+        /* 9. MULTIDISCIPLINARY CHILD DEVELOPMENT */
+        .ot-multidisciplinary-section { background: var(--cyan); }
+        .ot-hub-container {
+          position: relative;
+          max-width: 800px;
+          margin: 35px auto 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 35px;
+        }
+
+        .ot-hub-center {
+          width: 160px;
+          height: 160px;
+          background: white;
+          border: 4px solid var(--teal);
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: var(--navy);
+          text-align: center;
+          box-shadow: 0 15px 35px rgba(0,168,205,0.18);
+          z-index: 3;
+        }
+
+        .ot-hub-center svg {
+          color: var(--teal);
+          margin-bottom: 4px;
+        }
+
+        .ot-hub-center strong { font-size: 14px; font-weight: 800; }
+        .ot-hub-center span { font-size: 11px; color: #607d8b; }
+
+        .ot-hub-services-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+          width: 100%;
+        }
+
+        .ot-hub-service-card {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 18px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          box-shadow: 0 6px 20px rgba(0,59,92,0.04);
+        }
+
+        .ot-hub-icon {
+          display: grid;
+          width: 40px;
+          height: 40px;
+          flex: 0 0 40px;
+          place-items: center;
+          background: var(--cyan);
+          color: var(--teal);
+          border-radius: 12px;
+        }
+
+        .ot-hub-service-card span {
+          font-size: 12px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        /* 10. OUR OCCUPATIONAL THERAPY JOURNEY */
+        .ot-journey-section { background: white; }
+        .ot-journey-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .ot-journey-card {
+          padding: 26px;
+          background: var(--bg-light);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          box-shadow: 0 8px 25px rgba(0,59,92,0.03);
+          position: relative;
+        }
+
+        .ot-journey-number {
+          display: inline-block;
+          font-size: 11px;
+          font-weight: 800;
+          color: var(--teal);
+          background: var(--cyan);
+          padding: 5px 10px;
+          border-radius: 6px;
+          margin-bottom: 14px;
+        }
+
+        .ot-journey-card h3 {
+          margin: 0 0 6px;
+          font-size: 16px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+
+        .ot-journey-card p {
+          margin: 0;
+          font-size: 12px;
+          color: #607d8b;
+          line-height: 1.65;
+        }
+
+        /* 11. INDIVIDUALIZED OCCUPATIONAL THERAPY */
+        .ot-individualized-section { background: var(--bg-light); }
+        .ot-ind-content h2 {
+          font-size: clamp(26px, 3.2vw, 38px);
+          font-weight: 800;
+          letter-spacing: -1px;
+          line-height: 1.18;
+          margin: 10px 0 14px 0;
+          color: var(--navy);
+        }
+
+        .ot-ind-chips-wrap {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 20px;
+        }
+
+        .ot-ind-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 9px 14px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--navy);
+          box-shadow: 0 3px 10px rgba(0,59,92,0.02);
+        }
+
+        .ot-ind-chip svg {
+          color: var(--teal);
+        }
+
+        .ot-ind-quote-card {
+          position: relative;
+          padding: 38px;
+          background: white;
+          border: 1px solid var(--border);
+          border-radius: 24px;
+          box-shadow: 0 15px 40px rgba(0,59,92,0.06);
+          text-align: center;
+        }
+
+        .ot-big-quote-mark {
+          position: absolute;
+          top: 10px;
+          left: 24px;
+          font-size: 70px;
+          color: rgba(0,168,205,0.12);
+          font-family: serif;
+          line-height: 1;
+        }
+
+        .ot-ind-quote-card p {
+          position: relative;
+          z-index: 2;
+          margin: 0 0 16px;
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--navy);
+          line-height: 1.75;
+          font-style: italic;
+        }
+
+        .ot-ind-quote-card strong {
+          font-size: 11px;
+          color: var(--teal);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 1100px) {
+          .ot-bento-skills-grid, .ot-benefit-grid, .ot-play-grid { grid-template-columns: repeat(2, 1fr); }
+          .ot-intro-bento-hero { grid-template-columns: 1fr; padding: 30px; }
+          .ot-sensory-cards-wrapper, .ot-hub-services-grid { grid-template-columns: repeat(2, 1fr); }
+          .ot-roadmap-steps { grid-template-columns: repeat(3, 1fr); row-gap: 25px; }
+          .ot-roadmap-connector { display: none; }
+          .ot-family-grid, .ot-journey-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+          .ot-hero-layout, .ot-two-column { grid-template-columns: 1fr; gap: 40px; }
+          .ot-hero-text-content { text-align: center; }
+          .ot-hero-btn-group { justify-content: center; }
+        }
+
+        @media (max-width: 640px) {
+          .ot-bento-skills-grid, .ot-benefit-grid, .ot-play-grid, .ot-sensory-cards-wrapper, .ot-hub-services-grid, .ot-roadmap-steps, .ot-family-grid, .ot-journey-grid { grid-template-columns: 1fr; }
+          .ot-multidisciplinary-panel { flex-direction: column; text-align: center; }
+          .ot-hero-float-tag { display: none; }
+        }
+      `}</style>
+
+      <main className="ot-page">
+        <HeroSection />
+        <IntroSection />
+        <SensoryIntegrationSection />
+        <WhoMayBenefitSection />
+        <FineMotorSection />
+        <PlayDevelopmentSection />
+        <FeedingSection />
+        <FamilyTherapySection />
+        <MultidisciplinarySection />
+        <JourneySection />
+        <IndividualizedSection />
+      </main>
+    </>
   );
 }

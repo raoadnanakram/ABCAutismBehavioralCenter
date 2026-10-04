@@ -466,13 +466,6 @@ const Physiotherapy = () => {
                       <Icon type="arrow" size={19} />
                     </span>
                   </Link>
-
-                  <Link
-                    to="/online-consultation"
-                    className="group inline-flex items-center justify-center px-7 py-4 rounded-2xl border border-white/20 bg-white/[0.05] text-white font-bold backdrop-blur-md hover:bg-white/12 hover:border-white/35 hover:-translate-y-0.5 transition-all duration-300"
-                  >
-                    Online Guidance
-                  </Link>
                 </motion.div>
 
                 {/* Trust row */}
@@ -1072,7 +1065,7 @@ const Physiotherapy = () => {
 
               <div className="mt-8 pt-6 border-t border-slate-100">
                 <Link
-                  to="/book-appointment"
+                  to="/book-a-free-consult"
                   className="physio-shine inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-extrabold text-sm text-white shadow-md transition-all hover:opacity-90 hover:-translate-y-0.5"
                   style={{ backgroundColor: plan.color }}
                 >
@@ -1211,7 +1204,7 @@ const Physiotherapy = () => {
 
               <div className="mt-8">
                 <Link
-                  to="/online-consultation"
+                  to="/book-a-free-consult"
                   className="physio-shine group inline-flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#FF5271] text-white font-extrabold hover:bg-[#ff3b5e] transition-all shadow-lg hover:-translate-y-0.5"
                 >
                   Book Online Session
@@ -1330,7 +1323,7 @@ const Physiotherapy = () => {
               </div>
               <div className="pt-2">
                 <Link
-                  to="/book-appointment"
+                  to="/book-a-free-consult"
                   className="physio-shine inline-flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-[#FF5271] text-white font-extrabold shadow-lg hover:bg-[#ff3b5e] transition-all hover:-translate-y-0.5"
                 >
                   <Icon type="calendar" size={18} /> Book an Appointment
@@ -1424,7 +1417,7 @@ const Physiotherapy = () => {
                 </div>
 
                 <Link
-                  to="/book-appointment"
+                  to="/book-a-free-consult"
                   onClick={() => setActiveService(null)}
                   className="physio-shine group mt-8 inline-flex items-center justify-center gap-3 w-full px-8 py-4 rounded-2xl bg-[#003B5C] text-white font-extrabold hover:bg-[#005078] transition-colors shadow-lg"
                 >

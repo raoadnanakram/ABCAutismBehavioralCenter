@@ -13,6 +13,7 @@ import drGhafoor from '../assets/dr-Ghafoor.jpeg';
 import drZobiaaba from '../assets/dr-Zobiaaba.jpeg';
 import sirBasit from '../assets/sir-Basit.jpeg';
 import drSidra from '../assets/dr-Sidra.jpeg';
+import drqandeel from '../assets/dr-Qandeel.jpg';
 
  // Agar drRimsha ka import nahi tha toh upar add kar lein
 
@@ -108,7 +109,7 @@ export const teamMembers = [
     name: "Ms. Qandeel Amjad",
     designation: "Psychologist & ABA Therapist",
     category: "ABA Therapy & Psychology Department",
-    image: "",
+    image: drqandeel,
     specialization: "BS Psychology",
     bio: ""
   },

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logoImage from "../assets/Logo (2).png"; 
 
 function Footer() {
   return (
@@ -7,17 +8,18 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-16 border-b border-slate-600/60">
           
-          {/* Logo & Description */}
+          {/* Column 1: Logo, Description & Social Icons */}
           <div className="space-y-4">
-            <div className="flex items-center">
+            <div>
               <Link to="/" className="inline-block group">
                 <img 
-                  src="/Logo.png" 
-                  alt="Rex Medical Centre" 
+                  src={logoImage} 
+                  alt="ABC Autism Behavioral Center" 
                   className="h-14 sm:h-16 w-auto transform group-hover:scale-105 transition-all duration-300 filter brightness-125" 
                 />
               </Link>
             </div>
+            
             <p className="text-sm leading-relaxed text-slate-100 font-normal">
               Providing professional child therapy, modern developmental support, and expert clinical care with utmost integrity and human kindness.
             </p>
@@ -25,7 +27,7 @@ function Footer() {
             {/* Social Media Icons (Always Visible & Interactive) */}
             <div className="flex items-center space-x-3 pt-2">
               <a 
-                href="https://facebook.com//ABCAutismBehavioralCenter/" 
+                href="https://facebook.com/ABCAutismBehavioralCenter/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Facebook"
@@ -66,7 +68,7 @@ function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Column 2: Quick Links */}
           <div className="space-y-4">
             <h4 className="font-bold text-white text-sm uppercase tracking-wider border-l-4 border-[#FF5271] pl-3 py-0.5 bg-black/10 rounded-r-md">
               Quick Links
@@ -93,7 +95,7 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-1 border-b border-slate-600/30">
+                <Link to="/our-team" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-1 border-b border-slate-600/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF5271]" /> Our Team
                 </Link>
               </li>
@@ -104,62 +106,108 @@ function Footer() {
               </li>
             </ul>
           </div>
+{/* Column 3: Our Specialties */}
+<div className="space-y-4">
+  <h4 className="font-bold text-white text-sm uppercase tracking-wider border-l-4 border-[#00A8CD] pl-3 py-0.5 bg-black/10 rounded-r-md">
+    Our Specialties
+  </h4>
 
-          {/* Our Specialties */}
-          <div className="space-y-4">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider border-l-4 border-[#00A8CD] pl-3 py-0.5 bg-black/10 rounded-r-md">
-              Our Specialties
-            </h4>
-            <ul className="space-y-2 text-xs">
-              <li>
-                <Link to="/services/speech-therapy" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Speech & Language Therapy
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/nutrition-dietetics" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Nutrition Therapy & Dietetics
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/special-education" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Special Education
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/physiotherapy" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Physiotherapy
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/occupational-therapy" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Occupational Therapy
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/day-care" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Day Care
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/montessori-education" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Montessori Education
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/dysphagia-management" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> Dysphagia Management
-                </Link>
-              </li>
-              <li>
-                <Link to="/services/aba-psychology" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" /> ABA Therapy & Psychology
-                </Link>
-              </li>
-            </ul>
-          </div>
+  <ul className="space-y-2 text-xs">
 
-          {/* Get In Touch & Appointment Button */}
+    <li>
+      <Link
+        to="/Pages/speech-therapy"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Speech & Language Therapy
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/nutrition-dietetics"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Nutrition Therapy & Dietetics
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/special-education"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Special Education
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/physiotherapy"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Physiotherapy
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/occupational-therapy"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Occupational Therapy
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/day-care"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Day Care
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/montessori-education"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Montessori Education
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/dysphagia-management"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5 border-b border-slate-600/30"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        Dysphagia Management
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/Pages/aba-psychology"
+        className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-0.5"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-[#00A8CD]" />
+        ABA Therapy & Psychology
+      </Link>
+    </li>
+
+  </ul>
+</div>
+
+          {/* Column 4: Get In Touch & Appointment Button */}
           <div className="space-y-4">
             <h4 className="font-bold text-white text-sm uppercase tracking-wider border-l-4 border-[#F5A623] pl-3 py-0.5 bg-black/10 rounded-r-md">
               Get In Touch
@@ -167,14 +215,11 @@ function Footer() {
             <ul className="space-y-3 text-xs">
               <li className="flex items-start gap-2.5">
                 <i className="fa-solid fa-location-dot text-[#FF5271] mt-0.5"></i>
-                <span>20 Plaza Main Boulevard, Hasan Commercial,
-Al-Rehman Garden Phase 2,
-Main Sharqpur Road, Near Faizpur Interchange,
-Lahore Pakistan</span>
+                <span>20 Plaza Main Boulevard, Hasan Commercial, Al-Rehman Garden Phase 2, Main Sharqpur Road, Near Faizpur Interchange, Lahore Pakistan</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <i className="fa-solid fa-phone text-[#00A8CD]"></i>
-                <span> +92345-8471693 </span>
+                <span>+92345-8471693</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <i className="fa-solid fa-envelope text-[#F5A623]"></i>

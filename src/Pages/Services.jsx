@@ -8,58 +8,57 @@ function Services() {
       title: "Speech & Language Therapy",
       desc: "Improving articulation, expressive/receptive language capabilities, and functional communication skills.",
       img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=600",
-      path: "/services/speech-therapy"
+      path: "/Pages/speech-therapy"
     },
     {
       title: "Nutrition Therapy & Dietetics",
       desc: "Specialized pediatric dietary plans and nutritional guidance tailored to support growth and sensory needs.",
       img: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600",
-      path: "/services/nutrition-dietetics"
+      path: "/Pages/nutrition-dietetics"
     },
     {
       title: "Special Education",
       desc: "Customized academic and cognitive learning frameworks designed to unlock every child's unique potential.",
       img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=600",
-      path: "/services/special-education"
+      path: "/Pages/special-education"
     },
     {
       title: "Physiotherapy",
       desc: "Improving gross motor skills, core posture, physical strength, and overall bodily coordination.",
       img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600",
-      path: "/services/physiotherapy"
+      path: "/Pages/physiotherapy"
     },
     {
       title: "Occupational Therapy & Sensory Integration",
       desc: "Developing fine motor skills, independence in daily routines, and healthy sensory regulation.",
       img: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=600",
-      path: "/services/occupational-therapy"
+      path: "/Pages/occupational-therapy"
     },
     {
       title: "Day Care",
       desc: "A secure, nurturing, and highly structured environment designed for safe supervision and holistic care.",
       img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
-      path: "/services/day-care"
+      path: "/Pages/day-care"
     },
     {
       title: "Montessori & Early Childhood Education",
       desc: "Guided interactive learning that promotes natural confidence, attention spans, and self-reliance.",
       img: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=600",
-      path: "/services/montessori-education"
+      path: "/Pages/montessori-education"
     },
     {
       title: "Dysphagia Management & NG Tube Feeding",
       desc: "Specialized clinical swallowing therapy and tube feeding support administered by expert practitioners.",
       img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600",
-      path: "/services/dysphagia-management"
+      path: "/Pages/dysphagia-management"
     },
     {
       title: "ABA Therapy & Psychology",
       desc: "Evidence-based behavior analysis and psychological counseling fostering positive reinforcement and emotional health.",
       img: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600",
-      path: "/services/aba-psychology"
+      path: "/Pages/aba-psychology"
     }
   ];
-
   return (
     <div className="w-full font-sans text-[#334155] bg-[#FFFDF9] overflow-x-hidden">
       
