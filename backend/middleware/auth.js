@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, message: 'Access Denied! Token missing.' });
   }
@@ -10,11 +10,11 @@ const verifyToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = verified;
+    req.admin = jwt.verify(token, process.env.JWT_SECRET);
     next();
   } catch (err) {
-    res.status(403).json({ success: false, message: 'Invalid or Expired Token!' });
+    // 401 (not 403) so the dashboard knows to send the admin back to /login
+    res.status(401).json({ success: false, message: 'Invalid or Expired Token!' });
   }
 };
 

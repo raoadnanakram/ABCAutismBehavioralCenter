@@ -1,21 +1,17 @@
-<<<<<<< HEAD
-# React + Vite
+# ABC Autism & Behavioral Center
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MERN project.
 
-Currently, two official plugins are available:
+```
+/            -> Node/Express API (GoDaddy runs `npm install` + `npm start` from here)
+backend/     -> server.js, models, middleware, createAdmin.js
+frontend/    -> React + Vite website (deployed to GitHub Pages: cd frontend && npm run deploy)
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## GoDaddy (Node backend) - Environment Variables
+MONGO_URI, JWT_SECRET, EMAIL_USER, EMAIL_PASS, OWNER_EMAIL, ADMIN_PHONE, ADMIN_PASSWORD
+(see backend/.env.example). Do NOT set PORT - GoDaddy provides it.
+Check it works: open `https://<your-backend-url>/api/health`.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# ABCAutismBehavioralCenter
-ABC Autism &amp; Behavioral Center is a multidisciplinary child development center offering expert therapies, early education, and specialized care under one roof. Built with MERN Stack Technology, our digital platform ensures seamless family communication, efficient scheduling, and easy access to resources to empower every child.
->>>>>>> 5a7061456767f993032fdff348536cf0028c95c4
+## Frontend
+Put the backend URL in `frontend/.env.production` (VITE_API_URL), then `cd frontend && npm install && npm run deploy`.
