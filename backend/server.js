@@ -155,7 +155,13 @@ app.get('*', (req, res) => {
 });
 
 // Server Start with dynamic process.env.PORT
+// Server Start - GoDaddy Strict Port Binding Requirement
 const PORT = process.env.PORT;
+if (!PORT) {
+  console.error("ERROR: process.env.PORT is not defined");
+  process.exit(1);
+}
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
