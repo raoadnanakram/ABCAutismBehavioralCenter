@@ -1,5 +1,6 @@
 const path = require('path');
 const dns = require('dns');
+const crypto = require('crypto');
 const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -13,6 +14,13 @@ const Contact = require('./models/Contact');
 const Appointment = require('./models/Appointment');
 const Admin = require('./models/Admin');
 const verifyToken = require('./middleware/auth');
+
+// If the hosting did not pass JWT_SECRET, derive a private one from MONGO_URI (also a secret)
+// so login keeps working. Better: set JWT_SECRET explicitly in the hosting Secrets.
+if (!process.env.JWT_SECRET && process.env.MONGO_URI) {
+  process.env.JWT_SECRET = crypto.createHash('sha256').update('abc-autism-jwt:' + process.env.MONGO_URI).digest('hex');
+  console.warn('WARNING: JWT_SECRET not set - using a key derived from MONGO_URI. Add JWT_SECRET in hosting Secrets.');
+}
 
 const app = express();
 
@@ -127,13 +135,26 @@ const OWNER = () => process.env.OWNER_EMAIL || process.env.EMAIL_USER;
 const clean = (v) => (typeof v === 'string' ? v.trim() : '');
 
 // -------------------------------------------------------------- public APIs
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
   const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  let adminCount = null;
+  try {
+    if (mongoose.connection.readyState === 1) adminCount = await Admin.countDocuments();
+  } catch (e) { /* ignore */ }
   res.json({
     ok: true,
     database: states[mongoose.connection.readyState] || 'unknown',
     databaseName: mongoose.connection.name || null,
-    databaseError: dbError
+    databaseError: dbError,
+    adminCount,
+    settingsSeenByServer: {
+      MONGO_URI: !!process.env.MONGO_URI,
+      JWT_SECRET: !!process.env.JWT_SECRET,
+      ADMIN_PHONE: !!process.env.ADMIN_PHONE,
+      ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
+      EMAIL_USER: !!process.env.EMAIL_USER,
+      EMAIL_PASS: !!process.env.EMAIL_PASS
+    }
   });
 });
 
