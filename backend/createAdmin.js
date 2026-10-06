@@ -1,6 +1,7 @@
 // Usage (local or SSH):  node backend/createAdmin.js 03001234567 "MyStrongPassword"
 // or set ADMIN_PHONE / ADMIN_PASSWORD in .env. Existing admin => password is updated.
 const path = require('path');
+const dns = require('dns');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
@@ -15,7 +16,15 @@ const rawPassword = process.argv[3] || process.env.ADMIN_PASSWORD || '';
     process.exit(1);
   }
   try {
-    await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+    try {
+      await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+    } catch (e) {
+      if (!/querySrv|ECONNREFUSED|ENOTFOUND|ETIMEOUT|EAI_AGAIN/i.test(e.message)) throw e;
+      console.warn('DNS lookup failed, retrying with 8.8.8.8 / 1.1.1.1 ...');
+      dns.setServers(['8.8.8.8', '1.1.1.1']);
+      await mongoose.disconnect().catch(() => {});
+      await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+    }
     await Admin.createCollection().catch(() => {});
     const hashed = await bcrypt.hash(rawPassword, 10);
     const existing = await Admin.findOne({ phone });

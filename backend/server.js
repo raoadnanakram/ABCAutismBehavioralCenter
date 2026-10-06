@@ -1,4 +1,5 @@
 const path = require('path');
+const dns = require('dns');
 const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -22,6 +23,28 @@ app.use(express.json());
 // ------------------------------------------------------------------ database
 let dbError = null;
 
+// Some networks (many Pakistani ISPs) cannot resolve MongoDB Atlas "mongodb+srv" addresses
+// (error: querySrv ECONNREFUSED). On that error we retry once using Google / Cloudflare DNS.
+async function connectWithDnsFallback(uri) {
+  const options = { serverSelectionTimeoutMS: 15000 };
+  if (process.env.DNS_SERVERS) {
+    dns.setServers(process.env.DNS_SERVERS.split(',').map((s) => s.trim()).filter(Boolean));
+  }
+  try {
+    await mongoose.connect(uri, options);
+  } catch (err) {
+    const dnsProblem = /querySrv|ECONNREFUSED|ENOTFOUND|ETIMEOUT|EAI_AGAIN/i.test(err.message);
+    if (uri.startsWith('mongodb+srv') && dnsProblem) {
+      console.warn('DNS lookup failed (' + err.message + '). Retrying with public DNS 8.8.8.8 / 1.1.1.1 ...');
+      dns.setServers(['8.8.8.8', '1.1.1.1']);
+      await mongoose.disconnect().catch(() => {});
+      await mongoose.connect(uri, options);
+    } else {
+      throw err;
+    }
+  }
+}
+
 async function connectDatabase() {
   if (!process.env.MONGO_URI) {
     dbError = 'MONGO_URI is not set';
@@ -29,7 +52,7 @@ async function connectDatabase() {
     return;
   }
   try {
-    await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+    await connectWithDnsFallback(process.env.MONGO_URI);
     dbError = null;
     console.log('MongoDB successfully connected! Database:', mongoose.connection.name);
 
@@ -52,7 +75,11 @@ async function connectDatabase() {
   }
 }
 
-// Creates the admin from ADMIN_PHONE / ADMIN_PASSWORD (no shell access needed on hosting)
+// ADMIN_PHONE / ADMIN_PASSWORD are the source of truth (no shell access needed on hosting):
+//  - admin is created if missing
+//  - password is updated if it differs from ADMIN_PASSWORD
+//  - any OTHER admin account is removed (the old default login was public on GitHub).
+//    Set ADMIN_KEEP_OTHERS=true to keep other admins.
 async function ensureAdmin() {
   const phone = (process.env.ADMIN_PHONE || '').trim();
   const rawPassword = process.env.ADMIN_PASSWORD || '';
@@ -61,15 +88,22 @@ async function ensureAdmin() {
     if (count === 0) console.warn('WARNING: no admin exists. Set ADMIN_PHONE and ADMIN_PASSWORD, then redeploy.');
     return;
   }
+
   const existing = await Admin.findOne({ phone });
-  const hashed = await bcrypt.hash(rawPassword, 10);
   if (!existing) {
-    await Admin.create({ phone, password: hashed });
+    await Admin.create({ phone, password: await bcrypt.hash(rawPassword, 10) });
     console.log('Admin created for phone:', phone);
-  } else if (process.env.ADMIN_FORCE_RESET === 'true') {
-    existing.password = hashed;
+  } else if (!(await bcrypt.compare(rawPassword, existing.password))) {
+    existing.password = await bcrypt.hash(rawPassword, 10);
     await existing.save();
-    console.log('Admin password reset for phone:', phone);
+    console.log('Admin password updated for phone:', phone);
+  } else {
+    console.log('Admin OK for phone:', phone);
+  }
+
+  if (process.env.ADMIN_KEEP_OTHERS !== 'true') {
+    const removed = await Admin.deleteMany({ phone: { $ne: phone } });
+    if (removed.deletedCount) console.log('Removed old admin account(s):', removed.deletedCount);
   }
 }
 
