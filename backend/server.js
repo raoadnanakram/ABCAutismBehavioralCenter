@@ -34,7 +34,7 @@ let dbError = null;
 // Some networks (many Pakistani ISPs) cannot resolve MongoDB Atlas "mongodb+srv" addresses
 // (error: querySrv ECONNREFUSED). On that error we retry once using Google / Cloudflare DNS.
 async function connectWithDnsFallback(uri) {
-  const options = { serverSelectionTimeoutMS: 15000 };
+  const options = { serverSelectionTimeoutMS: Number(process.env.DB_TIMEOUT_MS) || 15000 };
   if (process.env.DNS_SERVERS) {
     dns.setServers(process.env.DNS_SERVERS.split(',').map((s) => s.trim()).filter(Boolean));
   }
@@ -80,6 +80,10 @@ async function connectDatabase() {
     dbError = err.message;
     console.error('Database connection error:', err.message);
     console.error('Hint: in MongoDB Atlas > Network Access allow the hosting server (0.0.0.0/0), and check user/password in MONGO_URI.');
+    // Keep trying, so fixing Atlas is enough - no restart needed
+    const wait = Number(process.env.DB_RETRY_MS) || 30000;
+    console.log('Will retry the database connection in ' + Math.round(wait / 1000) + 's ...');
+    setTimeout(connectDatabase, wait);
   }
 }
 
