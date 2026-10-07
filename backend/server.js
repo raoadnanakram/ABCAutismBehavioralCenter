@@ -1,6 +1,8 @@
 const path = require('path');
 const dns = require('dns');
 const crypto = require('crypto');
+const net = require('net');
+const https = require('https');
 const fs = require('fs');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,6 +11,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+
+// Hosting dashboards often keep stray spaces or wrapping quotes when a value is pasted.
+// Clean them, otherwise passwords / secrets silently stop matching.
+for (const key of ['MONGO_URI', 'JWT_SECRET', 'ADMIN_PHONE', 'ADMIN_PASSWORD', 'EMAIL_USER', 'EMAIL_PASS', 'OWNER_EMAIL']) {
+  let v = process.env[key];
+  if (typeof v !== 'string') continue;
+  v = v.trim();
+  if (v.length > 1 && ((v[0] === '"' && v.endsWith('"')) || (v[0] === "'" && v.endsWith("'")))) v = v.slice(1, -1);
+  process.env[key] = v;
+}
 
 const Contact = require('./models/Contact');
 const Appointment = require('./models/Appointment');
@@ -30,6 +42,54 @@ app.use(express.json());
 
 // ------------------------------------------------------------------ database
 let dbError = null;
+
+// ---------------------------------------------------- network diagnostics (shown in /api/health)
+let dbNetwork = null;
+
+function tcpCheck(host, port, ms) {
+  return new Promise((resolve) => {
+    const socket = net.connect({ host, port });
+    const done = (r) => { socket.destroy(); resolve(r); };
+    socket.setTimeout(ms, () => done('timeout'));
+    socket.once('connect', () => done('open'));
+    socket.once('error', (e) => done('error ' + (e.code || e.message)));
+  });
+}
+
+function httpGetText(url, ms) {
+  return new Promise((resolve) => {
+    const req = https.get(url, { timeout: ms }, (res) => {
+      let body = '';
+      res.on('data', (c) => { body += c; if (body.length > 200) req.destroy(); });
+      res.on('end', () => resolve(body.trim()));
+      res.on('close', () => resolve(body.trim()));
+    });
+    req.on('timeout', () => { req.destroy(); resolve(null); });
+    req.on('error', () => resolve(null));
+  });
+}
+
+async function probeNetwork(uri) {
+  const info = {};
+  try {
+    info.serverPublicIp = await httpGetText('https://api.ipify.org', 5000); // the IP Atlas sees
+    const m = (uri || '').match(/^mongodb\+srv:\/\/(?:[^@]+@)?([^/?]+)/);
+    if (m) {
+      try {
+        const srv = await dns.promises.resolveSrv('_mongodb._tcp.' + m[1]);
+        info.atlasDns = 'ok (' + srv.length + ' hosts)';
+        info.atlasPort27017 = await tcpCheck(srv[0].name, srv[0].port || 27017, 6000);
+      } catch (e) {
+        info.atlasDns = 'failed: ' + e.code;
+      }
+    }
+    // Any open-port test host: tells us if this hosting blocks outbound port 27017 at all
+    info.outbound27017ToTestHost = await tcpCheck('portquiz.net', 27017, 6000);
+  } catch (e) {
+    info.error = e.message;
+  }
+  dbNetwork = info;
+}
 
 // Some networks (many Pakistani ISPs) cannot resolve MongoDB Atlas "mongodb+srv" addresses
 // (error: querySrv ECONNREFUSED). On that error we retry once using Google / Cloudflare DNS.
@@ -62,6 +122,7 @@ async function connectDatabase() {
   try {
     await connectWithDnsFallback(process.env.MONGO_URI);
     dbError = null;
+    dbNetwork = null;
     console.log('MongoDB successfully connected! Database:', mongoose.connection.name);
 
     // Make sure the collections + indexes exist right away (not only after the first form submit)
@@ -79,6 +140,7 @@ async function connectDatabase() {
   } catch (err) {
     dbError = err.message;
     console.error('Database connection error:', err.message);
+    probeNetwork(process.env.MONGO_URI).then(() => console.log('Network check:', JSON.stringify(dbNetwork)));
     console.error('Hint: in MongoDB Atlas > Network Access allow the hosting server (0.0.0.0/0), and check user/password in MONGO_URI.');
     // Keep trying, so fixing Atlas is enough - no restart needed
     const wait = Number(process.env.DB_RETRY_MS) || 30000;
@@ -150,6 +212,7 @@ app.get('/api/health', async (req, res) => {
     database: states[mongoose.connection.readyState] || 'unknown',
     databaseName: mongoose.connection.name || null,
     databaseError: dbError,
+    networkCheck: dbNetwork,
     adminCount,
     settingsSeenByServer: {
       MONGO_URI: !!process.env.MONGO_URI,
