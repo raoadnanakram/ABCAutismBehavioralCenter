@@ -219,14 +219,14 @@ app.get('/api/health', async (req, res) => {
     networkCheck: dbNetwork,
     adminCount,
     settingsSeenByServer: {
-      MONGO_URI: !!process.env.MONGO_URI,
       MONGODB_URI: !!process.env.MONGODB_URI,
       DATABASE_URL: !!process.env.DATABASE_URL,
       JWT_SECRET: !!process.env.JWT_SECRET,
       ADMIN_PHONE: !!process.env.ADMIN_PHONE,
       ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
       EMAIL_USER: !!process.env.EMAIL_USER,
-      EMAIL_PASS: !!process.env.EMAIL_PASS
+      EMAIL_PASS: !!process.env.EMAIL_PASS,
+      OWNER_EMAIL: !!process.env.OWNER_EMAIL
     }
   });
 });
