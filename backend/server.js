@@ -14,7 +14,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Hosting dashboards often keep stray spaces or wrapping quotes when a value is pasted.
 // Clean them, otherwise passwords / secrets silently stop matching.
-for (const key of ['MONGO_URI', 'MONGODB_URI', 'DATABASE_URL', 'JWT_SECRET', 'ADMIN_PHONE', 'ADMIN_PASSWORD', 'EMAIL_USER', 'EMAIL_PASS', 'OWNER_EMAIL']) {
+for (const key of ['MONGO_URI', 'MONGODB_URI', 'DATABASE_URL', 'MONGO_URI_STANDARD', 'JWT_SECRET', 'ADMIN_PHONE', 'ADMIN_PASSWORD', 'EMAIL_USER', 'EMAIL_PASS', 'OWNER_EMAIL']) {
   let v = process.env[key];
   if (typeof v !== 'string') continue;
   v = v.trim();
@@ -27,8 +27,33 @@ const Appointment = require('./models/Appointment');
 const Admin = require('./models/Admin');
 const verifyToken = require('./middleware/auth');
 
-// Unified helper to get active database URI
-const getDbUri = () => process.env.MONGO_URI || process.env.MONGODB_URI || process.env.DATABASE_URL;
+// ---- Database URI helpers --------------------------------------------------
+// Collect EVERY configured URI (hosting dashboards often keep an old/stale MONGO_URI while a new one
+// is added under another name). We try them one after another, so a stale one can never block the app.
+const URI_KEYS = ['MONGODB_URI', 'MONGO_URI', 'DATABASE_URL', 'MONGO_URI_STANDARD'];
+
+// "mongodb://user:pass@cluster0.xxxx.mongodb.net/" is INVALID for Atlas (SRV hostname needs mongodb+srv://).
+function fixScheme(uri) {
+  const m = uri.match(/^mongodb:\/\/(?:[^@]+@)?([^/?]+)/);
+  if (m && /\.mongodb\.net$/i.test(m[1]) && !m[1].includes(',') && !m[1].includes(':')) {
+    return uri.replace(/^mongodb:\/\//, 'mongodb+srv://');
+  }
+  return uri;
+}
+
+const getDbCandidates = () => {
+  const list = [];
+  for (const key of URI_KEYS) {
+    const v = process.env[key];
+    if (!v) continue;
+    const uri = fixScheme(v);
+    if (!list.some((c) => c.uri === uri)) list.push({ key, uri });
+  }
+  return list;
+};
+const getDbUri = () => (getDbCandidates()[0] || {}).uri;
+const maskUri = (u) => u.replace(/\/\/([^:@/]+):[^@]*@/, '//$1:*****@');
+let candidateIndex = 0;
 
 // If the hosting did not pass JWT_SECRET, derive a private one from the active DB URI (also a secret)
 // so login keeps working. Better: set JWT_SECRET explicitly in the hosting Secrets.
@@ -98,6 +123,8 @@ async function probeNetwork(uri) {
 // (error: querySrv ECONNREFUSED). On that error we retry once using Google / Cloudflare DNS.
 async function connectWithDnsFallback(uri) {
   const options = { serverSelectionTimeoutMS: Number(process.env.DB_TIMEOUT_MS) || 15000 };
+  // URI without a database name would silently use "test". Keep data in a clearly named DB instead.
+  if (!/^mongodb(\+srv)?:\/\/[^/]+\/[^?\s]+/.test(uri)) options.dbName = process.env.DB_NAME || 'abcautism';
   if (process.env.DNS_SERVERS) {
     dns.setServers(process.env.DNS_SERVERS.split(',').map((s) => s.trim()).filter(Boolean));
   }
@@ -117,7 +144,10 @@ async function connectWithDnsFallback(uri) {
 }
 
 async function connectDatabase() {
-  const activeUri = getDbUri();
+  const candidates = getDbCandidates();
+  const picked = candidates.length ? candidates[candidateIndex % candidates.length] : null;
+  const activeUri = picked && picked.uri;
+  if (picked) console.log('Connecting to MongoDB using ' + picked.key + ': ' + maskUri(picked.uri).replace(/^(mongodb(\+srv)?:\/\/)(?:[^@]+@)?/, '$1'));
   if (!activeUri) {
     dbError = 'Database URI (MONGO_URI / MONGODB_URI / DATABASE_URL) is not set';
     console.error('ERROR: Database URI is not set. Add it to the hosting Environment Variables.');
@@ -147,6 +177,7 @@ async function connectDatabase() {
     probeNetwork(activeUri).then(() => console.log('Network check:', JSON.stringify(dbNetwork)));
     console.error('Hint: in MongoDB Atlas > Network Access allow the hosting server (0.0.0.0/0), and check user/password in database URI.');
     // Keep trying, so fixing Atlas is enough - no restart needed
+    candidateIndex++; // next retry tries the next configured URI (if any)
     const wait = Number(process.env.DB_RETRY_MS) || 30000;
     console.log('Will retry the database connection in ' + Math.round(wait / 1000) + 's ...');
     setTimeout(connectDatabase, wait);
@@ -219,6 +250,7 @@ app.get('/api/health', async (req, res) => {
     networkCheck: dbNetwork,
     adminCount,
     settingsSeenByServer: {
+      MONGO_URI: !!process.env.MONGO_URI,
       MONGODB_URI: !!process.env.MONGODB_URI,
       DATABASE_URL: !!process.env.DATABASE_URL,
       JWT_SECRET: !!process.env.JWT_SECRET,

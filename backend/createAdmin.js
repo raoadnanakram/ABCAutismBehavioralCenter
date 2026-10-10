@@ -7,23 +7,27 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const Admin = require('./models/Admin');
 
+let DB_URI = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.DATABASE_URL || '';
+// Atlas hostnames need mongodb+srv://
+if (/^mongodb:\/\/(?:[^@]+@)?[^/:,]+\.mongodb\.net(\/|\?|$)/i.test(DB_URI)) DB_URI = DB_URI.replace(/^mongodb:\/\//, 'mongodb+srv://');
+
 const phone = (process.argv[2] || process.env.ADMIN_PHONE || '').trim();
 const rawPassword = process.argv[3] || process.env.ADMIN_PASSWORD || '';
 
 (async () => {
-  if (!process.env.MONGO_URI || !phone || !rawPassword) {
-    console.error('Need MONGO_URI plus phone and password (arguments or ADMIN_PHONE / ADMIN_PASSWORD).');
+  if (!DB_URI || !phone || !rawPassword) {
+    console.error('Need MONGODB_URI plus phone and password (arguments or ADMIN_PHONE / ADMIN_PASSWORD).');
     process.exit(1);
   }
   try {
     try {
-      await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+      await mongoose.connect(DB_URI, { serverSelectionTimeoutMS: 15000 });
     } catch (e) {
       if (!/querySrv|ECONNREFUSED|ENOTFOUND|ETIMEOUT|EAI_AGAIN/i.test(e.message)) throw e;
       console.warn('DNS lookup failed, retrying with 8.8.8.8 / 1.1.1.1 ...');
       dns.setServers(['8.8.8.8', '1.1.1.1']);
       await mongoose.disconnect().catch(() => {});
-      await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 15000 });
+      await mongoose.connect(DB_URI, { serverSelectionTimeoutMS: 15000 });
     }
     await Admin.createCollection().catch(() => {});
     const hashed = await bcrypt.hash(rawPassword, 10);
