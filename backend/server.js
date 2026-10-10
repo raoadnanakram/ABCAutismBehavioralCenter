@@ -14,7 +14,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Hosting dashboards often keep stray spaces or wrapping quotes when a value is pasted.
 // Clean them, otherwise passwords / secrets silently stop matching.
-for (const key of ['MONGO_URI', 'JWT_SECRET', 'ADMIN_PHONE', 'ADMIN_PASSWORD', 'EMAIL_USER', 'EMAIL_PASS', 'OWNER_EMAIL']) {
+for (const key of ['MONGO_URI', 'MONGODB_URI', 'DATABASE_URL', 'JWT_SECRET', 'ADMIN_PHONE', 'ADMIN_PASSWORD', 'EMAIL_USER', 'EMAIL_PASS', 'OWNER_EMAIL']) {
   let v = process.env[key];
   if (typeof v !== 'string') continue;
   v = v.trim();
@@ -27,11 +27,14 @@ const Appointment = require('./models/Appointment');
 const Admin = require('./models/Admin');
 const verifyToken = require('./middleware/auth');
 
-// If the hosting did not pass JWT_SECRET, derive a private one from MONGO_URI (also a secret)
+// Unified helper to get active database URI
+const getDbUri = () => process.env.MONGO_URI || process.env.MONGODB_URI || process.env.DATABASE_URL;
+
+// If the hosting did not pass JWT_SECRET, derive a private one from the active DB URI (also a secret)
 // so login keeps working. Better: set JWT_SECRET explicitly in the hosting Secrets.
-if (!process.env.JWT_SECRET && process.env.MONGO_URI) {
-  process.env.JWT_SECRET = crypto.createHash('sha256').update('abc-autism-jwt:' + process.env.MONGO_URI).digest('hex');
-  console.warn('WARNING: JWT_SECRET not set - using a key derived from MONGO_URI. Add JWT_SECRET in hosting Secrets.');
+if (!process.env.JWT_SECRET && getDbUri()) {
+  process.env.JWT_SECRET = crypto.createHash('sha256').update('abc-autism-jwt:' + getDbUri()).digest('hex');
+  console.warn('WARNING: JWT_SECRET not set - using a key derived from Database URI. Add JWT_SECRET in hosting Secrets.');
 }
 
 const app = express();
@@ -114,13 +117,14 @@ async function connectWithDnsFallback(uri) {
 }
 
 async function connectDatabase() {
-  if (!process.env.MONGO_URI) {
-    dbError = 'MONGO_URI is not set';
-    console.error('ERROR: MONGO_URI is not set. Add it to the hosting Environment Variables.');
+  const activeUri = getDbUri();
+  if (!activeUri) {
+    dbError = 'Database URI (MONGO_URI / MONGODB_URI / DATABASE_URL) is not set';
+    console.error('ERROR: Database URI is not set. Add it to the hosting Environment Variables.');
     return;
   }
   try {
-    await connectWithDnsFallback(process.env.MONGO_URI);
+    await connectWithDnsFallback(activeUri);
     dbError = null;
     dbNetwork = null;
     console.log('MongoDB successfully connected! Database:', mongoose.connection.name);
@@ -140,8 +144,8 @@ async function connectDatabase() {
   } catch (err) {
     dbError = err.message;
     console.error('Database connection error:', err.message);
-    probeNetwork(process.env.MONGO_URI).then(() => console.log('Network check:', JSON.stringify(dbNetwork)));
-    console.error('Hint: in MongoDB Atlas > Network Access allow the hosting server (0.0.0.0/0), and check user/password in MONGO_URI.');
+    probeNetwork(activeUri).then(() => console.log('Network check:', JSON.stringify(dbNetwork)));
+    console.error('Hint: in MongoDB Atlas > Network Access allow the hosting server (0.0.0.0/0), and check user/password in database URI.');
     // Keep trying, so fixing Atlas is enough - no restart needed
     const wait = Number(process.env.DB_RETRY_MS) || 30000;
     console.log('Will retry the database connection in ' + Math.round(wait / 1000) + 's ...');
@@ -175,7 +179,7 @@ async function ensureAdmin() {
     console.log('Admin OK for phone:', phone);
   }
 
-  if (process.env.ADMIN_KEEP_OTHERS !== 'true') {
+if (process.env.ADMIN_KEEP_OTHERS !== 'true') {
     const removed = await Admin.deleteMany({ phone: { $ne: phone } });
     if (removed.deletedCount) console.log('Removed old admin account(s):', removed.deletedCount);
   }
@@ -216,6 +220,8 @@ app.get('/api/health', async (req, res) => {
     adminCount,
     settingsSeenByServer: {
       MONGO_URI: !!process.env.MONGO_URI,
+      MONGODB_URI: !!process.env.MONGODB_URI,
+      DATABASE_URL: !!process.env.DATABASE_URL,
       JWT_SECRET: !!process.env.JWT_SECRET,
       ADMIN_PHONE: !!process.env.ADMIN_PHONE,
       ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
@@ -363,7 +369,6 @@ if (fs.existsSync(path.join(distPath, 'index.html'))) {
 }
 
 // ---------------------------------------------------------------- start up
-// GoDaddy injects PORT. Never hard-code 5173/3000 - that is the Vite dev port and gets EACCES.
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
