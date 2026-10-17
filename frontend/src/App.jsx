@@ -25,15 +25,9 @@ import Montessori from './Pages/Montessori';
 import DysphagiaManagement from './Pages/DysphagiaManagement';
 import ABATherapy from './Pages/ABATherapy';
 
-// Admin Components & Layout Import
-import Login from './Pages/Login';
-import AdminLayout from './Pages/AdminLayout'; // 👈 Fixed case sensitivity for deployment
-import DashboardContacts from './Pages/DashboardContacts';
-import DashboardAppointments from './Pages/DashboardAppointments';
-
 import './App.css';
 
-// Yeh component pathname change hone par page ko sabse upar le jayega
+// Scroll to top on pathname change
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -59,16 +53,7 @@ function ScrollToTop() {
   return null;
 }
 
-// Protected Route Wrapper for Admin
-function ProtectedAdminRoute({ children }) {
-  const token = localStorage.getItem('adminToken');
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
-
-// ---- Friendly slugs -> real pages (so typing /speech-therapy etc. never gives an empty page) ----
+// Friendly slugs -> real pages
 const SLUG_REDIRECTS = {
   '/our-team': '/about/our-team',
   '/about-us': '/about',
@@ -88,7 +73,6 @@ const SLUG_REDIRECTS = {
   '/aba-therapy': '/Pages/aba-psychology',
 };
 
-// Simple pages for footer links that had no page before (they showed only header + footer)
 function InfoPage({ title }) {
   return (
     <section className="min-h-[60vh] flex items-center justify-center px-6 py-24 bg-[#F8F9FA]">
@@ -119,93 +103,50 @@ function NotFound() {
   );
 }
 
-// Main Layout jisme Navbar aur Footer sirf public pages par honge
-function PublicLayout() {
-  return (
-    <div className="app-container">
-      <Navbar />
-      <main className="w-full overflow-x-hidden">
-        <Routes>
-          {/* Primary Main Pages */}
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/about/our-team" element={<Team />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/conditions" element={<Conditions />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/book-a-free-consult" element={<BookAppointment />} />
-
-          {/* Individual Service Sub-Pages Routes */}
-          <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
-          <Route path="/Pages/nutrition-dietetics" element={<NutritiontherapyDietetics />} />
-          <Route path="/Pages/special-education" element={<SpecialEducation />} />
-          <Route path="/Pages/physiotherapy" element={<Physiotherapy />} />
-          <Route path="/Pages/occupational-therapy" element={<Occupationaltherapy />} />
-          <Route path="/Pages/day-care" element={<DayCare />} />
-          <Route path="/Pages/montessori-education" element={<Montessori />} />
-          <Route path="/Pages/dysphagia-management" element={<DysphagiaManagement />} />
-          <Route path="/Pages/aba-psychology" element={<ABATherapy />} />
-
-          {/* Old / short slugs -> correct page */}
-          {Object.entries(SLUG_REDIRECTS).map(([from, to]) => (
-            <Route key={from} path={from} element={<Navigate to={to} replace />} />
-          ))}
-
-          {/* Footer pages */}
-          <Route path="/faq" element={<InfoPage title="FAQ's" />} />
-          <Route path="/privacy-policy" element={<InfoPage title="Privacy Policy" />} />
-          <Route path="/terms" element={<InfoPage title="Terms of Service" />} />
-
-          {/* Anything else: real 404 page instead of an empty screen */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
 function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        {/* Standalone Login Route */}
-        <Route path="/login" element={<Login />} />
+      <div className="app-container">
+        <Navbar />
+        <main className="w-full overflow-x-hidden">
+          <Routes>
+            {/* Primary Main Pages */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/about/our-team" element={<Team />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/conditions" element={<Conditions />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/book-a-free-consult" element={<BookAppointment />} />
 
-        {/* Protected Admin Routes with AdminLayout */}
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          } 
-        />
-        <Route 
-          path="/admin/appointments" 
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout>
-                <DashboardAppointments />
-              </AdminLayout>
-            </ProtectedAdminRoute>
-          } 
-        />
-        <Route 
-          path="/admin/contacts" 
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout>
-                <DashboardContacts />
-              </AdminLayout>
-            </ProtectedAdminRoute>
-          } 
-        />
+            {/* Individual Service Sub-Pages Routes */}
+            <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
+            <Route path="/Pages/nutrition-dietetics" element={<NutritiontherapyDietetics />} />
+            <Route path="/Pages/special-education" element={<SpecialEducation />} />
+            <Route path="/Pages/physiotherapy" element={<Physiotherapy />} />
+            <Route path="/Pages/occupational-therapy" element={<Occupationaltherapy />} />
+            <Route path="/Pages/day-care" element={<DayCare />} />
+            <Route path="/Pages/montessori-education" element-={<Montessori />} />
+            <Route path="/Pages/dysphagia-management" element={<DysphagiaManagement />} />
+            <Route path="/Pages/aba-psychology" element={<ABATherapy />} />
 
-        {/* Catch-all Public Layout for all other routes */}
-        <Route path="*" element={<PublicLayout />} />
-      </Routes>
+            {/* Old / short slugs -> correct page */}
+            {Object.entries(SLUG_REDIRECTS).map(([from, to]) => (
+              <Route key={from} path={from} element={<Navigate to={to} replace />} />
+            ))}
+
+            {/* Footer pages */}
+            <Route path="/faq" element={<InfoPage title="FAQ's" />} />
+            <Route path="/privacy-policy" element={<InfoPage title="Privacy Policy" />} />
+            <Route path="/terms" element={<InfoPage title="Terms of Service" />} />
+
+            {/* 404 page */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </Router>
   );
 }

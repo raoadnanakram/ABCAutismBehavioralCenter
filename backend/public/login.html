@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login</title>
+  <style>
+    body { font-family: sans-serif; background:#f3f4f6; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+    .card { background:#fff; padding:32px; border-radius:12px; width:320px; box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    h2 { margin-top:0; text-align:center; }
+    input, button { width:100%; padding:10px; margin-top:12px; box-sizing:border-box; font-size:15px; }
+    button { background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+    #msg { color:#dc2626; margin-top:10px; font-size:14px; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Admin Login</h2>
+    <input id="phone" type="tel" placeholder="Phone number" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div id="msg"></div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('token')) location.href = 'dashboard.html';
+
+    async function login() {
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) return (msg.textContent = data.message);
+
+        localStorage.setItem('token', data.token);
+        location.href = 'dashboard.html';
+      } catch {
+        msg.textContent = 'Server se connect nahi ho saka';
+      }
+    }
+  </script>
+</body>
+</html>
