@@ -1,11 +1,13 @@
+
 {
   "name": "backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-  "start": "node server.js"
-},
+    "scripts": {
+    "postinstall": "cd backend && npm install",
+    "start": "node backend/server.js"
+    },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -18,3 +20,4 @@
     "mongoose": "^9.11.2"
   }
 }
+
