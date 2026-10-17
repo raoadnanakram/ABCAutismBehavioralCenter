@@ -9,7 +9,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/health', (req, res) => res.json(connectDB.status()));
 app.use('/api/auth', require('./routes/auth'));
-app.get('/', (req, res) => res.redirect('/login.html'));
+
+app.get('/', (req, res) =>
+  res.sendFile(path.join(__dirname, 'public', 'login.html'))
+);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log('Server running on port', port));
