@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "npm install --prefix backend",
+    "build": "echo No build step needed",
     "start": "node backend/server.js"
   },
   "engines": {
