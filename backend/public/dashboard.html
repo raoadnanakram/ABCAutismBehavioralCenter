@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;font-family:system-ui,sans-serif}
+:root{--a:#7c3aed;--b:#06b6d4}
+body{display:flex;min-height:100vh;background:#0b1020;color:#e5e7eb}
+nav{width:230px;padding:24px 14px;background:linear-gradient(180deg,#1e1b4b,#0f172a);position:sticky;top:0;height:100vh}
+nav h2{margin-bottom:24px;text-align:center;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+nav a{display:block;padding:12px 16px;margin-bottom:8px;border-radius:12px;cursor:pointer;transition:.3s}
+nav a:hover,nav a.on{background:linear-gradient(90deg,var(--a),var(--b));transform:translateX(6px)}
+main{flex:1;padding:28px;overflow:auto;min-width:0}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:24px}
+.c{padding:20px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:.3s;animation:up .6s both}
+.c:hover{transform:translateY(-6px);box-shadow:0 14px 36px rgba(124,58,237,.35)}.c b{font-size:32px;display:block;margin-top:6px}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+.bars{display:flex;align-items:flex-end;gap:10px;height:140px;margin-top:14px}
+.bars i{flex:1;background:linear-gradient(var(--b),var(--a));border-radius:8px 8px 0 0;min-height:4px;transition:.3s;animation:gr .8s both;transform-origin:bottom}.bars i:hover{filter:brightness(1.5)}
+@keyframes gr{from{transform:scaleY(0)}}
+.w{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+tbody tr{transition:.2s}tbody tr:hover{background:rgba(124,58,237,.15)}
+button,input,select{padding:9px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;transition:.3s}
+select option{color:#000}button{cursor:pointer}button:hover{background:var(--a);transform:translateY(-2px)}
+.bar{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap;align-items:center}.new{color:#34d399}
+#t{position:fixed;right:20px;bottom:20px;background:var(--a);padding:14px 20px;border-radius:12px;transform:translateY(100px);transition:.4s}#t.s{transform:none}
+@media(max-width:700px){body{flex-direction:column}nav{width:100%;height:auto;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:12px}nav h2{width:100%;margin:0 0 6px}nav a{margin:0;padding:8px 12px}main{padding:16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head>
+<body>
+<nav><h2>⚡ Admin Panel</h2><a class="on" onclick="show('home',this)">📊 Overview</a><a onclick="show('contacts',this)">📩 Contact Messages</a><a onclick="show('appointments',this)">📅 Appointments</a><a onclick="show('set',this)">🔒 Security</a><a onclick="lo()">🚪 Logout</a></nav>
+<main id="v"></main><div id="t"></div>
+<script>
+const $=s=>document.querySelector(s);let tab='home',page=1,last=0,tm;const deb=()=>{clearTimeout(tm);tm=setTimeout(load,300)};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const api=async(u,o={})=>{const r=await fetch('/api/admin'+u,{headers:{'Content-Type':'application/json'},...o});if(r.status==401){location='index.html';return new Promise(()=>{})}return r};
+const toast=m=>{$('#t').textContent=m;$('#t').className='s';setTimeout(()=>$('#t').className='',2600)};
+const SET='<div class="c" style="max-width:380px"><h3>Change password</h3><div class="bar"><input id="o" type="password" placeholder="Current password"><input id="n" type="password" placeholder="New password (min 10)"><button onclick="cp()">Save password</button></div></div>';
+function show(t,el){tab=t;page=1;document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a==el));
+ $('#v').innerHTML=t=='home'?'':t=='set'?SET:`<div class="bar"><input id="q" placeholder="Search..." oninput="page=1;deb()">${t=='appointments'?'<select id="st" onchange="page=1;load()"><option value="">All</option><option>pending</option><option>confirmed</option><option>cancelled</option></select>':''}<button onclick="location='/api/admin/export/${t}'">⬇ Export CSV</button></div><div class="w" id="tb"></div><div class="bar" id="pg"></div>`;load()}
+function draw(s){const days=[...Array(7)].map((_,i)=>new Date(Date.now()-(6-i)*864e5).toISOString().slice(0,10)),
+ v=days.map(d=>[...s.chart.contacts,...s.chart.appointments].filter(x=>x._id==d).reduce((a,x)=>a+x.n,0)),m=Math.max(...v,1);
+ $('#v').innerHTML='<div class="g">'+[['📩 Messages',s.contacts],['🔔 Unread',s.unread],['📅 Appointments',s.appointments],['⏳ Pending',s.pending]].map(([l,n],i)=>`<div class="c" style="animation-delay:${i*.1}s">${l}<b>${n}</b></div>`).join('')+'</div><div class="c"><h3>Submissions: last 7 days</h3><div class="bars">'+v.map((n,i)=>`<i style="height:${n/m*100}%" title="${days[i]}: ${n}"></i>`).join('')+'</div></div>'}
+async function load(){try{await run(tab)}catch{toast('⚠ Could not load data')}}
+async function run(t0){const sr=await api('/stats');if(!sr.ok)throw 1;const s=await sr.json(),tot=s.contacts+s.appointments;
+ if(t0!=tab)return;
+ if(last&&tot>last)toast('🔔 New submission received');last=tot;
+ if(t0=='home')return draw(s);if(t0=='set')return;
+ const dr=await api(`/${t0}?page=${page}&q=${encodeURIComponent($('#q')?.value||'')}&status=${$('#st')?.value||''}`);if(!dr.ok)throw 1;const d=await dr.json(),C=t0=='contacts';
+ if(t0!=tab||!$('#tb'))return;
+ $('#tb').innerHTML='<table><thead><tr>'+(C?'<th>Name<th>Email<th>Phone<th>Subject<th>Message<th>Actions':'<th>Name<th>Email<th>Phone<th>Service<th>Date / Time<th>Status<th>Actions')+'</thead><tbody>'+
+ (d.items.map(x=>C?`<tr><td>${x.read?'':'<span class="new">● </span>'}${esc(x.name)}<td>${esc(x.email)}<td>${esc(x.phone)}<td>${esc(x.subject)}<td>${esc(x.message)}<td><button onclick="rd('${x._id}')">✔</button> <button onclick="rp('${x._id}')">✉</button> <button onclick="del('contacts','${x._id}')">🗑</button>`:
+ `<tr><td>${esc(x.name)}<td>${esc(x.email)}<td>${esc(x.phone)}<td>${esc(x.service)}<td>${esc(x.date)} ${esc(x.time)}<td><select onchange="up('${x._id}',this.value)">${['pending','confirmed','cancelled'].map(z=>`<option ${z==x.status?'selected':''}>${z}</option>`).join('')}</select><td><button onclick="del('appointments','${x._id}')">🗑</button>`).join('')||'<tr><td colspan="7">Nothing here yet.')+'</tbody></table>';
+ $('#pg').innerHTML=`<button onclick="page=Math.max(1,page-1);load()">◀</button> Page ${page} / ${d.pages} <button onclick="page=Math.min(${d.pages},page+1);load()">▶</button>`}
+const rd=async i=>{await api(`/contacts/${i}/read`,{method:'PATCH'});load()};
+const rp=async i=>{const m=prompt('Reply to send by email:');if(m){const r=await api(`/contacts/${i}/reply`,{method:'POST',body:JSON.stringify({message:m})});toast(r.ok?'Reply emailed ✅':'Could not send')}};
+const up=async(i,s)=>{const r=await api('/appointments/'+i,{method:'PATCH',body:JSON.stringify({status:s})});toast(r.ok?'Status updated, user emailed ✅':'Update failed')};
+const del=async(t,i)=>{if(confirm('Delete permanently?')){await api(`/${t}/${i}`,{method:'DELETE'});load()}};
+const cp=async()=>{const r=await api('/change-password',{method:'POST',body:JSON.stringify({oldPassword:$('#o').value,newPassword:$('#n').value})});toast(r.ok?'Password changed ✅':'Check passwords (min 10 characters)')};
+const lo=async()=>{await api('/logout',{method:'POST'});location='index.html'};
+show('home',$('nav a'));setInterval(()=>{if(!document.activeElement?.closest('#tb'))load()},15000);
+</script></body></html>

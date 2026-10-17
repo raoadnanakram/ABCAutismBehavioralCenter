@@ -1,0 +1,20 @@
+# dependencies & builds
+node_modules
+dist
+dist-ssr
+
+# secrets - NEVER commit these
+.env
+.env.*
+!.env.example
+!frontend/.env.production
+
+# logs / editor
+logs
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.local
