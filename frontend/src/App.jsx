@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
 // Components Import
 import Navbar from './Components/Navbar';
@@ -13,6 +13,10 @@ import Conditions from './Pages/Conditions';
 import Contact from './Pages/Contact';
 import Team from './Pages/OurTeam';
 import BookAppointment from './Pages/BookAppointment';
+
+// Admin Pages Import
+import AdminLogin from './Pages/AdminLogin';
+import AdminDashboard from './Pages/AdminDashboard';
 
 // Individual Service Pages Import
 import SpeechLanguageTherapy from './Pages/SpeechLanguageTherapy';
@@ -103,50 +107,64 @@ function NotFound() {
   );
 }
 
+// Navbar/Footer admin pages par nahi dikhenge
+function Layout() {
+  const { pathname } = useLocation();
+  const isAdmin = pathname.startsWith('/login') || pathname.startsWith('/dashboard');
+
+  return (
+    <div className="app-container">
+      {!isAdmin && <Navbar />}
+      <main className="w-full overflow-x-hidden">
+        <Routes>
+          {/* Admin */}
+          <Route path="/login" element={<AdminLogin />} />
+          <Route path="/dashboard" element={<AdminDashboard />} />
+
+          {/* Primary Main Pages */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/about/our-team" element={<Team />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/conditions" element={<Conditions />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/book-a-free-consult" element={<BookAppointment />} />
+
+          {/* Individual Service Sub-Pages Routes */}
+          <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
+          <Route path="/Pages/nutrition-dietetics" element={<NutritiontherapyDietetics />} />
+          <Route path="/Pages/special-education" element={<SpecialEducation />} />
+          <Route path="/Pages/physiotherapy" element={<Physiotherapy />} />
+          <Route path="/Pages/occupational-therapy" element={<Occupationaltherapy />} />
+          <Route path="/Pages/day-care" element={<DayCare />} />
+          <Route path="/Pages/montessori-education" element={<Montessori />} />
+          <Route path="/Pages/dysphagia-management" element={<DysphagiaManagement />} />
+          <Route path="/Pages/aba-psychology" element={<ABATherapy />} />
+
+          {/* Old / short slugs -> correct page */}
+          {Object.entries(SLUG_REDIRECTS).map(([from, to]) => (
+            <Route key={from} path={from} element={<Navigate to={to} replace />} />
+          ))}
+
+          {/* Footer pages */}
+          <Route path="/faq" element={<InfoPage title="FAQ's" />} />
+          <Route path="/privacy-policy" element={<InfoPage title="Privacy Policy" />} />
+          <Route path="/terms" element={<InfoPage title="Terms of Service" />} />
+
+          {/* 404 page */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      {!isAdmin && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="app-container">
-        <Navbar />
-        <main className="w-full overflow-x-hidden">
-          <Routes>
-            {/* Primary Main Pages */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/about/our-team" element={<Team />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/conditions" element={<Conditions />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/book-a-free-consult" element={<BookAppointment />} />
-
-            {/* Individual Service Sub-Pages Routes */}
-            <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
-            <Route path="/Pages/nutrition-dietetics" element={<NutritiontherapyDietetics />} />
-            <Route path="/Pages/special-education" element={<SpecialEducation />} />
-            <Route path="/Pages/physiotherapy" element={<Physiotherapy />} />
-            <Route path="/Pages/occupational-therapy" element={<Occupationaltherapy />} />
-            <Route path="/Pages/day-care" element={<DayCare />} />
-            <Route path="/Pages/montessori-education" element-={<Montessori />} />
-            <Route path="/Pages/dysphagia-management" element={<DysphagiaManagement />} />
-            <Route path="/Pages/aba-psychology" element={<ABATherapy />} />
-
-            {/* Old / short slugs -> correct page */}
-            {Object.entries(SLUG_REDIRECTS).map(([from, to]) => (
-              <Route key={from} path={from} element={<Navigate to={to} replace />} />
-            ))}
-
-            {/* Footer pages */}
-            <Route path="/faq" element={<InfoPage title="FAQ's" />} />
-            <Route path="/privacy-policy" element={<InfoPage title="Privacy Policy" />} />
-            <Route path="/terms" element={<InfoPage title="Terms of Service" />} />
-
-            {/* 404 page */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Layout />
     </Router>
   );
 }

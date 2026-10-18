@@ -1,18 +1,38 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 
 const app = express();
+app.set('trust proxy', 1);
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/health', (req, res) => res.json(connectDB.status()));
+app.use(
+  '/api/auth/login',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { message: 'Bohat zyada koshishein. 15 minute baad try karein.' },
+  })
+);
+
 app.use('/api/auth', require('./routes/auth'));
 
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public', 'login.html'))
-);
+// Admin pages Google mein na aayein
+app.use(['/login', '/dashboard'], (req, res, next) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
+
+// React website
+app.use(express.static(path.join(__dirname, 'site')));
+app.get(/.*/, (req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).json({ message: 'Not found' });
+  res.sendFile(path.join(__dirname, 'site', 'index.html'));
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log('Server running on port', port));
