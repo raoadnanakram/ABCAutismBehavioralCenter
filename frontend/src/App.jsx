@@ -13,6 +13,7 @@ import Conditions from './Pages/Conditions';
 import Contact from './Pages/Contact';
 import Team from './Pages/OurTeam';
 import BookAppointment from './Pages/BookAppointment';
+import Careers from './Pages/Careers'; // Careers page import
 
 // Admin Pages Import
 import AdminLogin from './Pages/AdminLogin';
@@ -129,6 +130,7 @@ function Layout() {
           <Route path="/conditions" element={<Conditions />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/book-a-free-consult" element={<BookAppointment />} />
+          <Route path="/careers" element={<Careers />} /> {/* Careers Route added */}
 
           {/* Individual Service Sub-Pages Routes */}
           <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
