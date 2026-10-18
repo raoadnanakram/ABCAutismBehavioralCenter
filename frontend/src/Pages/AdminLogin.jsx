@@ -23,15 +23,23 @@ export default function AdminLogin() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phone.trim(), password }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setMsg(`Server ne ghalat jawab diya (status ${res.status})`);
+        setLoading(false);
+        return;
+      }
       if (!res.ok) {
         setMsg(data.message || 'Login fail ho gaya');
       } else {
         localStorage.setItem('token', data.token);
         navigate('/dashboard', { replace: true });
       }
-    } catch {
-      setMsg('Server se connect nahi ho saka');
+    } catch (err) {
+      setMsg('Network error: ' + err.message);
     }
     setLoading(false);
   };
