@@ -63,8 +63,8 @@ const connectDB = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
 
-    const phone = process.env.ADMIN_PHONE || '03001234567';
-    const plain = process.env.ADMIN_PASSWORD || 'Admin@12345';
+    const phone = process.env.ADMIN_PHONE || '+923001330450';
+    const plain = process.env.ADMIN_PASSWORD || 'Bilal786@#$@#$';
     const [rows] = await pool.query('SELECT id FROM admins WHERE phone = ?', [phone]);
     if (rows.length === 0) {
       await pool.query('INSERT INTO admins (phone, password) VALUES (?, ?)', [
