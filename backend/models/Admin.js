@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { getLastError } = require('../mailer');
 
 const adminSchema = new mongoose.Schema(
   {

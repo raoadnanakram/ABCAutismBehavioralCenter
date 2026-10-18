@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../config/db');
 const auth = require('../middleware/auth');
+const { getLastError } = require('../mailer');
 
 const pool = db.pool;
 const TYPES = ['appointment', 'contact', 'career'];
@@ -156,9 +157,10 @@ router.get(
     res.json({
       db: dbInfo,
       mail: {
-        apiKey: !!process.env.BREVO_API_KEY,
-        sender: !!process.env.MAIL_FROM,
+        apiKey: !!process.env.GOOGLE_SCRIPT_URL,
+        sender: !!process.env.MAIL_SECRET,
         owner: !!process.env.OWNER_EMAIL,
+        lastError: getLastError(),
       },
       server: { node: process.version, uptimeMin: Math.round(process.uptime() / 60) },
     });
