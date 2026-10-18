@@ -1,3 +1,4 @@
+// @ts-nocheck
 const router = require('express').Router();
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
@@ -19,8 +20,8 @@ const LABEL = {
   career: 'Career Application',
 };
 const EXTRA = {
-  appointment: ['childAge', 'service', 'date'],
-  contact: [],
+  appointment: ['childName', 'service', 'date', 'time'],
+  contact: ['service', 'preferredContact'],
   career: ['position', 'experience', 'cvLink'],
 };
 const USER_SUBJECT = {
@@ -54,33 +55,40 @@ const rowsHtml = (obj) =>
     )
     .join('');
 
+const clean = (v, n) => String(v || '').trim().slice(0, n);
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 router.post('/:type', async (req, res) => {
   try {
-    const type = req.params.type;
-    if (!LABEL[type]) return res.status(404).json({ message: 'Not found' });
+    const type = String(req.params.type);
+    if (!Object.prototype.hasOwnProperty.call(LABEL, type)) {
+      return res.status(404).json({ message: 'Not found' });
+    }
+
     const b = req.body || {};
     if (b.website) return res.json({ ok: true }); // honeypot: bots yahan phans jate hain
 
-    const clean = (v, n) => String(v || '').trim().slice(0, n);
     const name = clean(b.name, 120);
     const email = clean(b.email, 160);
     const phone = clean(b.phone, 30);
     const subject = clean(b.subject, 200);
     const message = clean(b.message, 3000);
 
-    if (name.length < 2) return res.status(400).json({ message: 'Naam likhein' });
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    if (name.length < 2) {
+      return res.status(400).json({ message: 'Naam likhein' });
+    }
+    if (!EMAIL_RE.test(email)) {
       return res.status(400).json({ message: 'Sahi email likhein' });
+    }
     const digits = phone.replace(/\D/g, '');
-    if (digits.length < 10 || digits.length > 15)
+    if (digits.length < 10 || digits.length > 15) {
       return res.status(400).json({ message: 'Sahi phone number likhein' });
-    if (type === 'contact' && message.length < 5)
-      return res.status(400).json({ message: 'Message likhein' });
+    }
 
-    const extra = {};
-    EXTRA[type].forEach((k) => (extra[k] = clean(b[k], 300)));
-    if (type === 'career' && !extra.position)
+    const extra = Object.fromEntries(EXTRA[type].map((k) => [k, clean(b[k], 300)]));
+    if (type === 'career' && !extra.position) {
       return res.status(400).json({ message: 'Position select karein' });
+    }
 
     const [r] = await pool.query(
       'INSERT INTO submissions (type,name,email,phone,subject,message,extra,ip) VALUES (?,?,?,?,?,?,?,?)',
@@ -95,7 +103,10 @@ router.post('/:type', async (req, res) => {
         to: process.env.OWNER_EMAIL,
         subject: `New ${LABEL[type]} from ${name}`,
         replyTo: email,
-        html: layout(`New ${LABEL[type]}`, `<table style="width:100%;border-collapse:collapse">${rowsHtml(details)}</table>`),
+        html: layout(
+          `New ${LABEL[type]}`,
+          `<table style="width:100%;border-collapse:collapse">${rowsHtml(details)}</table>`
+        ),
       });
       const userOk = await sendMail({
         to: email,

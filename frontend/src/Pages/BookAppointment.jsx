@@ -1,4 +1,4 @@
-import { API_BASE } from '../config';
+import { submitForm } from '../api';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,10 +52,10 @@ const BookingAppointment = () => {
     });
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.service || !formData.date || !formData.time || !formData.consent) {
-      alert("Kripya sabhi anivarya (required) fields bharein aur consent check karein.");
+    if (!formData.name || !formData.phone || !formData.email || !formData.service || !formData.date || !formData.time || !formData.consent) {
+      setErrorMessage("Please fill all required fields and tick the consent box.");
       return;
     }
 
@@ -63,36 +63,25 @@ const handleSubmit = async (e) => {
     setErrorMessage("");
 
     try {
-      // Backend API call
-      const response = await fetch(`${API_BASE}/api/appointment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          childName: formData.childName,
-          service: formData.service,
-          date: formData.date,
-          time: formData.time,
-          additionalInfo: formData.additionalInfo || formData.message // Yahan additionalInfo add kar diya gaya hai
-        })
+      await submitForm("appointment", {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        childName: formData.childName,
+        service: formData.service,
+        date: formData.date,
+        time: formData.time,
+        message: formData.message,
+        website: "",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setIsSuccess(true);
-      } else {
-        setErrorMessage(data.message || "Kuch ghalat ho gaya, dobara koshish karein.");
-      }
+      setIsSuccess(true);
     } catch (err) {
-      console.error("Error:", err);
-      setErrorMessage("Server ke sath connection nahi ho saka.");
+      setErrorMessage(err.message || "Something went wrong, please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="w-full font-sans text-[#334155] bg-[#F8F9FA] overflow-x-hidden">
 
@@ -325,11 +314,12 @@ const handleSubmit = async (e) => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                          Email Address
+                          Email Address *
                         </label>
                         <input 
                           type="email"
                           name="email"
+                          required
                           placeholder="Enter your email address"
                           value={formData.email}
                           onChange={handleChange}

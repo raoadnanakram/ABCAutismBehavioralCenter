@@ -1,4 +1,4 @@
-import { API_BASE } from '../config';
+import { submitForm } from '../api';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -67,6 +67,7 @@ export default function Contact() {
     const errors = {};
     if (!formValues.fullName.trim()) errors.fullName = "Full name is required";
     if (!formValues.phone.trim()) errors.phone = "Phone number is required";
+    if (!formValues.email.trim()) errors.email = "Email is required";
     if (!formValues.service) errors.service = "Please select a service";
     return errors;
   };
@@ -92,30 +93,19 @@ export default function Contact() {
     setErrorMessage('');
 
     try {
-      // Backend API call updated to match individual professional fields
-      const response = await fetch(`${API_BASE}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formValues.fullName,
-          email: formValues.email,
-          phone: formValues.phone,
-          service: formValues.service,
-          preferredContact: formValues.contactMethod,
-          message: formValues.message
-        })
+      await submitForm('contact', {
+        name: formValues.fullName,
+        email: formValues.email,
+        phone: formValues.phone,
+        subject: formValues.service,
+        service: formValues.service,
+        preferredContact: formValues.contactMethod,
+        message: formValues.message,
+        website: '',
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setIsSubmitted(true);
-      } else {
-        setErrorMessage(data.message || 'Kuch ghalat ho gaya, dobara koshish karein.');
-      }
+      setIsSubmitted(true);
     } catch (err) {
-      console.error('Error:', err);
-      setErrorMessage('Server ke sath connection nahi ho saka.');
+      setErrorMessage(err.message || 'Something went wrong, please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -388,15 +378,16 @@ export default function Contact() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Email Address</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Email Address *</label>
                     <input 
                       type="email" 
                       name="email"
                       value={formValues.email}
                       onChange={handleChange}
                       placeholder="Enter your email address" 
-                      className="w-full p-3.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:border-[#00A8CD] focus:ring-2 focus:ring-[#00A8CD]/20 transition"
+                      className={`w-full p-3.5 rounded-xl border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#00A8CD]/20 transition ${formErrors.email ? 'border-red-400' : 'border-slate-300 focus:border-[#00A8CD]'}`}
                     />
+                    {formErrors.email && <p className="text-red-500 text-xs">{formErrors.email}</p>}
                   </div>
 
                   <div className="space-y-2">
