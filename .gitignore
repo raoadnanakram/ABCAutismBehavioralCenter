@@ -2,6 +2,7 @@
 node_modules
 dist
 dist-ssr
+backend/site
 
 # secrets - NEVER commit these
 .env
