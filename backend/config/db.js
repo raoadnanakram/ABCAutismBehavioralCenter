@@ -1,3 +1,4 @@
+// @ts-nocheck
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
@@ -63,8 +64,21 @@ const connectDB = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
 
-    const phone = process.env.ADMIN_PHONE || '+923001330450';
-    const plain = process.env.ADMIN_PASSWORD || 'Bilal786@#$@#$';
+    // CV files of career applications
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS cv_files (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        submission_id INT NOT NULL,
+        filename VARCHAR(160) NOT NULL,
+        mime VARCHAR(100) NOT NULL,
+        size INT NOT NULL,
+        data LONGBLOB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY uq_cv_submission (submission_id)
+      )`);
+
+    const phone = process.env.ADMIN_PHONE || '03001234567';
+    const plain = process.env.ADMIN_PASSWORD || 'Admin@12345';
     const [rows] = await pool.query('SELECT id FROM admins WHERE phone = ?', [phone]);
     if (rows.length === 0) {
       await pool.query('INSERT INTO admins (phone, password) VALUES (?, ?)', [

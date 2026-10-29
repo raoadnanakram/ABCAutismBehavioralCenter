@@ -13,7 +13,7 @@ import Conditions from './Pages/Conditions';
 import Contact from './Pages/Contact';
 import Team from './Pages/OurTeam';
 import BookAppointment from './Pages/BookAppointment';
-import Careers from './Pages/Careers'; // Careers page import
+import Careerpage from './Pages/Careerpage'; // Career page (file name: Careerpage.jsx)
 
 // Admin Pages Import
 import AdminLogin from './Pages/AdminLogin';
@@ -66,6 +66,8 @@ const SLUG_REDIRECTS = {
   '/contact-us': '/contact',
   '/book-appointment': '/book-a-free-consult',
   '/book': '/book-a-free-consult',
+  '/career': '/careers',
+  '/join-us': '/careers',
   '/speech-therapy': '/Pages/speech-therapy',
   '/nutrition-dietetics': '/Pages/nutrition-dietetics',
   '/special-education': '/Pages/special-education',
@@ -130,7 +132,7 @@ function Layout() {
           <Route path="/conditions" element={<Conditions />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/book-a-free-consult" element={<BookAppointment />} />
-          <Route path="/careers" element={<Careers />} /> {/* Careers Route added */}
+          <Route path="/careers" element={<Careerpage />} />
 
           {/* Individual Service Sub-Pages Routes */}
           <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />

@@ -550,6 +550,17 @@ function Modal({ item, onClose, onStatus, onDelete }) {
     ['User mail', item.mail_sent & 2 ? 'Sent ✓' : 'Not sent'],
   ].filter(([, v]) => v);
 
+  const downloadCv = async () => {
+    const res = await fetch(`/api/admin/submissions/${item.id}/cv`, {
+      headers: { Authorization: 'Bearer ' + getToken() },
+    });
+    if (!res.ok) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(await res.blob());
+    a.download = x['CV file'] || 'cv';
+    a.click();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -612,7 +623,16 @@ function Modal({ item, onClose, onStatus, onDelete }) {
             ))}
           </div>
 
-          <div className="mt-5 grid grid-cols-3 gap-2">
+          {Number(item.has_cv) > 0 && (
+            <button
+              onClick={downloadCv}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#F5A623] to-[#F5456B] py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              📄 Download CV
+            </button>
+          )}
+
+          <div className="mt-3 grid grid-cols-3 gap-2">
             <a
               href={`mailto:${item.email}`}
               onClick={() => onStatus(item.id, 'replied')}
@@ -1197,7 +1217,12 @@ function SecurityTab({ sys, logins, pw, setPw, changePw }) {
           headline={!sys ? 'Checking...' : mailOk ? 'Configured' : 'Setup incomplete'}
           lines={
             sys
-              ? [`API key ${sys.mail.apiKey ? '✓' : '✗'}`, `Sender address ${sys.mail.sender ? '✓' : '✗'}`, `Owner email ${sys.mail.owner ? '✓' : '✗'}`]
+              ? [
+                  `Mail script link ${sys.mail.apiKey ? '✓' : '✗'}`,
+                  `Secret key ${sys.mail.sender ? '✓' : '✗'}`,
+                  `Owner email ${sys.mail.owner ? '✓' : '✗'}`,
+                  ...(sys.mail.lastError ? ['Last error: ' + sys.mail.lastError] : []),
+                ]
               : ['Checking settings']
           }
         />

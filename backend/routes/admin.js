@@ -31,7 +31,7 @@ router.get(
     );
     const [[{ t }]] = await pool.query("SELECT DATE_FORMAT(CURDATE(),'%Y-%m-%d') t");
     const [recent] = await pool.query(
-      'SELECT id, type, name, phone, email, subject, message, extra, status, mail_sent, created_at FROM submissions ORDER BY id DESC LIMIT 8'
+      'SELECT s.id, s.type, s.name, s.phone, s.email, s.subject, s.message, s.extra, s.status, s.mail_sent, s.created_at, (SELECT COUNT(*) FROM cv_files c WHERE c.submission_id = s.id) AS has_cv FROM submissions s ORDER BY s.id DESC LIMIT 8'
     );
 
     const n = (rows, k, v) => Number((rows.find((r) => r[k] === v) || {}).c || 0);
@@ -87,10 +87,28 @@ router.get(
     const w = where.join(' AND ');
     const [[{ total }]] = await pool.query(`SELECT COUNT(*) total FROM submissions WHERE ${w}`, args);
     const [rows] = await pool.query(
-      `SELECT * FROM submissions WHERE ${w} ORDER BY id DESC LIMIT ? OFFSET ?`,
+      `SELECT s.*, (SELECT COUNT(*) FROM cv_files c WHERE c.submission_id = s.id) AS has_cv FROM submissions s WHERE ${w} ORDER BY s.id DESC LIMIT ? OFFSET ?`,
       [...args, limit, (page - 1) * limit]
     );
     res.json({ rows, total: Number(total), page, pages: Math.max(1, Math.ceil(total / limit)) });
+  })
+);
+
+router.get(
+  '/submissions/:id/cv',
+  h(async (req, res) => {
+    const [rows] = await pool.query('SELECT filename, mime, data FROM cv_files WHERE submission_id = ?', [
+      Number(req.params.id),
+    ]);
+    if (!rows.length) return res.status(404).json({ message: 'No CV found' });
+    const f = rows[0];
+    res
+      .set({
+        'Content-Type': f.mime,
+        'Content-Disposition': `attachment; filename="${String(f.filename).replace(/[^\w.\- ]/g, '_')}"`,
+        'X-Content-Type-Options': 'nosniff',
+      })
+      .send(f.data);
   })
 );
 
@@ -107,6 +125,7 @@ router.patch(
 router.delete(
   '/submissions/:id',
   h(async (req, res) => {
+    await pool.query('DELETE FROM cv_files WHERE submission_id = ?', [Number(req.params.id)]);
     await pool.query('DELETE FROM submissions WHERE id = ?', [Number(req.params.id)]);
     res.json({ ok: true });
   })

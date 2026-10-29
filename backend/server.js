@@ -8,6 +8,10 @@ const connectDB = require('./config/db');
 const app = express();
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
+
+// Career form sends the CV inside the request, so this one route may be bigger.
+// It must come BEFORE the general (small) limit below.
+app.use('/api/forms/career', express.json({ limit: '8mb' }));
 app.use(express.json({ limit: '50kb' }));
 
 app.use(

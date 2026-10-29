@@ -22,7 +22,7 @@ const LABEL = {
 const EXTRA = {
   appointment: ['childName', 'service', 'date', 'time'],
   contact: ['service', 'preferredContact'],
-  career: ['position', 'experience', 'cvLink'],
+  career: ['position', 'experience', 'degree', 'age', 'gender'],
 };
 const USER_SUBJECT = {
   appointment: 'We received your appointment request',
@@ -58,6 +58,32 @@ const rowsHtml = (obj) =>
 const clean = (v, n) => String(v || '').trim().slice(0, n);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/* ---------- CV check (career form) ---------- */
+const MAX_CV = 5 * 1024 * 1024;
+const MIME_PDF = 'application/pdf';
+const MIME_DOC = 'application/msword';
+const MIME_DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+function checkCv(cv) {
+  if (!cv || typeof cv !== 'object') return { error: 'Please upload your CV.' };
+  const data = typeof cv.data === 'string' ? cv.data : '';
+  if (!data) return { error: 'Please upload your CV.' };
+  if (data.length > Math.ceil((MAX_CV * 4) / 3) + 16) return { error: 'CV file is too large (max 5 MB).' };
+
+  const buf = Buffer.from(data, 'base64');
+  if (!buf.length) return { error: 'CV file looks empty.' };
+  if (buf.length > MAX_CV) return { error: 'CV file is too large (max 5 MB).' };
+
+  // The real file type is checked from the first bytes, not from the name
+  const isPdf = buf.slice(0, 4).toString('latin1') === '%PDF';
+  const isDocx = buf[0] === 0x50 && buf[1] === 0x4b; // zip container
+  const isDoc = buf[0] === 0xd0 && buf[1] === 0xcf && buf[2] === 0x11 && buf[3] === 0xe0;
+  if (!isPdf && !isDocx && !isDoc) return { error: 'CV must be a PDF or Word file.' };
+
+  const name = String(cv.name || 'cv').replace(/[^\w.\- ]+/g, '_').slice(0, 120) || 'cv';
+  return { buf, name, mime: isPdf ? MIME_PDF : isDoc ? MIME_DOC : MIME_DOCX };
+}
+
 router.post('/:type', async (req, res) => {
   try {
     const type = String(req.params.type);
@@ -74,26 +100,41 @@ router.post('/:type', async (req, res) => {
     const subject = clean(b.subject, 200);
     const message = clean(b.message, 3000);
 
-    if (name.length < 2) {
-      return res.status(400).json({ message: 'Naam likhein' });
-    }
-    if (!EMAIL_RE.test(email)) {
-      return res.status(400).json({ message: 'Sahi email likhein' });
-    }
+    if (name.length < 2) return res.status(400).json({ message: 'Naam likhein' });
+    if (!EMAIL_RE.test(email)) return res.status(400).json({ message: 'Sahi email likhein' });
     const digits = phone.replace(/\D/g, '');
-    if (digits.length < 10 || digits.length > 15) {
+    if (digits.length < 10 || digits.length > 15)
       return res.status(400).json({ message: 'Sahi phone number likhein' });
-    }
 
     const extra = Object.fromEntries(EXTRA[type].map((k) => [k, clean(b[k], 300)]));
-    if (type === 'career' && !extra.position) {
+    if (type === 'career' && !extra.position)
       return res.status(400).json({ message: 'Position select karein' });
+
+    let cvInfo = null;
+    if (type === 'career') {
+      cvInfo = checkCv(b.cv);
+      if (cvInfo.error) return res.status(400).json({ message: cvInfo.error });
+      extra['CV file'] = cvInfo.name;
     }
 
     const [r] = await pool.query(
       'INSERT INTO submissions (type,name,email,phone,subject,message,extra,ip) VALUES (?,?,?,?,?,?,?,?)',
       [type, name, email, phone, subject || null, message || null, JSON.stringify(extra), req.ip]
     );
+
+    if (cvInfo) {
+      try {
+        await pool.query(
+          'INSERT INTO cv_files (submission_id, filename, mime, size, data) VALUES (?,?,?,?,?)',
+          [r.insertId, cvInfo.name, cvInfo.mime, cvInfo.buf.length, cvInfo.buf]
+        );
+      } catch (e) {
+        console.error('CV save error:', e.message);
+        await pool.query('DELETE FROM submissions WHERE id = ?', [r.insertId]).catch(() => {});
+        return res.status(500).json({ message: 'Could not save your CV. Please try a smaller file.' });
+      }
+    }
+
     res.json({ ok: true });
 
     // Emails background mein jati hain, user ko intezar nahi karna parta
@@ -105,7 +146,9 @@ router.post('/:type', async (req, res) => {
         replyTo: email,
         html: layout(
           `New ${LABEL[type]}`,
-          `<table style="width:100%;border-collapse:collapse">${rowsHtml(details)}</table>`
+          `<table style="width:100%;border-collapse:collapse">${rowsHtml(details)}</table>${
+            cvInfo ? '<p style="margin-top:12px;color:#64748b">The CV can be downloaded from the admin dashboard.</p>' : ''
+          }`
         ),
       });
       const userOk = await sendMail({
