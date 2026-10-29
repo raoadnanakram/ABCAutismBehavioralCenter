@@ -1,177 +1,30 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api, setToken, getToken } from '../api';
-
-const COLORS = {
-  navy: '#003B5C',
-  deepNavy: '#00283F',
-  blue: '#04507A',
-  pink: '#F5456B',
-  yellow: '#F5A623',
-  cyan: '#1CA7C7',
-  white: '#FFFFFF',
-};
-
-const entrance = {
-  hidden: { opacity: 0, y: 24, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.65, ease: 'easeOut' },
-  },
-};
-
-function FloatingOrb({ color, className, duration = 9, delay = 0 }) {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <motion.div
-      aria-hidden="true"
-      className={`pointer-events-none absolute rounded-full blur-3xl ${className}`}
-      style={{ background: color, willChange: 'transform' }}
-      animate={
-        reduceMotion
-          ? {}
-          : {
-              x: [0, 25, -12, 0],
-              y: [0, -30, 12, 0],
-              scale: [1, 1.08, 0.96, 1],
-            }
-      }
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }}
-    />
-  );
-}
-
-function BrandLogo({ mobile = false }) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.035, y: -2 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-      className={`inline-flex items-center justify-center rounded-xl bg-white ${
-        mobile ? 'w-[180px] p-1.5' : 'w-[220px] p-2'
-      }`}
-    >
-      <img
-        src="/Logo (2).png"
-        alt="ABC Autism Behavioral Center"
-        className="h-auto w-full object-contain"
-      />
-    </motion.div>
-  );
-}
-
-function BrandPill({ color, children }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md">
-      <span
-        className="h-2 w-2 rounded-full"
-        style={{
-          background: color,
-          boxShadow: `0 0 12px ${color}90`,
-        }}
-      />
-      {children}
-    </span>
-  );
-}
-
-function FieldIcon({ type }) {
-  if (type === 'phone') {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth="1.7" className="h-5 w-5">
-        <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
-        <path d="M10 18h4" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      strokeWidth="1.7" className="h-5 w-5">
-      <rect x="4" y="10" width="16" height="11" rx="2.5" />
-      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-      <path d="M12 14v3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function InputField({
-  label,
-  type,
-  value,
-  onChange,
-  placeholder,
-  icon,
-  rightElement,
-  autoComplete,
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-sm font-semibold text-slate-700">
-        {label}
-      </label>
-
-      <div className="group relative">
-        <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors duration-300 group-focus-within:text-[#1CA7C7]">
-          <FieldIcon type={icon} />
-        </span>
-
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          autoComplete={autoComplete}
-          required
-          className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50/80 pl-11 pr-12 text-sm font-medium text-[#003B5C] outline-none transition-all duration-300 placeholder:text-slate-400 hover:border-slate-300 focus:border-[#1CA7C7] focus:bg-white focus:ring-4 focus:ring-[#1CA7C7]/15"
-        />
-
-        {rightElement && (
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
-            {rightElement}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default function AdminLogin() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [show, setShow] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    document.title = 'Admin Login | ABC Autism Behavioral Center';
+    document.title = 'Staff Portal | ABC Autism Behavioral Center';
 
     if (getToken()) {
       navigate('/dashboard', { replace: true });
     }
 
     if (new URLSearchParams(window.location.search).get('expired')) {
-      setMsg(
-        'Security ki wajah se session khatam ho gaya. Dobara login karein.'
-      );
+      setMsg('Session expired for security. Please sign in again.');
     }
   }, [navigate]);
 
-  // Existing authentication logic preserved.
-  const login = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg('');
     setLoading(true);
@@ -188,466 +41,247 @@ export default function AdminLogin() {
       setToken(data.token);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      setMsg(err.message);
+      setMsg(err.message || 'Authentication failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
-  const floatingAnimation = reduceMotion
-    ? {}
-    : {
-        y: [0, -5, 0],
-      };
-
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#00283F] px-4 py-7 sm:px-6">
-
-      {/* BACKGROUND GRADIENT */}
-      <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0"
+    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#001E30] px-4 py-8 font-sans antialiased sm:px-6">
+      
+      {/* AMBIENT BACKGROUND GLOWS */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-[#1CA7C7]/20 blur-[120px]" />
+        <div className="absolute -right-40 top-1/3 h-[500px] w-[500px] rounded-full bg-[#F5456B]/15 blur-[140px]" />
+        <div className="absolute -bottom-40 left-1/3 h-[450px] w-[450px] rounded-full bg-[#F5A623]/10 blur-[130px]" />
+        
+        {/* Subtle geometric dot grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.035]"
           style={{
-            background:
-              'radial-gradient(ellipse at 12% 12%, #0C5870 0%, transparent 43%), radial-gradient(ellipse at 88% 88%, #063D60 0%, transparent 45%), linear-gradient(135deg, #00283F, #003B5C 52%, #012C45)',
+            backgroundImage: 'radial-gradient(circle at 1px 1px, #FFFFFF 1px, transparent 0)',
+            backgroundSize: '32px 32px'
           }}
-        />
-
-        <div
-          className="absolute inset-0 opacity-[0.045]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
-            backgroundSize: '44px 44px',
-          }}
-        />
-
-        <FloatingOrb
-          color="#F5456B35"
-          className="-left-24 top-10 h-72 w-72 sm:h-96 sm:w-96"
-          duration={9}
-        />
-
-        <FloatingOrb
-          color="#1CA7C735"
-          className="-right-24 top-0 h-80 w-80 sm:h-[430px] sm:w-[430px]"
-          duration={11}
-          delay={1}
-        />
-
-        <FloatingOrb
-          color="#F5A62325"
-          className="-bottom-36 left-[25%] h-72 w-72 sm:h-96 sm:w-96"
-          duration={10}
-          delay={2}
-        />
-
-        {/* Rotating decorative rings */}
-        <motion.div
-          className="absolute -right-16 top-[15%] hidden h-64 w-64 rounded-full border border-white/10 lg:block"
-          animate={reduceMotion ? {} : { rotate: 360 }}
-          transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-        />
-
-        <motion.div
-          className="absolute -right-2 top-[20%] hidden h-44 w-44 rounded-full border border-[#1CA7C7]/20 lg:block"
-          animate={reduceMotion ? {} : { rotate: -360 }}
-          transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
-        />
-
-        <motion.div
-          className="absolute left-[8%] top-[20%] hidden h-2 w-2 rounded-full bg-[#F5A623] shadow-[0_0_20px_#F5A623] lg:block"
-          animate={reduceMotion ? {} : { opacity: [0.3, 1, 0.3], scale: [1, 1.6, 1] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-
-        <motion.div
-          className="absolute bottom-[18%] right-[10%] hidden h-2 w-2 rounded-full bg-[#F5456B] shadow-[0_0_20px_#F5456B] lg:block"
-          animate={reduceMotion ? {} : { opacity: [0.3, 1, 0.3], scale: [1, 1.6, 1] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
         />
       </div>
 
-      {/* MAIN LAYOUT */}
-      <div className="relative z-10 mx-auto grid w-full max-w-5xl items-center gap-8 lg:grid-cols-[1fr_400px] lg:gap-12">
+      {/* CONTAINER */}
+      <div className="relative z-10 mx-auto grid w-full max-w-4xl items-center gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
 
-        {/* DESKTOP BRANDING */}
-        <motion.section
-          variants={entrance}
-          initial="hidden"
-          animate="visible"
-          className="hidden text-white lg:block"
+        {/* LEFT COLUMN: HERO / BRANDING (Desktop) */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="hidden space-y-6 lg:block"
         >
-          <BrandLogo />
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            <BrandPill color={COLORS.yellow}>Support</BrandPill>
-            <BrandPill color={COLORS.pink}>Learn</BrandPill>
-            <BrandPill color={COLORS.cyan}>Grow</BrandPill>
+          {/* Brand Logo Container */}
+          <div className="inline-block rounded-2xl bg-white p-3 shadow-xl shadow-black/20">
+            <img
+              src="/Logo (2).png"
+              alt="ABC Autism Behavioral Center"
+              className="h-11 w-auto object-contain"
+            />
           </div>
 
-          <h1 className="mt-6 max-w-xl text-5xl font-semibold leading-[1.13] tracking-tight xl:text-[58px]">
-            Care that helps
-            <br />
-            every child
-            <br />
-            <span className="font-serif italic text-[#F5456B]">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-[#1CA7C7] backdrop-blur-md">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#1CA7C7]" />
+            Authorized Personnel Only
+          </div>
+
+          {/* Heading */}
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white xl:text-[44px]">
+            Empowering growth, <br />
+            inspiring every child to{' '}
+            <span className="bg-gradient-to-r from-[#F5456B] via-[#F5A623] to-[#1CA7C7] bg-clip-text text-transparent">
               shine brighter.
             </span>
           </h1>
 
-          <p className="mt-5 max-w-md text-base leading-7 text-slate-200">
-            Welcome to the ABC Autism Behavioral Center
-            administration portal. Manage your work with
-            care, confidence, and a secure experience.
+          <p className="max-w-md text-sm leading-relaxed text-slate-300">
+            Welcome to the ABC Autism Behavioral Center administrative hub. Please authenticate to access therapist records, progress reports, and operations.
           </p>
 
-          <div className="mt-8 grid max-w-md grid-cols-3 border-t border-white/15 pt-5">
-            <div className="pr-3">
-              <p className="text-lg font-extrabold text-[#F5A623]">Support</p>
-              <p className="mt-1 text-xs text-slate-300">Compassionate care</p>
-            </div>
-
-            <div className="border-x border-white/15 px-3">
-              <p className="text-lg font-extrabold text-[#F5456B]">Learn</p>
-              <p className="mt-1 text-xs text-slate-300">Individual growth</p>
-            </div>
-
-            <div className="pl-3">
-              <p className="text-lg font-extrabold text-[#1CA7C7]">Grow</p>
-              <p className="mt-1 text-xs text-slate-300">Brighter futures</p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex max-w-md items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-md">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1CA7C7]/15 text-[#1CA7C7]">
-              <FieldIcon type="password" />
-            </div>
-
-            <div>
-              <p className="text-sm font-semibold text-white">
-                Secure Administration
-              </p>
-              <p className="mt-1 text-xs text-slate-300">
-                For authorized staff access.
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* COMPACT LOGIN CARD */}
-        <motion.section
-          initial={{ opacity: 0, y: 30, scale: 0.94 }}
-          animate={{
-            opacity: 1,
-            y: reduceMotion ? 0 : [0, -4, 0],
-            scale: 1,
-          }}
-          transition={{
-            opacity: { duration: 0.65, delay: 0.1 },
-            scale: { duration: 0.65, delay: 0.1 },
-            y: reduceMotion
-              ? { duration: 0 }
-              : { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-          }}
-          className="mx-auto w-full max-w-[400px]"
-        >
-          <div className="group relative">
-
-            {/* Animated glowing border */}
-            <motion.div
-              aria-hidden="true"
-              className="absolute -inset-[2px] rounded-[27px] blur-[2px]"
-              style={{
-                background:
-                  'linear-gradient(135deg, #F5A623, #F5456B, #1CA7C7, #F5A623)',
-                backgroundSize: '300% 300%',
-              }}
-              animate={
-                reduceMotion
-                  ? {}
-                  : {
-                      backgroundPosition: [
-                        '0% 50%',
-                        '100% 50%',
-                        '0% 50%',
-                      ],
-                      opacity: [0.45, 0.9, 0.45],
-                    }
-              }
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            />
-
-            <div className="relative overflow-hidden rounded-[25px] border border-white/80 bg-white shadow-[0_25px_70px_rgba(0,0,0,0.30)] transition-shadow duration-500 group-hover:shadow-[0_30px_85px_rgba(0,0,0,0.40)]">
-
-              <div
-                className="h-1 w-full"
-                style={{
-                  background:
-                    'linear-gradient(90deg, #F5A623, #F5456B, #1CA7C7)',
-                }}
-              />
-
-              <div className="p-5 sm:p-7">
-
-                {/* Mobile logo */}
-                <div className="mb-5 flex flex-col items-center lg:hidden">
-                  <BrandLogo mobile />
-
-                  <div className="mt-3 flex gap-2">
-                    <BrandPill color={COLORS.yellow}>Support</BrandPill>
-                    <BrandPill color={COLORS.pink}>Learn</BrandPill>
-                    <BrandPill color={COLORS.cyan}>Grow</BrandPill>
-                  </div>
-                </div>
-
-                {/* Heading */}
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25, duration: 0.5 }}
-                  className="mb-6"
-                >
-                  <motion.div
-                    whileHover={{ rotate: 8, scale: 1.06 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5456B] to-[#dc3156] text-white shadow-lg shadow-[#F5456B]/25"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="1.7"
-                      className="h-6 w-6">
-                      <rect x="4" y="10" width="16" height="11" rx="2.5" />
-                      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                      <path d="M12 14v3" strokeLinecap="round" />
-                    </svg>
-                  </motion.div>
-
-                  <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#1CA7C7]">
-                    ADMINISTRATION PORTAL
-                  </p>
-
-                  <h2 className="text-[27px] font-extrabold leading-tight tracking-tight text-[#003B5C]">
-                    Welcome back
-                    <span className="text-[#F5456B]">.</span>
-                  </h2>
-
-                  <p className="mt-2 text-[13px] leading-5 text-slate-500">
-                    Sign in to access your dashboard.
-                  </p>
-                </motion.div>
-
-                {/* LOGIN FORM */}
-                <form onSubmit={login} className="space-y-4">
-
-                  <InputField
-                    label="Phone Number"
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Enter your phone number"
-                    icon="phone"
-                    autoComplete="tel"
-                  />
-
-                  <InputField
-                    label="Password"
-                    type={show ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    icon="password"
-                    autoComplete="current-password"
-                    rightElement={
-                      <motion.button
-                        type="button"
-                        whileTap={{ scale: 0.88 }}
-                        onClick={() => setShow(!show)}
-                        aria-label={show ? 'Hide password' : 'Show password'}
-                        aria-pressed={show}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-[#1CA7C7]/10 hover:text-[#003B5C] focus:outline-none focus:ring-2 focus:ring-[#1CA7C7]/40"
-                      >
-                        {show ? (
-                          <svg viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="1.7"
-                            className="h-5 w-5">
-                            <path d="M3 3l18 18" strokeLinecap="round" />
-                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                            <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.5 4.1 9.5 7-.4 1.2-1.2 2.4-2.2 3.4" />
-                            <path d="M6.2 6.2C4.2 7.6 2.9 9.6 2.5 12c.8 2.7 4.3 7 9.5 7 1.1 0 2.2-.2 3.2-.6" />
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="1.7"
-                            className="h-5 w-5">
-                            <path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        )}
-                      </motion.button>
-                    }
-                  />
-
-                  {/* Error and session messages */}
-                  <AnimatePresence mode="wait">
-                    {msg && (
-                      <motion.div
-                        key={msg}
-                        initial={{ opacity: 0, y: -8, height: 0 }}
-                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        exit={{ opacity: 0, y: -5, height: 0 }}
-                        role="alert"
-                        aria-live="polite"
-                        className="overflow-hidden"
-                      >
-                        <div className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3 text-xs leading-5 text-red-700">
-                          <svg viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="1.8"
-                            className="mt-0.5 h-4 w-4 shrink-0">
-                            <circle cx="12" cy="12" r="9" />
-                            <path d="M12 8v4m0 4h.01" strokeLinecap="round" />
-                          </svg>
-                          <span>{msg}</span>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Animated login button */}
-                  <motion.button
-                    type="submit"
-                    disabled={loading}
-                    whileHover={
-                      loading || reduceMotion
-                        ? {}
-                        : {
-                            y: -2,
-                            scale: 1.015,
-                            boxShadow: '0 12px 28px rgba(245,69,107,0.32)',
-                          }
-                    }
-                    whileTap={loading ? {} : { scale: 0.975 }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 350,
-                      damping: 18,
-                    }}
-                    className="group/button relative mt-1 flex h-[50px] w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#F5456B] px-4 text-sm font-bold text-white shadow-lg shadow-[#F5456B]/20 transition-colors duration-300 hover:bg-[#003B5C] focus:outline-none focus:ring-4 focus:ring-[#F5456B]/25 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover/button:translate-x-full" />
-
-                    {loading ? (
-                      <>
-                        <motion.span
-                          animate={reduceMotion ? {} : { rotate: 360 }}
-                          transition={{
-                            duration: 0.8,
-                            repeat: Infinity,
-                            ease: 'linear',
-                          }}
-                          className="h-4 w-4 rounded-full border-2 border-white/35 border-t-white"
-                        />
-                        <span>Authenticating...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Sign In to Dashboard</span>
-                        <motion.svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="h-4 w-4"
-                          animate={
-                            reduceMotion ? {} : { x: [0, 3, 0] }
-                          }
-                          transition={{
-                            duration: 1.8,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                        >
-                          <path d="M5 12h14m-6-6 6 6-6 6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round" />
-                        </motion.svg>
-                      </>
-                    )}
-                  </motion.button>
-                </form>
-
-                {/* Security note */}
-                <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-[#1CA7C7]/15 bg-[#1CA7C7]/[0.055] p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#1CA7C7] shadow-sm">
-                    <svg viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="1.8"
-                      className="h-4 w-4">
-                      <path d="M12 3 20 6v5c0 5-3.4 8-8 10-4.6-2-8-5-8-10V6l8-3Z" />
-                      <path d="m8.5 12 2.3 2.3 4.7-5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round" />
-                    </svg>
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-bold text-[#003B5C]">
-                      Secure administration
-                    </p>
-                    <p className="mt-1 text-[11px] leading-4 text-slate-500">
-                      Use your authorized credentials and keep
-                      your password private.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="mt-5 border-t border-slate-100 pt-4 text-center">
-                  <p className="text-xs font-semibold text-slate-500">
-                    ABC Autism Behavioral Center
-                  </p>
-
-                  <div className="mt-2 flex items-center justify-center gap-1.5">
-                    <motion.span
-                      animate={reduceMotion ? {} : { scale: [1, 1.35, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="h-1.5 w-1.5 rounded-full bg-[#F5A623]"
-                    />
-                    <motion.span
-                      animate={reduceMotion ? {} : { scale: [1, 1.35, 1] }}
-                      transition={{ duration: 2, delay: 0.3, repeat: Infinity }}
-                      className="h-1.5 w-1.5 rounded-full bg-[#F5456B]"
-                    />
-                    <motion.span
-                      animate={reduceMotion ? {} : { scale: [1, 1.35, 1] }}
-                      transition={{ duration: 2, delay: 0.6, repeat: Infinity }}
-                      className="h-1.5 w-1.5 rounded-full bg-[#1CA7C7]"
-                    />
-                  </div>
-
-                  <p className="mt-2 text-[9px] font-medium tracking-[0.18em] text-slate-400">
-                    SUPPORT · LEARN · GROW
-                  </p>
+          {/* Pillars */}
+          <div className="flex items-center gap-6 pt-2">
+            {[
+              { label: 'Support', desc: 'Compassionate Care', color: '#F5A623' },
+              { label: 'Learn', desc: 'Targeted Growth', color: '#F5456B' },
+              { label: 'Grow', desc: 'Brighter Future', color: '#1CA7C7' },
+            ].map((item, index) => (
+              <div key={index} className="flex items-center gap-2.5">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-white">{item.label}</p>
+                  <p className="text-[11px] text-slate-400">{item.desc}</p>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        </motion.section>
-      </div>
+        </motion.div>
 
-      {/* Background animation styling */}
-      <style>{`
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            scroll-behavior: auto !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
+        {/* RIGHT COLUMN: LOGIN CARD */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+          className="mx-auto w-full max-w-sm"
+        >
+          {/* Card Wrapper with Subtle Border Glow */}
+          <div className="relative rounded-3xl border border-white/15 bg-white/95 p-6 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
+            
+            {/* Top Color Accent Bar */}
+            <div className="absolute inset-x-8 top-0 h-1 bg-gradient-to-r from-[#F5A623] via-[#F5456B] to-[#1CA7C7] rounded-b-full" />
+
+            {/* Mobile Header / Logo */}
+            <div className="mb-6 flex flex-col items-center text-center lg:hidden">
+              <div className="mb-3 rounded-xl bg-white p-2 shadow-sm">
+                <img
+                  src="/Logo (2).png"
+                  alt="ABC Logo"
+                  className="h-9 w-auto object-contain"
+                />
+              </div>
+              <h2 className="text-xl font-bold text-[#00283F]">Staff Portal</h2>
+              <p className="text-xs text-slate-500">Sign in to your dashboard</p>
+            </div>
+
+            {/* Desktop Header */}
+            <div className="mb-6 hidden lg:block">
+              <h2 className="text-2xl font-bold tracking-tight text-[#00283F]">
+                Staff Sign In
+              </h2>
+              <p className="mt-1 text-xs text-slate-500">
+                Enter your authorized credentials to continue.
+              </p>
+            </div>
+
+            {/* FORM */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              
+              {/* Phone Input */}
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600">
+                  Phone Number
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="e.g. +60 12-345 6789"
+                    autoComplete="tel"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-3.5 text-sm font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 hover:border-slate-300 focus:border-[#1CA7C7] focus:bg-white focus:ring-4 focus:ring-[#1CA7C7]/15"
+                  />
+                </div>
+              </div>
+
+              {/* Password Input */}
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <rect x="4" y="10" width="16" height="11" rx="2.5" strokeWidth="2" />
+                      <path strokeLinecap="round" strokeWidth="2" d="M8 10V7a4 4 0 018 0v3" />
+                    </svg>
+                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    autoComplete="current-password"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-10 text-sm font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 hover:border-slate-300 focus:border-[#1CA7C7] focus:bg-white focus:ring-4 focus:ring-[#1CA7C7]/15"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 transition hover:text-slate-600 focus:outline-none"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                      </svg>
+                    ) : (
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Alert Message */}
+              <AnimatePresence mode="wait">
+                {msg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                    exit={{ opacity: 0, y: -6, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs text-red-600">
+                      <svg className="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span className="font-medium">{msg}</span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Submit Button */}
+              <motion.button
+                type="submit"
+                disabled={loading}
+                whileHover={loading ? {} : { scale: 1.01 }}
+                whileTap={loading ? {} : { scale: 0.98 }}
+                className="relative mt-2 flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#F5456B] to-[#e6355b] text-sm font-semibold text-white shadow-lg shadow-[#F5456B]/25 transition hover:shadow-xl hover:shadow-[#F5456B]/35 disabled:cursor-not-allowed disabled:opacity-75"
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                    <span>Signing in...</span>
+                  </div>
+                ) : (
+                  <>
+                    <span>Sign In to Dashboard</span>
+                    <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </>
+                )}
+              </motion.button>
+            </form>
+
+            {/* Card Footer info */}
+            <div className="mt-6 border-t border-slate-100 pt-4 text-center">
+              <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-slate-400">
+                <svg className="h-3.5 w-3.5 text-[#1CA7C7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>End-to-End Encrypted Staff Portal</span>
+              </div>
+            </div>
+
+          </div>
+        </motion.div>
+
+      </div>
     </main>
   );
 }
