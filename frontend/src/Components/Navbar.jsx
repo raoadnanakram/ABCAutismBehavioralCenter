@@ -141,6 +141,10 @@ function Navbar() {
               Contact
               <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
             </Link>
+            <Link to="/careers" className="relative group py-1 hover:text-[#00A8CD] transition-colors duration-200">
+              Careers
+              <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
+            </Link>
           </div>
 
           {/* CTA Button */}
