@@ -96,12 +96,14 @@ const STYLES = `
 @keyframes abcShine { 0% { transform: translateX(-130%) skewX(-18deg); } 60%,100% { transform: translateX(260%) skewX(-18deg); } }
 @keyframes abcPing { 0% { transform: scale(1); opacity: .65; } 80%,100% { transform: scale(2.4); opacity: 0; } }
 @keyframes abcWave { 0%,100% { transform: rotate(0deg); } 20% { transform: rotate(16deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(12deg); } 80% { transform: rotate(-4deg); } }
+@keyframes abcSpin { to { transform: rotate(360deg); } }
 @keyframes abcSkeleton { 0% { background-position: -200px 0; } 100% { background-position: calc(200px + 100%) 0; } }
 .abc-float { animation: abcFloat 9s ease-in-out infinite; }
 .abc-float-b { animation: abcFloatB 11s ease-in-out infinite; }
 .abc-shift { background-size: 220% 220%; animation: abcShift 14s ease infinite; }
 .abc-shine { position: relative; overflow: hidden; }
 .abc-shine::after { content: ''; position: absolute; top: 0; bottom: 0; width: 38%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent); animation: abcShine 5.5s ease-in-out infinite; pointer-events: none; }
+.abc-spin { animation: abcSpin .8s linear infinite; }
 .abc-ping { animation: abcPing 1.8s cubic-bezier(0,0,.2,1) infinite; }
 .abc-wave { display: inline-block; transform-origin: 70% 70%; animation: abcWave 2.4s ease-in-out 1s 2; }
 .abc-skeleton { background: linear-gradient(90deg, #eef3f7 0%, #f8fbfd 50%, #eef3f7 100%); background-size: 200px 100%; background-repeat: no-repeat; animation: abcSkeleton 1.3s linear infinite; }
@@ -658,6 +660,117 @@ function Modal({ item, onClose, onStatus, onDelete }) {
         </div>
       </motion.div>
     </motion.div>
+  );
+}
+
+/* --------------------------- delete confirmation ------------------------- */
+
+function ConfirmDialog({ item, loading, onConfirm, onCancel }) {
+  const open = !!item;
+
+  useEffect(() => {
+    if (!open) return undefined;
+    // capture phase + stopPropagation: Esc closes only this dialog, not the popup behind it
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        if (!loading) onCancel();
+      }
+    };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
+  }, [open, loading, onCancel]);
+
+  const meta = item ? META[item.type] : null;
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-[#02263b]/70 p-4 backdrop-blur-md"
+          onClick={() => !loading && onCancel()}
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="delete-title"
+          aria-describedby="delete-text"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88, y: 34 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 20 }}
+            transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white shadow-[0_40px_80px_-20px_rgba(2,38,59,0.65)]"
+          >
+            <div className="abc-shift h-2 bg-gradient-to-r from-[#F5A623] via-[#F5456B] to-[#1CA7C7]" />
+            <div className="abc-float pointer-events-none absolute -right-12 top-6 h-40 w-40 rounded-full bg-[#F5456B]/10 blur-2xl" />
+
+            <div className="relative p-7 text-center sm:p-9">
+              <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+                <span className="abc-ping absolute inset-2 rounded-full bg-[#F5456B]/30" />
+                <motion.span
+                  initial={{ rotate: -14, scale: 0.5 }}
+                  animate={{ rotate: 0, scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 13, delay: 0.1 }}
+                  className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#F5456B] to-[#ff7a59] text-4xl shadow-xl shadow-[#F5456B]/40"
+                >
+                  🗑️
+                </motion.span>
+              </div>
+
+              <h3 id="delete-title" className="mt-5 font-serif text-2xl font-bold text-[#003B5C]">
+                Delete this {meta.single.toLowerCase()}?
+              </h3>
+              <p id="delete-text" className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-slate-500">
+                This will be removed permanently
+                {item.type === 'career' && Number(item.has_cv) > 0 ? ', together with the uploaded CV' : ''}. You will not be able to get it back.
+              </p>
+
+              <div className="mx-auto mt-5 flex max-w-sm items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-left">
+                <Avatar name={item.name} color={meta.color} size="h-11 w-11" />
+                <span className="min-w-0 flex-1">
+                  <b className="block truncate text-sm text-slate-800">{item.name}</b>
+                  <span className="block truncate text-xs text-slate-500">
+                    {meta.icon} {meta.single}
+                    {detail(item) ? ` - ${detail(item)}` : ''}
+                  </span>
+                </span>
+              </div>
+
+              <div className="mt-7 grid grid-cols-2 gap-3">
+                <motion.button
+                  type="button"
+                  autoFocus
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={onCancel}
+                  disabled={loading}
+                  className="rounded-2xl bg-slate-100 py-3.5 text-sm font-bold text-slate-700 transition hover:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-[#1CA7C7]/30 disabled:opacity-50"
+                >
+                  Keep it
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileHover={loading ? {} : { y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={onConfirm}
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#F5456B] to-[#e11d48] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#F5456B]/40 transition hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-[#F5456B]/30 disabled:opacity-70"
+                >
+                  {loading && <span className="abc-spin inline-block h-4 w-4 rounded-full border-2 border-white/40 border-t-white" />}
+                  {loading ? 'Deleting...' : 'Yes, delete'}
+                </motion.button>
+              </div>
+
+              <p className="mt-4 text-[11px] text-slate-400">Press Esc to cancel</p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -1416,6 +1529,8 @@ export default function AdminDashboard() {
   const [sys, setSys] = useState(null);
   const [logins, setLogins] = useState([]);
   const [pw, setPw] = useState({ cur: '', n1: '', n2: '' });
+  const [confirmDel, setConfirmDel] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const logout = useCallback(() => {
     clearToken();
@@ -1492,13 +1607,20 @@ export default function AdminDashboard() {
     setSel(row);
     if (row.status === 'new') setStatus(row.id, 'read');
   };
-  const remove = async (id) => {
-    if (!window.confirm('Kya aap waqai delete karna chahte hain?')) return;
-    await api(`/admin/submissions/${id}`, { method: 'DELETE' });
-    setSel(null);
-    say('Deleted');
-    loadList();
-    loadStats();
+  const doDelete = async () => {
+    if (!confirmDel) return;
+    setDeleting(true);
+    try {
+      await api(`/admin/submissions/${confirmDel.id}`, { method: 'DELETE' });
+      setConfirmDel(null);
+      setSel(null);
+      say('Deleted');
+      loadList();
+      loadStats();
+    } catch (err) {
+      say(err.message || 'Could not delete. Please try again.');
+    }
+    setDeleting(false);
   };
   const exportCsv = async () => {
     const res = await fetch('/api/admin/export?type=' + tab, { headers: { Authorization: 'Bearer ' + getToken() } });
@@ -1612,7 +1734,9 @@ export default function AdminDashboard() {
         </main>
       </div>
 
-      <AnimatePresence>{sel && <Modal item={sel} onClose={() => setSel(null)} onStatus={setStatus} onDelete={remove} />}</AnimatePresence>
+      <AnimatePresence>{sel && <Modal item={sel} onClose={() => setSel(null)} onStatus={setStatus} onDelete={() => setConfirmDel(sel)} />}</AnimatePresence>
+
+      <ConfirmDialog item={confirmDel} loading={deleting} onConfirm={doDelete} onCancel={() => setConfirmDel(null)} />
 
       <IdleWarning warn={warn} />
       <Toast toast={toast} />
