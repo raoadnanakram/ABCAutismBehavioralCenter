@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'r
 // Components Import
 import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
+import WhatsAppButton from './Components/WhatsAppButton';
 
 // Pages Import
 import Home from './Pages/Home';
@@ -103,7 +104,7 @@ function NotFound() {
   );
 }
 
-// Navbar/Footer admin pages par nahi dikhenge
+// Navbar/Footer/WhatsApp admin pages par nahi dikhenge
 function Layout() {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith('/login') || pathname.startsWith('/dashboard');
@@ -153,6 +154,9 @@ function Layout() {
         </Routes>
       </main>
       {!isAdmin && <Footer />}
+
+      {/* Floating WhatsApp button - har public page par */}
+      {!isAdmin && <WhatsAppButton />}
     </div>
   );
 }

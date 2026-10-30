@@ -38,7 +38,7 @@ export const STYLES = `
 .pl-shine { position: relative; overflow: hidden; }
 .pl-shine::after { content: ''; position: absolute; top: 0; bottom: 0; width: 34%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent); animation: plShine 5s ease-in-out infinite; pointer-events: none; }
 .pl-dots { background-image: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1px); background-size: 22px 22px; }
-.pl-scroll::-webkit-scrollbar { height: 5px; }
+.pl-scroll::-webkit-scrollbar { height: 5px; width: 5px; }
 .pl-scroll::-webkit-scrollbar-thumb { background: #c5d4df; border-radius: 999px; }
 @media (prefers-reduced-motion: reduce) {
   .pl-float, .pl-float-b, .pl-shift, .pl-shine::after { animation: none !important; }
@@ -236,7 +236,7 @@ export function RelatedAndCta({ current, ctaTitle, ctaText, hideCta = false }) {
 
 /* ----------------------------- main layout ----------------------------- */
 
-const blockText = (b) => (typeof b === 'string' ? b : b.list ? b.list.join(' ') : b.note || '');
+const blockText = (b) => (typeof b === 'string' ? b : b.list ? b.list.join(' ') : b.table ? b.table.rows.flat().join(' ') : b.note || '');
 
 export default function PolicyLayout({ current, crumb, eyebrow, title, accent, intro, updated, sections, metaTitle, metaDescription, ctaTitle, ctaText }) {
   const [active, setActive] = useState(sections[0].id);
@@ -296,7 +296,7 @@ export default function PolicyLayout({ current, crumb, eyebrow, title, accent, i
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 lg:grid-cols-[280px_1fr]">
         {/* table of contents */}
         <aside className="lg:sticky lg:top-28 lg:h-fit">
-          <div className="hidden rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 lg:block">
+          <div className="pl-scroll hidden max-h-[calc(100vh-8rem)] overflow-y-auto rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 lg:block">
             <p className="mb-3 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">On this page</p>
             <nav className="space-y-1">
               {sections.map((s, i) => (
@@ -386,13 +386,42 @@ export default function PolicyLayout({ current, crumb, eyebrow, title, accent, i
                     if (b.list)
                       return (
                         <ul key={j} className="space-y-2.5">
-                          {b.list.map((item) => (
-                            <li key={item} className="flex gap-3 transition-transform duration-200 hover:translate-x-1">
-                              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} />
-                              <span>{item}</span>
-                            </li>
-                          ))}
+                          {b.list.map((item) => {
+                            const m = b.labels ? item.match(/^([^:]{3,70}):\s+([\s\S]+)$/) : null;
+                            return (
+                              <li key={item} className="flex gap-3 transition-transform duration-200 hover:translate-x-1">
+                                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} />
+                                <span>
+                                  {m ? (
+                                    <>
+                                      <strong className="font-semibold" style={{ color: BRAND.navy }}>{m[1]}:</strong> {m[2]}
+                                    </>
+                                  ) : (
+                                    item
+                                  )}
+                                </span>
+                              </li>
+                            );
+                          })}
                         </ul>
+                      );
+                    if (b.table)
+                      return (
+                        <div key={j} className="overflow-hidden rounded-2xl ring-1 ring-slate-200">
+                          <div className="hidden bg-slate-50 px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 sm:grid sm:grid-cols-[230px_1fr] sm:gap-4">
+                            <span>{b.table.head[0]}</span>
+                            <span>{b.table.head[1]}</span>
+                          </div>
+                          {b.table.rows.map(([a, c]) => (
+                            <div
+                              key={a}
+                              className="grid gap-1 border-t border-slate-100 px-5 py-4 text-sm transition-colors duration-200 hover:bg-slate-50 sm:grid-cols-[230px_1fr] sm:gap-4"
+                            >
+                              <span className="font-semibold" style={{ color }}>{a}</span>
+                              <span>{c}</span>
+                            </div>
+                          ))}
+                        </div>
                       );
                     return (
                       <div key={j} className="flex gap-3 rounded-2xl border-l-4 bg-slate-50 p-4 text-sm" style={{ borderColor: BRAND.orange }}>

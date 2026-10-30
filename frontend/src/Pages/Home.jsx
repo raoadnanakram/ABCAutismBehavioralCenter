@@ -2035,8 +2035,11 @@ function Home() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9, ease: "easeOut" }} className="w-full lg:w-1/2 relative min-h-[380px] lg:min-h-[580px] m-0 p-0">
-            <img src={heroImg} alt="Child Therapy Session" className="absolute inset-0 w-full h-full object-cover object-center m-0 p-0" />
-           
+<img
+  src={heroImg}
+  alt="Child Therapy Session"
+  className="absolute inset-0 w-full h-full object-contain object-right bg-[#003B5C] m-0 p-0"
+/>           
             <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#003B5C] via-[#003B5C]/20 to-transparent hidden lg:block pointer-events-none" />
             <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-8 right-8 bg-white/95 backdrop-blur-md px-5 py-3 rounded-2xl shadow-xl shadow-slate-900/15 border border-white/50 hidden sm:flex items-center gap-3 text-xs font-bold text-[#003B5C] z-30">
               <span className="w-3 h-3 rounded-full bg-[#00A8CD] animate-pulse" />

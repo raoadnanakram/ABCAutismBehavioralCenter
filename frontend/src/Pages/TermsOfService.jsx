@@ -2,133 +2,257 @@ import React from 'react';
 import PolicyLayout from '../Components/PolicyLayout';
 
 /* ==========================================================================
-   TERMS OF SERVICE - ABC Autism Behavioral Center
-   This is a clear starting draft. Please have your Legal Advisor read it
-   (especially the "Governing law" and "Appointments" sections) before relying on it.
+   TERMS & CONDITIONS - ABC Autism Behavioral Center
+   Sections 1 to 18 are your own text. Section 19 (website and online forms)
+   was added because this page lives on the website; delete it if you do not want it.
+   Before publishing, have your Legal Advisor check it against your centre's
+   registration, fees, cancellation and clinical consent procedures.
    ========================================================================== */
 
 const UPDATED = '30 October 2026'; // change this date whenever you edit the text
 
 const SECTIONS = [
   {
-    id: 'acceptance',
-    icon: '🤝',
-    title: 'Accepting these terms',
+    id: 'registration',
+    icon: '🧾',
+    title: 'Registration and Initial Assessment',
     body: [
-      'Welcome to the website of ABC Autism Behavioral Center ("ABC", "we", "us"). By visiting or using this website you agree to these Terms of Service. If you do not agree, please do not use the website.',
+      'By registering for or using our services, parents, guardians, clients, and caregivers agree to the following terms and conditions.',
+      { list: [
+        'A completed registration form and accurate client information must be provided before services begin.',
+        'Parents or legal guardians must provide relevant medical, developmental, educational, dietary, and therapy history.',
+        'Initial assessments may be required to identify individual needs, establish goals, and recommend suitable services.',
+        'The centre reserves the right to recommend an alternative service or referral when a client’s needs fall outside its available expertise or facilities.',
+      ] },
     ],
   },
   {
-    id: 'our-website',
-    icon: '🌐',
-    title: 'About our website',
+    id: 'treatment-plans',
+    icon: '🎯',
+    title: 'Individualized Treatment and Development Plans',
     body: [
-      'This website tells families about our centre, our team and our services, and lets you send us appointment requests, messages and job applications.',
-      { note: 'The information on this website is general and is not medical advice. It does not replace a proper assessment by a qualified professional, and using the website does not create a therapist–client relationship.' },
-      'In a medical emergency, please contact your nearest emergency service or hospital straight away. Do not use our website forms for urgent matters.',
+      { list: [
+        'Therapy and developmental plans will be designed according to the client’s individual needs, abilities, and goals.',
+        'Progress may vary from person to person, and specific outcomes or timelines cannot be guaranteed.',
+        'Plans may be reviewed and modified according to assessment findings and progress.',
+        'Parents and caregivers are encouraged to participate in reviews and follow recommended home activities.',
+      ] },
     ],
   },
   {
     id: 'appointments',
     icon: '📅',
-    title: 'Appointments and enquiries',
-    body: [
-      'Sending an appointment form is a request, not a confirmed booking. An appointment is confirmed only when our team contacts you and agrees a time with you.',
-      'The automatic email you receive after submitting a form only shows that we received your request.',
-      'Please contact us as early as you can if you need to change or cancel a visit.',
-    ],
-  },
-  {
-    id: 'your-information',
-    icon: '📝',
-    title: 'Information you give us',
+    title: 'Appointments and Punctuality',
     body: [
       { list: [
-        'Please give true, complete and up-to-date information in every form.',
-        'Use your own email address and phone number, or those of the person you are acting for.',
-        'If you fill a form for a child, you confirm that you are the parent, guardian or authorised adult.',
+        'Appointments should be booked in advance.',
+        'Clients are requested to arrive on time for scheduled sessions.',
+        'Late arrival may result in a shortened session if the next appointment is scheduled.',
+        'Missed appointments may be considered utilized sessions unless a cancellation or rescheduling exception is approved by the centre.',
       ] },
     ],
   },
   {
-    id: 'acceptable-use',
-    icon: '🚫',
-    title: 'Using the website properly',
+    id: 'cancellation',
+    icon: '🔁',
+    title: 'Cancellation and Rescheduling Policy',
     body: [
-      'You agree not to misuse the website. In particular, you must not:',
       { list: [
-        'Send spam, false enquiries or harmful files.',
-        'Try to break into, overload or damage the website or its protected admin area.',
-        'Use automated tools to submit forms or to copy the website\'s content.',
-        'Use the website in a way that is unlawful or that harms others.',
+        'At least 24 hours’ notice should be provided for cancellations or rescheduling.',
+        'Repeated last-minute cancellations or unexplained absences may affect session continuity and scheduling.',
+        'Make-up sessions are subject to availability and centre approval.',
+        'The centre may reschedule appointments due to staff availability, emergencies, or unforeseen circumstances.',
       ] },
-      'We may block access, or remove submissions, if we believe the website is being misused.',
     ],
   },
   {
-    id: 'job-applications',
-    icon: '💼',
-    title: 'Job applications',
+    id: 'fees',
+    icon: '💳',
+    title: 'Fees, Packages, and Payments',
     body: [
-      'When you apply for a job through our Careers page, you confirm that your details and CV are true. Sending an application does not guarantee an interview or a job.',
-      'We contact shortlisted candidates only. By applying, you agree that we may keep and review your application as described in our Privacy Policy.',
+      { list: [
+        'Fees must be paid according to the agreed service plan or package.',
+        'Package inclusions, session frequency, validity, and any applicable additional charges will be communicated before purchase.',
+        'Packages are intended for the specified services and cannot be transferred to another client without written approval.',
+        'Refunds, unused sessions, package extensions, and exceptional circumstances will be handled according to the centre’s disclosed payment policy and applicable law.',
+        'Any fee revisions will be communicated to clients in advance.',
+      ] },
     ],
   },
   {
-    id: 'ownership',
-    icon: '©️',
-    title: 'Ownership of content',
+    id: 'parent-responsibilities',
+    icon: '👪',
+    title: 'Parent and Caregiver Responsibilities',
     body: [
-      'The text, design, logo, images and other material on this website belong to ABC Autism Behavioral Center or are used with permission. You may view the website for your own personal use. Please do not copy, sell or republish our material without our written permission.',
+      { list: [
+        'Parents or guardians must provide complete and accurate information relevant to the client’s care.',
+        'Any changes in medical condition, medication, behavior, allergies, dietary restrictions, or emergency contact details must be reported promptly.',
+        'Caregivers should follow appropriate home-practice recommendations when advised by the relevant professional.',
+        'Parents and caregivers must treat staff, other families, and clients respectfully.',
+      ] },
     ],
   },
   {
-    id: 'privacy',
+    id: 'child-safety',
+    icon: '🛡️',
+    title: 'Child Safety and Supervision',
+    body: [
+      { list: [
+        'Children must be accompanied by an authorized adult during arrival and departure unless a separate arrangement has been agreed upon in writing.',
+        'The centre’s drop-off and pick-up procedures must be followed.',
+        'Parents or guardians must provide details of authorized persons collecting a child.',
+        'Day care and supervised-program arrangements will be governed by the specific supervision, attendance, and handover policies communicated by the centre.',
+        'Any immediate safety concern must be reported to the centre’s management.',
+      ] },
+    ],
+  },
+  {
+    id: 'confidentiality',
     icon: '🔒',
-    title: 'Privacy',
+    title: 'Confidentiality and Privacy',
     body: [
-      'How we handle your personal information is explained in our Privacy Policy, which forms part of these terms.',
+      { list: [
+        'Client records, assessments, therapy plans, and personal information will be handled confidentially and accessed only as authorized or otherwise permitted by applicable law.',
+        'Information may be shared with relevant professionals involved in a client’s care when appropriately authorized or legally permitted.',
+        'Photographs, videos, testimonials, or case studies will not be used for promotional purposes without the required informed consent.',
+        'Clients and families are requested to respect the privacy of other individuals at the centre.',
+      ] },
     ],
   },
   {
-    id: 'third-party-links',
-    icon: '🔗',
-    title: 'Links to other websites',
+    id: 'medical-limits',
+    icon: '🩺',
+    title: 'Medical and Professional Limitations',
     body: [
-      'Our website may link to other websites. We do not control them and are not responsible for their content or practices.',
+      { list: [
+        'Services are provided within the scope of practice and qualifications of the relevant professionals.',
+        'Therapy, nutrition counselling, and developmental support do not replace emergency medical care or other specialist services when required.',
+        'Medication changes, medical diagnoses, and medical treatment decisions must be handled by appropriately qualified healthcare professionals.',
+        'Clients may be referred to another healthcare provider when clinically appropriate.',
+      ] },
     ],
   },
   {
-    id: 'disclaimer',
-    icon: '⚖️',
-    title: 'Disclaimer and liability',
+    id: 'nutrition',
+    icon: '🥗',
+    title: 'Nutrition and Supplementation',
     body: [
-      'We work to keep the website accurate and available, but we provide it "as is". We do not promise that it will always be free of errors or interruptions.',
-      'To the extent the law allows, ABC is not responsible for losses that come from using the website or from relying on its general information. Nothing in these terms limits any right you have under the law that cannot be limited.',
+      { list: [
+        'Nutrition plans are developed according to individual needs, available assessment information, and relevant clinical considerations.',
+        'Supplements are recommended only when appropriate and should be used according to professional advice and product instructions.',
+        'Supplement costs are included only when explicitly stated in the selected package.',
+        'Parents and caregivers must disclose allergies, intolerances, current supplements, medications, and relevant medical conditions.',
+        'No nutritional supplement or diet plan guarantees a specific medical or developmental outcome.',
+      ] },
     ],
   },
   {
-    id: 'changes',
+    id: 'clinical-services',
+    icon: '🗣️',
+    title: 'Physiotherapy, Speech Therapy, and Other Clinical Services',
+    body: [
+      { list: [
+        'Clients must participate in assessments and activities to the extent appropriate for their abilities and safety.',
+        'Relevant medical history, precautions, and changes in condition must be disclosed before treatment.',
+        'Home exercises and practice activities should be performed according to professional instructions.',
+        'Progress depends on individual circumstances, attendance, and other relevant factors; results cannot be guaranteed.',
+      ] },
+    ],
+  },
+  {
+    id: 'dysphagia',
+    icon: '🍼',
+    title: 'Dysphagia Management and Feeding Support',
+    body: [
+      { list: [
+        'Swallowing and feeding interventions require appropriate clinical assessment.',
+        'Recommendations for oral feeding, modified food textures, or feeding equipment will be made according to the professional’s scope and assessment.',
+        'Enteral feeding and nasogastric (NG) tube-related support must be provided only by appropriately qualified personnel within their scope of practice and applicable regulations.',
+        'Any signs of choking, breathing difficulty, or other medical emergency require immediate appropriate medical assistance.',
+      ] },
+    ],
+  },
+  {
+    id: 'behavior-education',
+    icon: '🧩',
+    title: 'Behavior, Education, and Developmental Support',
+    body: [
+      { list: [
+        'Behavioral interventions and educational activities will be individualized and designed to respect each client’s dignity, safety, and developmental needs.',
+        'Parents and caregivers will be informed about relevant goals and progress as appropriate.',
+        'The centre does not guarantee a particular academic, behavioral, communication, or developmental outcome.',
+        'Concerns about a client’s treatment, learning plan, or well-being may be raised with the relevant professional or centre management.',
+      ] },
+    ],
+  },
+  {
+    id: 'conduct',
+    icon: '🤝',
+    title: 'Respectful Conduct',
+    body: [
+      { list: [
+        'Abusive language, harassment, threats, discrimination, or unsafe behavior toward clients, families, or staff will not be tolerated.',
+        'The centre may take reasonable steps to protect the safety and well-being of everyone on its premises.',
+        'Where services cannot safely or appropriately continue, the centre may review or discontinue services with suitable communication, transition planning, and referrals where appropriate.',
+      ] },
+    ],
+  },
+  {
+    id: 'complaints',
+    icon: '💬',
+    title: 'Complaints and Feedback',
+    body: [
+      { list: [
+        'Parents, guardians, and clients may submit concerns or complaints to centre management.',
+        'The centre will review concerns fairly and seek an appropriate resolution.',
+        'Raising a concern in good faith will not, by itself, be grounds for penalizing a client or family.',
+      ] },
+    ],
+  },
+  {
+    id: 'emergencies',
+    icon: '🚑',
+    title: 'Emergencies and Unexpected Events',
+    body: [
+      { list: [
+        'Emergency contact information must be kept up to date.',
+        'In an urgent situation, the centre may contact the parent, guardian, emergency services, or an appropriate healthcare provider as necessary.',
+        'Parents or guardians remain responsible for communicating relevant emergency instructions and medical precautions.',
+      ] },
+    ],
+  },
+  {
+    id: 'amendments',
     icon: '🔄',
-    title: 'Changes to these terms',
+    title: 'Amendments to These Terms',
     body: [
-      'We may update these terms from time to time. The "Last updated" date at the top of this page shows when they last changed. Continuing to use the website after a change means you accept the new terms.',
+      { list: [
+        'The centre may update its policies when necessary to improve service delivery, safety, or compliance with applicable requirements.',
+        'Material changes will be communicated to clients where appropriate.',
+        'These terms will be interpreted in accordance with applicable laws and regulations in Pakistan.',
+      ] },
     ],
   },
   {
-    id: 'governing-law',
-    icon: '🏛️',
-    title: 'Governing law',
+    id: 'acknowledgment',
+    icon: '✍️',
+    title: 'Acknowledgment and Consent',
     body: [
-      'These terms are governed by the laws of Pakistan. Any dispute will be handled by the courts that have authority under those laws.',
+      'By signing the registration or service agreement, the undersigned confirms that they have read and understood these terms and conditions, had the opportunity to ask questions, and agree to comply with the applicable policies of ABC Autism Behavioral Center.',
+      { note: 'The registration or service agreement is signed at the centre. Please ask our team if you would like a copy.' },
     ],
   },
   {
-    id: 'contact',
-    icon: '📞',
-    title: 'Contact us',
+    id: 'website',
+    icon: '🌐',
+    title: 'Using our website and online forms',
     body: [
-      'If you have any question about these terms, please use our Contact page and our team will be glad to help.',
+      { list: [
+        'Information on this website is general and does not replace an assessment by a qualified professional.',
+        'Sending an appointment or contact form is a request, not a confirmed booking. A visit is confirmed when our team contacts you.',
+        'Job applications sent through the Careers page must contain true details, and sending one does not guarantee an interview or a job.',
+        'Please do not send spam, false enquiries or harmful files, and do not try to misuse or break into the website.',
+      ] },
     ],
   },
 ];
@@ -137,15 +261,15 @@ export default function TermsOfService() {
   return (
     <PolicyLayout
       current="/terms"
-      crumb="Terms of Service"
-      eyebrow="Please read"
-      title="Terms of"
-      accent="Service"
-      intro="The simple rules for using our website, booking with us and applying to work with us."
+      crumb="Terms & Conditions"
+      eyebrow="Support • Learn • Grow"
+      title="Terms &"
+      accent="Conditions"
+      intro="We are committed to providing individualized, respectful, and evidence-based healthcare, therapy, rehabilitation, education, and developmental support to children, adults, and families."
       updated={UPDATED}
       sections={SECTIONS}
-      metaTitle="Terms of Service | ABC Autism Behavioral Center"
-      metaDescription="The terms for using the ABC Autism Behavioral Center website, including appointment requests, enquiries and job applications."
+      metaTitle="Terms & Conditions | ABC Autism Behavioral Center"
+      metaDescription="Terms and conditions for services at ABC Autism Behavioral Center: registration, appointments, cancellations, fees, child safety, confidentiality and more."
       ctaTitle="Need help understanding something?"
       ctaText="Reach out and our team will explain anything in these terms."
     />
