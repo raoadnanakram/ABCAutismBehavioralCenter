@@ -34,6 +34,26 @@ const categories = [
   "Legal Advisor",
 ];
 
+// Is member ko "Mentors" ki jagah "Legal Advisor" mein dikhana hai.
+// (Advocate / legal wale members automatically Legal Advisor tab mein aate hain,
+//  is liye teamData.js mein kuch badalne ki zaroorat nahi.)
+const isLegalMember = (member) => {
+  const cat = (member.category || "").toLowerCase();
+  const des = (member.designation || "").toLowerCase();
+  const spec = (member.specialization || "").toLowerCase();
+  return (
+    cat.includes("legal") ||
+    des.includes("advocate") ||
+    des.includes("legal advisor") ||
+    spec.includes("legal services")
+  );
+};
+
+// teamData ko ek baar adjust karte hain: legal members ki category "Legal Advisor" ho jati hai
+const allMembers = teamMembers.map((member) =>
+  isLegalMember(member) ? { ...member, category: "Legal Advisor" } : member
+);
+
 // Leadership Data
 const leadershipData = [
   {
@@ -93,12 +113,22 @@ export default function OurTeam() {
   const navigate = useNavigate();
 
   // Filter team members
-  const filteredMembers = teamMembers.filter((member) => {
+  const filteredMembers = allMembers.filter((member) => {
     if (selectedCategory === "ALL EXPERTS") return true;
 
     const catLower = selectedCategory.toLowerCase();
     const memCatLower = (member.category || "").toLowerCase();
     const memSpecLower = (member.specialization || "").toLowerCase();
+
+    // Legal Advisor tab: sirf legal members
+    if (catLower.includes("legal")) {
+      return isLegalMember(member);
+    }
+
+    // Legal members ko baqi kisi tab (jaise Mentors) mein nahi dikhana
+    if (isLegalMember(member)) {
+      return false;
+    }
 
     if (
       catLower.includes("speech") &&
@@ -431,14 +461,16 @@ export default function OurTeam() {
   {filteredMembers.length > 0 ? (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {filteredMembers.map((member, index) => {
-        // Check if member is a receptionist or mentor
+        // Receptionist, Mentor aur Legal Advisor ke card par Book Appointment button nahi aayega
         const memCat = (member.category || "").toLowerCase();
         const memDes = (member.designation || "").toLowerCase();
         const isReceptionistOrMentor = 
           memCat.includes("receptionist") || 
           memCat.includes("mentor") || 
+          memCat.includes("legal") || 
           memDes.includes("receptionist") || 
-          memDes.includes("mentor");
+          memDes.includes("mentor") || 
+          memDes.includes("advocate");
 
         return (
           <motion.div
@@ -497,7 +529,7 @@ export default function OurTeam() {
                   </p>
                 </div>
 
-                {/* Conditional Rendering: Book Appointment button only shows if NOT Receptionist or Mentor */}
+                {/* Conditional Rendering: Book Appointment button only shows if NOT Receptionist, Mentor or Legal Advisor */}
                 {!isReceptionistOrMentor && (
                   <Link 
                     to="/book-a-free-consult" 

@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Sparkles,
@@ -8,28 +8,30 @@ import {
   Heart,
   Users,
   Brain,
-  MessageCircle,
   Activity,
   CalendarCheck,
   Phone,
   CheckCircle2,
   Star,
-  BookOpen,
-  Smile,
-  Compass,
   Award,
-  Target,
-  SmilePlus,
+  Utensils,
+  ChevronDown,
+  Stethoscope,
+  Clock,
+  MapPin,
+  Mail,
   Zap,
-  Feather,
-  HelpCircle,
-  Utensils
+  Globe,
+  Compass
 } from "lucide-react";
+
+// Local Images Import
+import nutritionImg from "../assets/Nutrition.jpg";
+import occupationImg from "../assets/Occupation.jpg";
 
 /* =========================================================
     ANIMATION SYSTEM
 ========================================================= */
-
 const ease = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
@@ -62,7 +64,7 @@ const scaleIn = {
 const stagger = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.08 },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
@@ -71,17 +73,16 @@ const viewport = { once: true, amount: 0.12 };
 /* =========================================================
     REUSABLE SECTION HEADER
 ========================================================= */
-
 const SectionHeader = ({ eyebrow, title, description }) => {
   return (
     <motion.div
-      className="ot-section-header"
+      className="nutri-section-header"
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
       viewport={viewport}
     >
-      <span className="ot-eyebrow">
+      <span className="nutri-eyebrow">
         <Sparkles size={14} />
         {eyebrow}
       </span>
@@ -92,113 +93,94 @@ const SectionHeader = ({ eyebrow, title, description }) => {
 };
 
 /* =========================================================
-    1. COMPACT & ULTRA-ATTRACTIVE HERO SECTION
+    1. HERO SECTION
 ========================================================= */
-
 const HeroSection = () => {
   return (
-    <section className="ot-hero-modern">
-      {/* Dynamic Background Glows & Shapes */}
-      <div className="ot-hero-glow-accent ot-glow-cyan" />
-      <div className="ot-hero-glow-accent ot-glow-coral" />
-      <div className="ot-hero-grid-pattern" />
+    <section className="nutri-hero">
+      <div className="nutri-hero-glow-1" />
+      <div className="nutri-hero-glow-2" />
+      <div className="nutri-grid-pattern" />
 
-      <div className="ot-container ot-hero-layout">
-        {/* Left Content Column */}
+      <div className="nutri-container nutri-hero-layout">
         <motion.div
-          className="ot-hero-text-content"
+          className="nutri-hero-text"
           variants={fadeLeft}
           initial="hidden"
           animate="visible"
         >
           <motion.div
-            className="ot-hero-pill-badge"
+            className="nutri-pill-badge"
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <Sparkles size={15} className="ot-pulse-icon" />
-            <span>ABC CENTER • PEDIATRIC CARE</span>
+            <Sparkles size={14} className="nutri-pulse-icon" />
+            <span>EXPERT NUTRITION & DIETETICS CARE</span>
           </motion.div>
 
           <h1>
-            Building Skills. <br />
-            <span className="ot-gradient-text-teal">Supporting Independence.</span> <br />
-            <span className="ot-gradient-text-coral">Empowering Every Child.</span>
+            Nourish Your Body. <br />
+            <span className="nutri-gradient-text">Transform Your Health.</span>
           </h1>
 
           <p>
-            Our Occupational Therapy program supports children in developing the skills they need to participate, learn, play, and become more independent in everyday life.
+            Personalized Nutrition & Dietetics Care for a Healthier You. We empower you to cultivate sustainable eating habits and optimize your holistic clinical well-being.
           </p>
 
-          <div className="ot-hero-btn-group">
-            <motion.a 
-              href="#approach" 
-              className="ot-btn ot-btn-glow-primary"
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span>Explore Our Approach</span>
+          <div className="nutri-hero-btns">
+            <Link to="/book-a-free-consult" className="nutri-btn nutri-btn-primary">
+              <CalendarCheck size={18} />
+              <span>Book a Consultation</span>
               <ArrowRight size={16} />
-            </motion.a>
+            </Link>
 
-            <motion.div
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Link
-                to="/book-a-free-consult"
-                className="ot-btn ot-btn-frosted"
-              >
-                <CalendarCheck size={16} />
-                <span>Book Assessment</span>
-              </Link>
-            </motion.div>
+            <a href="#services" className="nutri-btn nutri-btn-outline">
+              <span>Explore Our Services</span>
+            </a>
           </div>
         </motion.div>
 
-        {/* Right Visual Composition Column */}
         <motion.div
-          className="ot-hero-visual-composition"
+          className="nutri-hero-visual"
           variants={scaleIn}
           initial="hidden"
           animate="visible"
         >
-          <div className="ot-hero-main-photo-frame">
+          <div className="nutri-hero-img-frame">
             <img
-              src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1000&q=85"
-              alt="Child engaged in occupational therapy"
+              src={nutritionImg}
+              alt="Clinical Nutrition and Dietetics"
               loading="lazy"
             />
-            <div className="ot-photo-vignette" />
+            <div className="nutri-img-overlay" />
           </div>
 
-          {/* Floating Interactive Glass Cards */}
-          <motion.div 
-            className="ot-hero-float-tag ot-tag-top-left"
+          <motion.div
+            className="nutri-float-card card-top"
             animate={{ y: [0, -8, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
           >
-            <div className="ot-tag-icon-wrap cyan">
-              <Activity size={16} />
+            <div className="nutri-float-icon">
+              <Utensils size={18} />
             </div>
             <div>
-              <strong>Fine Motor</strong>
-              <span>Dexterity & Strength</span>
+              <strong>Therapeutic Diets</strong>
+              <span>Tailored Meal Plans</span>
             </div>
           </motion.div>
 
-          <motion.div 
-            className="ot-hero-float-tag ot-tag-top-right"
-            animate={{ y: [0, 10, 0] }}
+          <motion.div
+            className="nutri-float-card card-bottom"
+            animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
           >
-            <div className="ot-tag-icon-wrap coral">
-              <Brain size={16} />
+            <div className="nutri-float-icon gold">
+              <Heart size={18} />
             </div>
             <div>
-              <strong>Sensory Regulation</strong>
-              <span>Processing & Balance</span>
+              <strong>Holistic Care</strong>
+              <span>100% Evidence-Based</span>
             </div>
           </motion.div>
         </motion.div>
@@ -208,549 +190,197 @@ const HeroSection = () => {
 };
 
 /* =========================================================
-    2. INTRODUCTION / WHAT IS OCCUPATIONAL THERAPY
+    2. PROFESSIONAL PROFILE SECTION (MS. MOMNA)
 ========================================================= */
-
-const IntroSection = () => {
-  const skillCards = [
-    { title: "Fine Motor Development", desc: "Building hand and finger strength for grasping and manipulation.", icon: Zap },
-    { title: "Gross Motor Coordination", desc: "Enhancing balance, posture, and large muscle group control.", icon: Activity },
-    { title: "Hand-Eye Coordination", desc: "Connecting visual information with precise motor actions.", icon: Target },
-    { title: "Visual-Motor Skills", desc: "Translating visual perceptions into accurate physical movements.", icon: Sparkles },
-    { title: "Pre-Writing & Handwriting", desc: "Developing foundational strokes, letter formation, and legibility.", icon: BookOpen },
-    { title: "Self-Care Skills", desc: "Fostering autonomy in dressing, grooming, and hygiene routines.", icon: Smile },
-    { title: "Feeding Functional Skills", desc: "Supporting comfortable mealtime participation and utensil handling.", icon: Utensils },
-    { title: "Attention & Participation", desc: "Improving focus, task persistence, and classroom engagement.", icon: Brain },
-    { title: "Play Skills", desc: "Promoting imaginative play, sharing, and peer collaboration.", icon: Users },
-    { title: "School Readiness", desc: "Preparing children with executive function and classroom habits.", icon: Award },
-    { title: "Sensory Processing", desc: "Helping children interpret and respond to environmental stimuli.", icon: Feather },
-    { title: "Independence", desc: "Empowering children to accomplish daily tasks with confidence.", icon: Star },
+const AboutSection = () => {
+  const qualifications = [
+    { title: "MPhil Food Science", source: "University of Engineering and Technology (UET)" },
+    { title: "Doctor of Nutrition & Dietetics (DND)", source: "University of Veterinary and Animal Sciences (UVAS)" },
+    { title: "Clinical Dietetics Specialist", source: "Professional experience in clinical nutrition (Sir Ganga Ram Hospital, Lahore)" },
+    { title: "Therapeutic & Lifestyle Nutrition", source: "Specialized in metabolic health & behavioral nutrition" },
   ];
 
   return (
-    <section className="ot-section ot-intro-section" id="approach">
-      <div className="ot-container">
-        <div className="ot-intro-bento-hero">
-          <motion.div 
-            className="ot-intro-text-box"
+    <section className="nutri-section nutri-about-section" id="about">
+      <div className="nutri-container">
+        <div className="nutri-about-grid">
+          <motion.div
+            className="nutri-about-media"
             variants={fadeLeft}
             initial="hidden"
             whileInView="visible"
             viewport={viewport}
           >
-            <span className="ot-eyebrow">
-              <Sparkles size={14} /> UNDERSTANDING OCCUPATIONAL THERAPY
-            </span>
-            <h2>What Is Occupational Therapy?</h2>
-            <p className="ot-lead">
-              Occupational therapy helps children develop skills required for everyday activities and meaningful participation at home, school, and in the community.
-            </p>
-            <p className="ot-subtext">
-              Through structured guidance, play, and evidence-based interventions, our specialists enable children to overcome developmental hurdles and reach their full potential.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            className="ot-intro-media-box"
-            variants={fadeLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport}
-          >
-            <div className="ot-media-card-inner">
-              <img
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=85"
-                alt="Occupational therapy session with children"
-                loading="lazy"
-              />
-              <div className="ot-media-floating-badge">
-                <Award size={22} />
+            <div className="nutri-profile-frame">
+              <img src={occupationImg} alt="Ms. Momna - Consultant Nutritionist & Dietitian" />
+              <div className="nutri-profile-badge">
+                <Award size={24} />
                 <div>
-                  <strong>ABC Autism Behavioral Center</strong>
-                  <span>Pediatric Excellence</span>
+                  <strong>Ms. Momna</strong>
+                  <span>Consultant Nutritionist & Dietitian</span>
                 </div>
               </div>
             </div>
           </motion.div>
-        </div>
 
-        <motion.div 
-          className="ot-bento-skills-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          {skillCards.map((card, index) => {
-            const IconComp = card.icon;
-            return (
-              <motion.div
-                className="ot-modern-skill-card"
-                key={index}
-                variants={fadeUp}
-                whileHover={{ y: -6, scale: 1.015 }}
-              >
-                <div className="ot-modern-skill-top">
-                  <div className="ot-modern-skill-icon">
-                    <IconComp size={20} />
-                  </div>
-                  <span className="ot-skill-num">0{index + 1}</span>
-                </div>
-                <h3>{card.title}</h3>
-                <p>{card.desc}</p>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    3. SENSORY INTEGRATION — FEATURE SECTION
-========================================================= */
-
-const SensoryIntegrationSection = () => {
-  const sensoryItems = [
-    { title: "Touch", desc: "Processing tactile inputs from textures, temperatures, and physical contact safely.", icon: Feather },
-    { title: "Movement & Balance", desc: "Understanding body position in space and gravitational security through vestibular input.", icon: Activity },
-    { title: "Body Awareness", desc: "Proprioceptive feedback from muscles and joints for coordinated movement.", icon: Users },
-    { title: "Visual Processing", desc: "Interpreting visual details, spatial orientation, and environmental tracking.", icon: Sparkles },
-    { title: "Auditory Processing", desc: "Filtering sounds, responding to verbal cues, and tolerating ambient noise levels.", icon: MessageCircle },
-    { title: "Oral Sensory Experiences", desc: "Managing different food textures, temperatures, and oral motor feedback.", icon: Utensils },
-  ];
-
-  return (
-    <section className="ot-section ot-sensory-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Sensory Integration"
-          title="Sensory Integration"
-          description="Helping Children Understand & Respond to Their World"
-        />
-
-        <div className="ot-sensory-orbit-container">
-          <div className="ot-orbit-center-card">
-            <div className="ot-orbit-pulse" />
-            <Brain size={42} />
-            <strong>Sensory Processing</strong>
-            <span>Core Integration</span>
-          </div>
-
-          <div className="ot-sensory-cards-wrapper">
-            {sensoryItems.map((item, idx) => {
-              const IconComp = item.icon;
-              return (
-                <motion.div
-                  className="ot-sensory-card"
-                  key={idx}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={viewport}
-                  transition={{ delay: idx * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                >
-                  <div className="ot-sensory-icon">
-                    <IconComp size={22} />
-                  </div>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    4. WHO MAY BENEFIT?
-========================================================= */
-
-const WhoMayBenefitSection = () => {
-  const benefits = [
-    "Fine Motor Skills",
-    "Handwriting",
-    "Coordination",
-    "Attention & Participation",
-    "Self-Care",
-    "Dressing & Grooming",
-    "Feeding-Related Functional Skills",
-    "Sensory Processing",
-    "Play Skills",
-    "School Readiness",
-    "Motor Planning",
-    "Daily Routines",
-    "Functional Independence"
-  ];
-
-  return (
-    <section className="ot-section ot-benefit-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Targeted Support"
-          title="Who May Benefit?"
-          description="Support Designed Around Real-Life Needs"
-        />
-
-        <motion.div 
-          className="ot-benefit-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          {benefits.map((benefit, i) => (
-            <motion.div
-              className="ot-benefit-item"
-              key={i}
-              variants={fadeUp}
-              whileHover={{ scale: 1.03, y: -4 }}
-            >
-              <div className="ot-benefit-dot">
-                <CheckCircle2 size={18} />
-              </div>
-              <span>{benefit}</span>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div 
-          className="ot-multidisciplinary-panel"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <div className="ot-panel-icon">
-            <ShieldCheck size={28} />
-          </div>
-          <div>
-            <h4>Comprehensive Multidisciplinary Care</h4>
-            <p>
-              Occupational therapy may be incorporated into multidisciplinary support for children with developmental delays, autism, learning difficulties, neurological conditions, or other developmental needs following appropriate professional assessment.
-            </p>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    5. FINE MOTOR & PRE-WRITING SECTION
-========================================================= */
-
-const FineMotorSection = () => {
-  const fineMotorSkills = [
-    "Hand Strength",
-    "Finger Coordination",
-    "Pencil Grasp",
-    "Hand-Eye Coordination",
-    "Bilateral Hand Use",
-    "Cutting Skills",
-    "Drawing",
-    "Tracing",
-    "Coloring",
-    "Pre-Writing Patterns",
-    "Handwriting Readiness"
-  ];
-
-  const stages = [
-    { title: "GRIP", desc: "Finger and thumb foundation" },
-    { title: "CONTROL", desc: "Pencil manipulation and pressure" },
-    { title: "COORDINATION", desc: "Two-handed harmony" },
-    { title: "PRE-WRITING", desc: "Shapes, strokes, and lines" },
-    { title: "HANDWRITING", desc: "Fluent letter formation" },
-  ];
-
-  return (
-    <section className="ot-section ot-finemotor-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Little Hands, Big Skills"
-          title="Fine Motor & Pre-Writing Skills"
-          description="Targeted exercises and play activities designed to build precision, strength, and confidence in writing."
-        />
-
-        <motion.div 
-          className="ot-fm-chips-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          {fineMotorSkills.map((skill, idx) => (
-            <motion.div
-              className="ot-fm-chip"
-              key={idx}
-              variants={fadeUp}
-              whileHover={{ scale: 1.05, y: -3 }}
-            >
-              <Zap size={16} />
-              <span>{skill}</span>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <div className="ot-progress-roadmap">
-          <h3>Progression Pathway</h3>
-          <div className="ot-roadmap-steps">
-            {stages.map((stage, sIdx) => (
-              <motion.div
-                className="ot-roadmap-step"
-                key={sIdx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={viewport}
-                transition={{ delay: sIdx * 0.15 }}
-              >
-                <div className="ot-roadmap-badge">0{sIdx + 1}</div>
-                <strong>{stage.title}</strong>
-                <span>{stage.desc}</span>
-                {sIdx < stages.length - 1 && <div className="ot-roadmap-connector" />}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    6. PLAY & DEVELOPMENT
-========================================================= */
-
-const PlayDevelopmentSection = () => {
-  const playCards = [
-    { title: "Exploration", desc: "Discovering textures, objects, and spatial surroundings.", icon: Compass },
-    { title: "Imagination", desc: "Fostering creative thinking and role-play scenarios.", icon: Sparkles },
-    { title: "Problem-Solving", desc: "Navigating puzzles, obstacles, and cognitive challenges.", icon: Brain },
-    { title: "Social Interaction", desc: "Engaging in cooperative play, sharing, and communication.", icon: Users },
-    { title: "Motor Development", desc: "Building agility, endurance, and physical confidence.", icon: Activity },
-    { title: "Communication", desc: "Expressing ideas, emotions, and needs through interactive play.", icon: MessageCircle },
-    { title: "Attention", desc: "Sustaining focus during preferred and guided play tasks.", icon: Target },
-    { title: "Independence", desc: "Making choices and leading activities with self-assurance.", icon: SmilePlus },
-  ];
-
-  return (
-    <section className="ot-section ot-play-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Learning Through Play"
-          title="Play & Development"
-          description="Play provides children with natural opportunities to learn, grow, and interact."
-        />
-
-        <div className="ot-play-statement-box">
-          <Smile size={32} />
-          <h3>“Play is an important occupation of childhood.”</h3>
-        </div>
-
-        <motion.div 
-          className="ot-play-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          {playCards.map((card, idx) => {
-            const Icon = card.icon;
-            return (
-              <motion.div
-                className="ot-play-card"
-                key={idx}
-                variants={fadeUp}
-                whileHover={{ y: -6, scale: 1.02 }}
-              >
-                <div className="ot-play-icon">
-                  <Icon size={22} />
-                </div>
-                <h4>{card.title}</h4>
-                <p>{card.desc}</p>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    7. FEEDING & ORAL-MOTOR SUPPORT
-========================================================= */
-
-const FeedingSection = () => {
-  return (
-    <section className="ot-section ot-feeding-section">
-      <div className="ot-container ot-two-column">
-        <motion.div
-          className="ot-feeding-content"
-          variants={fadeLeft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <span className="ot-eyebrow">
-            <Utensils size={14} /> CLINICAL SUPPORT
-          </span>
-          <h2>Feeding & Oral-Motor Support</h2>
-          <p className="ot-lead">
-            Occupational therapy may contribute to functional feeding skills, postural positioning, self-feeding mechanics, and sensory aspects of eating where appropriate and within professional scope.
-          </p>
-          <p className="ot-subtext">
-            We collaborate closely with families to ensure mealtime is a comfortable, stress-free, and nourishing experience for every child.
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="ot-feeding-alert-card"
-          variants={fadeLeft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <div className="ot-alert-icon">
-            <HelpCircle size={28} />
-          </div>
-          <h3>Important Clinical Notice</h3>
-          <p>
-            Children with swallowing difficulties, feeding safety concerns, or suspected dysphagia should be assessed and managed by an appropriately qualified <strong>Speech & Language Pathologist</strong> / feeding and swallowing professional, with dietitian support where needed.
-          </p>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    8. FAMILY-CENTERED THERAPY
-========================================================= */
-
-const FamilyTherapySection = () => {
-  const familyCards = [
-    { title: "Home Activities", desc: "Practical exercises tailored for home environments." },
-    { title: "Sensory Support Strategies", desc: "Managing sensory overload in daily settings." },
-    { title: "Fine Motor Activities", desc: "Fun games using everyday household items." },
-    { title: "Self-Care Practice", desc: "Steps toward dressing and hygiene autonomy." },
-    { title: "Play Ideas", desc: "Engaging games that build developmental milestones." },
-    { title: "Routine Development", desc: "Establishing predictable, calm daily schedules." },
-    { title: "Supporting Independence", desc: "Encouraging self-reliance in age-appropriate tasks." },
-  ];
-
-  return (
-    <section className="ot-section ot-family-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Family Partnership"
-          title="Therapy Doesn't Stop When the Session Ends"
-          description="Parents and caregivers are an essential part of every child's developmental journey."
-        />
-
-        <motion.div 
-          className="ot-family-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          {familyCards.map((item, idx) => (
-            <motion.div
-              className="ot-family-card"
-              key={idx}
-              variants={fadeUp}
-              whileHover={{ y: -6, scale: 1.02 }}
-            >
-              <div className="ot-family-check">
-                <CheckCircle2 size={18} />
-              </div>
-              <div>
-                <h4>{item.title}</h4>
-                <p>{item.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div 
-          className="ot-family-quote-banner"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <Heart size={26} />
-          <p>Parents and caregivers are an important part of a child's developmental journey.</p>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* =========================================================
-    9. MULTIDISCIPLINARY CHILD DEVELOPMENT
-========================================================= */
-
-const MultidisciplinarySection = () => {
-  const teamServices = [
-    { title: "Special Education", icon: BookOpen },
-    { title: "Speech & Language Pathology", icon: MessageCircle },
-    { title: "Physiotherapy", icon: Activity },
-    { title: "Nutrition & Dietetics", icon: Utensils },
-    { title: "Psychology", icon: Brain },
-    { title: "Parents & Family", icon: Users },
-  ];
-
-  return (
-    <section className="ot-section ot-multidisciplinary-section">
-      <div className="ot-container">
-        <SectionHeader
-          eyebrow="Collaborative Care"
-          title="One Child. One Team. A Coordinated Approach."
-          description="Our specialists work hand-in-hand to provide seamless, holistic care tailored to your child's needs."
-        />
-
-        <div className="ot-hub-container">
-          <motion.div 
-            className="ot-hub-center"
-            animate={{ scale: [1, 1.04, 1] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          <motion.div
+            className="nutri-about-text"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
           >
-            <Smile size={32} />
-            <strong>The Child</strong>
-            <span>Center of Care</span>
+            <span className="nutri-eyebrow">
+              <Sparkles size={14} /> CONSULTANT PROFILE
+            </span>
+            <h2>Meet Consultant Nutritionist Ms. Momna</h2>
+            <p className="nutri-lead">
+              Dedicated to translating complex nutritional science into practical, enjoyable, and life-changing daily habits.
+            </p>
+            <p className="nutri-subtext">
+              With professional experience at premier clinical institutions including Sir Ganga Ram Hospital, Lahore, Ms. Momna combines therapeutic dietetics with behavioral coaching to address root causes rather than temporary symptoms.
+            </p>
+
+            <div className="nutri-qualifications-grid">
+              {qualifications.map((q, idx) => (
+                <div key={idx} className="nutri-qual-card">
+                  <CheckCircle2 size={18} className="nutri-check-icon" />
+                  <div>
+                    <h4>{q.title}</h4>
+                    <p>{q.source}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    3. SERVICES SECTION
+========================================================= */
+const ServicesSection = () => {
+  const services = [
+    {
+      title: "Clinical Nutrition & Dietetics",
+      desc: "Comprehensive dietary evaluations and clinical meal design for underlying medical condition management.",
+      icon: Stethoscope,
+    },
+    {
+      title: "Therapeutic Nutrition",
+      desc: "Targeted medical nutrition therapy for diabetes, hypertension, PCOS, and gut health.",
+      icon: Heart,
+    },
+    {
+      title: "Behavioral Nutrition",
+      desc: "Mindful eating strategies and psychological frameworks to heal your relationship with food.",
+      icon: Brain,
+    },
+    {
+      title: "Physiotherapy",
+      desc: "Coordinated nutrition and movement strategies to accelerate muscle recovery and body mechanics.",
+      icon: Activity,
+    },
+    {
+      title: "Supplement Guidance",
+      desc: "Evidence-based micronutrient, vitamin, and supplement protocols tailored to your blood work.",
+      icon: Zap,
+    },
+    {
+      title: "Online Consultation",
+      desc: "Virtual appointments and continuous digital guidance from the comfort of your home.",
+      icon: Globe,
+    },
+  ];
+
+  return (
+    <section className="nutri-section nutri-services-section" id="services">
+      <div className="nutri-container">
+        <SectionHeader
+          eyebrow="Core Offerings"
+          title="Clinical & Wellness Services"
+          description="Tailored nutritional interventions grounded in medical research and individualized care."
+        />
+
+        <motion.div
+          className="nutri-services-grid"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+        >
+          {services.map((svc, i) => {
+            const Icon = svc.icon;
+            return (
+              <motion.div
+                key={i}
+                className="nutri-service-card"
+                variants={fadeUp}
+                whileHover={{ y: -8 }}
+              >
+                <div className="nutri-svc-icon-wrap">
+                  <Icon size={24} />
+                </div>
+                <h3>{svc.title}</h3>
+                <p>{svc.desc}</p>
+                <Link to="/book-a-free-consult" className="nutri-svc-link">
+                  <span>Learn More</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    4. INTEGRATED CARE SECTION
+========================================================= */
+const IntegratedCareSection = () => {
+  return (
+    <section className="nutri-section nutri-integrated-section" id="integrated">
+      <div className="nutri-container">
+        <div className="nutri-integrated-box">
+          <motion.div
+            className="nutri-integrated-content"
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+          >
+            <span className="nutri-eyebrow light">
+              <ShieldCheck size={14} /> MULTIDISCIPLINARY SYNERGY
+            </span>
+            <h2>Integrated Healthcare Approach</h2>
+            <p>
+              Our clinical nutrition programs integrate seamlessly with primary medical care, physical therapy, and behavioral guidance to deliver holistic recovery plans.
+            </p>
+            <ul className="nutri-integrated-list">
+              <li><CheckCircle2 size={16} /> Coordinated therapy with primary care providers</li>
+              <li><CheckCircle2 size={16} /> Routine progress & lab marker monitoring</li>
+              <li><CheckCircle2 size={16} /> Alignment with physical therapy and rehabilitation</li>
+            </ul>
           </motion.div>
 
-          <div className="ot-hub-services-grid">
-            {teamServices.map((svc, i) => {
-              const IconComp = svc.icon;
-              return (
-                <motion.div
-                  className="ot-hub-service-card"
-                  key={i}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={viewport}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -4 }}
-                >
-                  <div className="ot-hub-icon">
-                    <IconComp size={22} />
-                  </div>
-                  <span>{svc.title}</span>
-                </motion.div>
-              );
-            })}
-          </div>
+          <motion.div
+            className="nutri-integrated-card"
+            variants={scaleIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+          >
+            <div className="nutri-card-inner">
+              <Compass size={40} className="nutri-gold-icon" />
+              <h3>Integrated Health Circle</h3>
+              <p>Clinical Nutrition • Behavior • Movement • Medical Care</p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -758,41 +388,120 @@ const MultidisciplinarySection = () => {
 };
 
 /* =========================================================
-    10. OUR OCCUPATIONAL THERAPY JOURNEY
+    5. CARE PLANS SECTION
 ========================================================= */
-
-const JourneySection = () => {
-  const steps = [
-    { num: "01", title: "Initial Assessment", desc: "Understand the child's developmental strengths, challenges, routines, and functional needs." },
-    { num: "02", title: "Goal Setting", desc: "Develop individualized and meaningful goals together with parents/caregivers." },
-    { num: "03", title: "Individualized Therapy", desc: "Provide structured, play-based occupational therapy and sensory-focused activities." },
-    { num: "04", title: "Family Education", desc: "Provide practical strategies for supporting skills at home." },
-    { num: "05", title: "Progress Monitoring", desc: "Track functional progress and participation." },
-    { num: "06", title: "Review & Adaptation", desc: "Modify goals and intervention strategies according to the child's changing needs." },
+const CarePlansSection = () => {
+  const plans = [
+    {
+      name: "Disease Care Plan",
+      badge: "Standard Therapeutic",
+      desc: "Designed for single health condition management and targeted dietary correction.",
+      features: [
+        "Comprehensive Nutritional Assessment",
+        "Customized Therapeutic Meal Plan",
+        "Regular Progress Monitoring",
+        "Lifestyle & Habit Guidance",
+        "Direct Support & Queries"
+      ],
+      highlight: false
+    },
+    {
+      name: "Disease + Complication Care Plan",
+      badge: "Advanced Multidisciplinary",
+      desc: "Comprehensive medical nutrition therapy for complex or multi-condition health management.",
+      features: [
+        "In-depth Health & Report Analysis",
+        "Multi-Condition Integrated Meal Design",
+        "Priority Monitoring & Adjustments",
+        "Movement & Physiotherapy Alignment",
+        "Comprehensive Family Support"
+      ],
+      highlight: true
+    }
   ];
 
   return (
-    <section className="ot-section ot-journey-section">
-      <div className="ot-container">
+    <section className="nutri-section nutri-plans-section" id="plans">
+      <div className="nutri-container">
         <SectionHeader
-          eyebrow="Step-by-Step Path"
-          title="Our Occupational Therapy Journey"
-          description="A clear, collaborative roadmap designed to guide your child toward independence and success."
+          eyebrow="Targeted Interventions"
+          title="Structured Care Plans"
+          description="Select a specialized care plan designed for your individual health requirements."
         />
 
-        <div className="ot-journey-grid">
+        <div className="nutri-plans-grid">
+          {plans.map((plan, idx) => (
+            <motion.div
+              key={idx}
+              className={`nutri-plan-card ${plan.highlight ? "highlighted" : ""}`}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              whileHover={{ y: -6 }}
+            >
+              {plan.highlight && <div className="nutri-popular-tag">Recommended</div>}
+              <span className="nutri-plan-badge">{plan.badge}</span>
+              <h3>{plan.name}</h3>
+              <p className="nutri-plan-desc">{plan.desc}</p>
+              
+              <div className="nutri-plan-divider" />
+
+              <ul className="nutri-plan-features">
+                {plan.features.map((feat, fIdx) => (
+                  <li key={fIdx}>
+                    <CheckCircle2 size={16} />
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link to="/book-a-free-consult" className={`nutri-btn ${plan.highlight ? "nutri-btn-primary" : "nutri-btn-outline-dark"}`}>
+                <span>Book Consultation</span>
+                <ArrowRight size={16} />
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    6. HOW IT WORKS (SIX-STEP TIMELINE)
+========================================================= */
+const HowItWorksSection = () => {
+  const steps = [
+    { num: "01", title: "Assessment", desc: "Evaluation of medical history, lifestyle routines, dietary habits, and individual goals." },
+    { num: "02", title: "Personalized Plan", desc: "Designing a customized nutrition and lifestyle plan tailored to your health." },
+    { num: "03", title: "Behavioral Support", desc: "Mindset coaching and strategies for sustainable habit formation." },
+    { num: "04", title: "Movement & Physiotherapy", desc: "Aligning physical movement with nutritional energy needs." },
+    { num: "05", title: "Monitor", desc: "Regular reviews and adjustments based on ongoing health progress." },
+    { num: "06", title: "Sustain", desc: "Empowering long-term independence for lifelong wellness." },
+  ];
+
+  return (
+    <section className="nutri-section nutri-how-section" id="how-it-works">
+      <div className="nutri-container">
+        <SectionHeader
+          eyebrow="Structured Pathway"
+          title="How It Works"
+          description="A clear, interactive 6-step journey towards sustainable health improvement."
+        />
+
+        <div className="nutri-timeline-grid">
           {steps.map((st, idx) => (
             <motion.div
-              className="ot-journey-card"
               key={idx}
+              className="nutri-timeline-item"
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"
               viewport={viewport}
               transition={{ delay: idx * 0.1 }}
-              whileHover={{ y: -6, scale: 1.02 }}
             >
-              <div className="ot-journey-number">{st.num}</div>
+              <div className="nutri-timeline-num">{st.num}</div>
               <h3>{st.title}</h3>
               <p>{st.desc}</p>
             </motion.div>
@@ -804,1198 +513,738 @@ const JourneySection = () => {
 };
 
 /* =========================================================
-    11. INDIVIDUALIZED OCCUPATIONAL THERAPY
+    7. FAQ SECTION
 ========================================================= */
-
-const IndividualizedSection = () => {
-  const chips = [
-    "Age",
-    "Developmental Level",
-    "Functional Abilities",
-    "Sensory Needs",
-    "Learning Style",
-    "Family Priorities",
-    "School Requirements",
-    "Individual Goals"
+const FaqSection = () => {
+  const faqs = [
+    { q: "What should I expect during my first consultation?", a: "Your initial consultation involves an in-depth assessment of medical history, eating routines, lifestyle preferences, and setting individual health goals." },
+    { q: "Are meal plans customized for specific medical conditions?", a: "Yes. All nutrition plans are tailored according to underlying health conditions such as diabetes, hypertension, PCOS, digestive issues, and metabolic health." },
+    { q: "How do online consultations work?", a: "Online consultations take place through secure video calls. Meal charts, guidelines, and monitoring materials are delivered digitally." },
+    { q: "Are recent blood tests required?", a: "Having recent medical reports helps in tailoring an accurate plan. Recommendations for specific blood tests can also be provided during your consult if necessary." }
   ];
 
+  const [openIdx, setOpenIdx] = useState(null);
+
   return (
-    <section className="ot-section ot-individualized-section">
-      <div className="ot-container ot-two-column">
-        <motion.div
-          className="ot-ind-content"
-          variants={fadeLeft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <span className="ot-eyebrow">
-            <Compass size={14} /> TAILORED INTERVENTION
-          </span>
-          <h2>Every Child Has Different Strengths.</h2>
-          <p className="ot-lead">
-            There is no single therapy approach that works identically for every child.
-          </p>
+    <section className="nutri-section nutri-faq-section" id="faq">
+      <div className="nutri-container">
+        <SectionHeader
+          eyebrow="Common Inquiries"
+          title="Frequently Asked Questions"
+          description="Find answers to common questions regarding clinical consultations and nutrition plans."
+        />
 
-          <div className="ot-ind-chips-wrap">
-            {chips.map((chip, i) => (
-              <span className="ot-ind-chip" key={i}>
-                <CheckCircle2 size={14} />
-                {chip}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="ot-ind-quote-card"
-          variants={fadeLeft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-        >
-          <span className="ot-big-quote-mark">“</span>
-          <p>
-            The focus is not simply on completing exercises — it is on helping children participate more successfully in real-life activities.
-          </p>
-          <strong>ABC CENTER Therapy Team</strong>
-        </motion.div>
+        <div className="nutri-faq-list">
+          {faqs.map((faq, i) => {
+            const isOpen = openIdx === i;
+            return (
+              <motion.div
+                key={i}
+                className={`nutri-faq-item ${isOpen ? "open" : ""}`}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+              >
+                <button
+                  className="nutri-faq-question"
+                  onClick={() => setOpenIdx(isOpen ? null : i)}
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown className={`nutri-faq-arrow ${isOpen ? "rotate" : ""}`} size={20} />
+                </button>
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      className="nutri-faq-answer"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <p>{faq.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 };
 
 /* =========================================================
-    MAIN COMPONENT WITH EMBEDDED STYLES
+    8. CONTACT SECTION
 ========================================================= */
+const ContactCtaSection = () => {
+  return (
+    <section className="nutri-section nutri-contact-section" id="contact">
+      <div className="nutri-container">
+        <div className="nutri-contact-card">
+          <motion.div
+            className="nutri-contact-info"
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+          >
+            <span className="nutri-eyebrow light">GET IN TOUCH</span>
+            <h2>Start Your Health Journey Today</h2>
+            <p>Schedule a personalized consultation with Ms. Momna and take a proactive step towards long-term wellness.</p>
 
-export default function OccupationalTherapyPage() {
+            <div className="nutri-contact-details">
+              <div className="nutri-contact-item">
+                <MapPin size={20} />
+                <span>Sir Ganga Ram Hospital / Private Consultation, Lahore</span>
+              </div>
+              <div className="nutri-contact-item">
+                <Clock size={20} />
+                <span>Clinic Timings: By Appointment</span>
+              </div>
+              <div className="nutri-contact-item">
+                <Phone size={20} />
+                <span>Phone/WhatsApp: Available upon booking</span>
+              </div>
+              <div className="nutri-contact-item">
+                <Mail size={20} />
+                <span>Email: contact@nutritioncare.com</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="nutri-contact-action"
+            variants={scaleIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+          >
+            <div className="nutri-action-box">
+              <CalendarCheck size={42} className="nutri-gold-icon" />
+              <h3>Book Your Appointment</h3>
+              <p>In-person and Online Consultations available.</p>
+              <Link to="/book-a-free-consult" className="nutri-btn nutri-btn-primary full-width">
+                <span>Book Consultation</span>
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* =========================================================
+    MAIN COMPONENT WITH EMBEDDED CSS STYLES
+========================================================= */
+export default function NutritionDieteticsPage() {
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-        .ot-page {
-          --navy: #003B5C;
-          --teal: #00A8CD;
-          --cyan: #E8F8FB;
-          --coral: #FF5271;
-          --yellow: #FFF4C7;
+        .nutri-page {
+          --emerald: #176B55;
+          --sage: #A8C3A0;
+          --gold: #D6A85F;
+          --cream: #FAF9F4;
+          --light-bg: #F0F5EF;
+          --dark-text: #24352F;
           --white: #FFFFFF;
-          --bg-light: #F7FBFC;
-          --text-dark: #183B4D;
-          --border: rgba(0, 168, 205, 0.15);
+          --border: rgba(23, 107, 85, 0.12);
 
-          font-family: "Plus Jakarta Sans", sans-serif;
-          color: var(--text-dark);
-          background: var(--bg-light);
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          color: var(--dark-text);
+          background-color: var(--cream);
           overflow-x: hidden;
           line-height: 1.7;
         }
 
-        .ot-page *, .ot-page *::before, .ot-page *::after {
+        .nutri-page *, .nutri-page *::before, .nutri-page *::after {
           box-sizing: border-box;
         }
 
-        .ot-page img {
-          display: block;
-          width: 100%;
-        }
-
-        .ot-page a {
-          text-decoration: none;
-        }
-
-        .ot-container {
+        .nutri-container {
           width: min(1200px, calc(100% - 40px));
           margin: 0 auto;
           position: relative;
-          z-index: 3;
-        }
-
-        .ot-section {
-          position: relative;
-          padding: 85px 0;
-        }
-
-        .ot-two-column {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-          gap: 65px;
-          align-items: center;
-        }
-
-        /* SECTION HEADER */
-        .ot-section-header {
-          max-width: 780px;
-          margin: 0 auto 50px;
-          text-align: center;
-        }
-
-        .ot-section-header h2 {
-          margin: 10px 0 14px;
-          font-size: clamp(28px, 3.5vw, 40px);
-          line-height: 1.18;
-          font-weight: 800;
-          letter-spacing: -1.2px;
-          color: var(--navy);
-        }
-
-        .ot-section-header p {
-          margin: 0 auto;
-          max-width: 700px;
-          color: #556c78;
-          font-size: 15px;
-          line-height: 1.7;
-        }
-
-        .ot-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--teal);
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-        }
-
-        .ot-eyebrow svg {
-          color: var(--coral);
-        }
-
-        /* BUTTONS */
-        .ot-btn {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          min-height: 48px;
-          padding: 0 22px;
-          border-radius: 12px;
-          font-size: 13px;
-          font-weight: 800;
-          overflow: hidden;
-          isolation: isolate;
-          transition: transform .3s ease, box-shadow .3s ease, background .3s ease, border-color .3s ease, color .3s ease;
-        }
-
-        .ot-btn-glow-primary {
-          color: white;
-          background: linear-gradient(135deg, var(--teal), #007a99);
-          box-shadow: 0 12px 25px rgba(0,168,205,0.3);
-        }
-
-        .ot-btn-glow-primary:hover {
-          background: linear-gradient(135deg, var(--navy), var(--teal));
-          box-shadow: 0 16px 35px rgba(0,59,92,0.35);
-        }
-
-        .ot-btn-frosted {
-          color: var(--navy);
-          border: 1px solid rgba(0,59,92,0.15);
-          background: white;
-          box-shadow: 0 8px 20px rgba(0,59,92,0.05);
-        }
-
-        .ot-btn-frosted:hover {
-          background: var(--cyan);
-          border-color: var(--teal);
-        }
-
-        .ot-btn-white {
-          color: var(--teal);
-          background: white;
-          box-shadow: 0 12px 30px rgba(0,0,0,.15);
-        }
-
-        .ot-btn-transparent {
-          color: white;
-          border: 1px solid rgba(255,255,255,.4);
-          background: rgba(255,255,255,.08);
-          backdrop-filter: blur(10px);
-        }
-
-        /* =========================================================
-           1. COMPACT & ULTRA-ATTRACTIVE HERO STYLES
-        ========================================================= */
-        .ot-hero-modern {
-          position: relative;
-          min-height: auto;
-          padding: 70px 0 75px;
-          display: flex;
-          align-items: center;
-          overflow: hidden;
-          background: linear-gradient(135deg, #002235 0%, var(--navy) 50%, #004973 100%);
-        }
-
-        .ot-hero-glow-accent {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(70px);
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .ot-glow-cyan {
-          width: 400px;
-          height: 400px;
-          background: rgba(0, 168, 205, 0.2);
-          top: -120px;
-          right: -80px;
-        }
-
-        .ot-glow-coral {
-          width: 320px;
-          height: 320px;
-          background: rgba(255, 82, 113, 0.15);
-          bottom: -80px;
-          left: -80px;
-        }
-
-        .ot-hero-grid-pattern {
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-          background-size: 28px 28px;
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .ot-hero-layout {
-          display: grid;
-          grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.85fr);
-          align-items: center;
-          gap: 50px;
           z-index: 2;
         }
 
-        .ot-hero-pill-badge {
+        .nutri-section {
+          padding: 85px 0;
+          position: relative;
+        }
+
+        /* SECTION HEADERS */
+        .nutri-section-header {
+          text-align: center;
+          max-width: 750px;
+          margin: 0 auto 50px;
+        }
+
+        .nutri-section-header h2 {
+          font-size: clamp(28px, 3.5vw, 40px);
+          font-weight: 800;
+          color: var(--emerald);
+          margin: 10px 0;
+          letter-spacing: -1px;
+        }
+
+        .nutri-section-header p {
+          color: #536760;
+          font-size: 15px;
+        }
+
+        .nutri-eyebrow {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          padding: 6px 14px;
-          border: 1px solid rgba(0, 168, 205, 0.35);
-          border-radius: 50px;
-          color: #4cd5f5;
-          background: rgba(0, 168, 205, 0.1);
-          backdrop-filter: blur(10px);
-          font-size: 10px;
+          gap: 6px;
+          font-size: 11px;
           font-weight: 800;
-          letter-spacing: 1.2px;
           text-transform: uppercase;
+          letter-spacing: 1.5px;
+          color: var(--emerald);
         }
 
-        .ot-pulse-icon {
-          animation: pulseIcon 2s infinite ease-in-out;
+        .nutri-eyebrow.light {
+          color: var(--gold);
         }
 
-        @keyframes pulseIcon {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.6; transform: scale(1.15); }
-        }
-
-        .ot-hero-text-content h1 {
-          margin: 16px 0 14px;
-          color: white;
-          font-size: clamp(32px, 4vw, 48px);
-          line-height: 1.12;
-          font-weight: 800;
-          letter-spacing: -1.5px;
-        }
-
-        .ot-gradient-text-teal {
-          background: linear-gradient(135deg, #4cd5f5 0%, #00a8cd 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .ot-gradient-text-coral {
-          background: linear-gradient(135deg, #ff8fa3 0%, var(--coral) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .ot-hero-text-content > p {
-          max-width: 540px;
-          margin: 0 0 24px 0;
-          color: rgba(255, 255, 255, 0.82);
+        /* BUTTONS */
+        .nutri-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 12px 24px;
+          border-radius: 12px;
           font-size: 14px;
-          line-height: 1.7;
+          font-weight: 700;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          cursor: pointer;
         }
 
-        .ot-hero-btn-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
+        .nutri-btn-primary {
+          background: linear-gradient(135deg, var(--emerald), #0e4839);
+          color: var(--white);
+          box-shadow: 0 10px 25px rgba(23, 107, 85, 0.25);
         }
 
-        /* Right Composition Styles */
-        .ot-hero-visual-composition {
-          position: relative;
+        .nutri-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 30px rgba(23, 107, 85, 0.35);
+        }
+
+        .nutri-btn-outline {
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: var(--white);
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+        }
+
+        .nutri-btn-outline:hover {
+          background: var(--white);
+          color: var(--emerald);
+        }
+
+        .nutri-btn-outline-dark {
+          border: 1px solid var(--emerald);
+          color: var(--emerald);
+          background: transparent;
+        }
+
+        .nutri-btn-outline-dark:hover {
+          background: var(--emerald);
+          color: var(--white);
+        }
+
+        .nutri-btn.full-width {
           width: 100%;
         }
 
-        .ot-hero-main-photo-frame {
+        /* 1. HERO SECTION */
+        .nutri-hero {
           position: relative;
-          border-radius: 28px;
+          background: linear-gradient(135deg, #0e382d 0%, var(--emerald) 100%);
+          color: var(--white);
+          padding: 80px 0 90px;
           overflow: hidden;
-          box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-          border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .ot-hero-main-photo-frame img {
-          height: 380px;
-          object-fit: cover;
-          transform: scale(1.02);
-          transition: transform 0.5s ease;
-        }
-
-        .ot-hero-main-photo-frame:hover img {
-          transform: scale(1.05);
-        }
-
-        .ot-photo-vignette {
+        .nutri-hero-glow-1, .nutri-hero-glow-2 {
           position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(0, 34, 53, 0.4), transparent 60%);
+          border-radius: 50%;
+          filter: blur(80px);
           pointer-events: none;
         }
 
-        .ot-hero-float-tag {
+        .nutri-hero-glow-1 {
+          width: 350px;
+          height: 350px;
+          background: rgba(214, 168, 95, 0.15);
+          top: -100px;
+          right: -50px;
+        }
+
+        .nutri-hero-glow-2 {
+          width: 300px;
+          height: 300px;
+          background: rgba(168, 195, 160, 0.15);
+          bottom: -50px;
+          left: -50px;
+        }
+
+        .nutri-grid-pattern {
           position: absolute;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 14px;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(15px);
-          border-radius: 16px;
-          box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          z-index: 5;
+          inset: 0;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+          background-size: 24px 24px;
         }
 
-        .ot-tag-icon-wrap {
-          width: 36px;
-          height: 36px;
+        .nutri-hero-layout {
           display: grid;
-          place-items: center;
-          border-radius: 10px;
-          color: white;
-        }
-
-        .ot-tag-icon-wrap.cyan { background: var(--teal); box-shadow: 0 6px 15px rgba(0,168,205,0.3); }
-        .ot-tag-icon-wrap.coral { background: var(--coral); box-shadow: 0 6px 15px rgba(255,82,113,0.3); }
-
-        .ot-hero-float-tag strong {
-          display: block;
-          font-size: 12px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-hero-float-tag span {
-          display: block;
-          font-size: 10px;
-          color: #607d8b;
-          font-weight: 600;
-        }
-
-        .ot-tag-top-left { top: 20px; left: -25px; }
-        .ot-tag-top-right { bottom: 20px; right: -25px; }
-
-        /* 2. REDESIGNED INTRO & BENTO SKILLS SECTION */
-        .ot-intro-section { background: white; }
-        .ot-intro-bento-hero {
-          display: grid;
-          grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+          grid-template-columns: 1.1fr 0.9fr;
           gap: 50px;
           align-items: center;
-          margin-bottom: 60px;
-          background: linear-gradient(135deg, var(--cyan), #f4fbfd);
-          padding: 45px;
-          border-radius: 28px;
-          border: 1px solid rgba(0,168,205,0.2);
-          box-shadow: 0 15px 40px rgba(0,59,92,0.04);
         }
 
-        .ot-intro-text-box h2 {
-          font-size: clamp(26px, 3.2vw, 38px);
-          font-weight: 800;
-          letter-spacing: -1px;
-          line-height: 1.18;
-          margin: 10px 0 14px 0;
-          color: var(--navy);
-        }
-
-        .ot-lead {
-          margin: 0 0 16px 0;
-          color: #4a6572;
-          font-size: 15px;
-          line-height: 1.75;
-          font-weight: 600;
-        }
-
-        .ot-subtext {
-          margin: 0;
-          color: #607d8b;
-          font-size: 14px;
-          line-height: 1.75;
-        }
-
-        .ot-intro-media-box {
-          position: relative;
-        }
-
-        .ot-media-card-inner {
-          position: relative;
-          border-radius: 22px;
-          overflow: hidden;
-          box-shadow: 0 15px 35px rgba(0,59,92,0.12);
-        }
-
-        .ot-media-card-inner img {
-          height: 340px;
-          object-fit: cover;
-        }
-
-        .ot-media-floating-badge {
-          position: absolute;
-          bottom: 16px;
-          left: 16px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 16px;
-          background: rgba(255,255,255,0.95);
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          box-shadow: 0 8px 20px rgba(0,59,92,0.12);
-          color: var(--teal);
-        }
-
-        .ot-media-floating-badge strong {
-          display: block;
-          font-size: 11px;
-          color: var(--navy);
-        }
-
-        .ot-media-floating-badge span {
-          display: block;
-          font-size: 10px;
-          color: #607d8b;
-        }
-
-        .ot-bento-skills-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 18px;
-        }
-
-        .ot-modern-skill-card {
-          padding: 22px;
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          box-shadow: 0 8px 25px rgba(0,59,92,0.03);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-        }
-
-        .ot-modern-skill-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 14px;
-        }
-
-        .ot-modern-skill-icon {
-          width: 40px;
-          height: 40px;
-          display: grid;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          border-radius: 12px;
-        }
-
-        .ot-skill-num {
-          font-size: 11px;
-          font-weight: 800;
-          color: #a0b2be;
-          letter-spacing: 1px;
-        }
-
-        .ot-modern-skill-card h3 {
-          margin: 0 0 6px;
-          font-size: 15px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-modern-skill-card p {
-          margin: 0;
-          font-size: 12px;
-          color: #607d8b;
-          line-height: 1.6;
-        }
-
-        /* 3. SENSORY INTEGRATION */
-        .ot-sensory-section { background: var(--cyan); }
-        .ot-sensory-orbit-container {
-          position: relative;
-          max-width: 900px;
-          margin: 35px auto 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 35px;
-        }
-
-        .ot-orbit-center-card {
-          position: relative;
-          width: 180px;
-          height: 180px;
-          background: linear-gradient(135deg, var(--navy), var(--teal));
-          border-radius: 50%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          text-align: center;
-          box-shadow: 0 20px 45px rgba(0,59,92,0.2);
-          z-index: 3;
-        }
-
-        .ot-orbit-pulse {
-          position: absolute;
-          inset: -8px;
-          border-radius: 50%;
-          border: 2px dashed rgba(0,168,205,0.4);
-          animation: spinOrb 20s linear infinite;
-        }
-
-        @keyframes spinOrb {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .ot-orbit-center-card strong { font-size: 14px; margin-top: 4px; }
-        .ot-orbit-center-card span { font-size: 11px; opacity: 0.85; }
-
-        .ot-sensory-cards-wrapper {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
-          width: 100%;
-        }
-
-        .ot-sensory-card {
-          display: flex;
-          align-items: flex-start;
-          gap: 14px;
-          padding: 20px;
-          background: white;
-          border-radius: 18px;
-          border: 1px solid var(--border);
-          box-shadow: 0 8px 25px rgba(0,59,92,0.04);
-        }
-
-        .ot-sensory-icon {
-          display: grid;
-          width: 42px;
-          height: 42px;
-          flex: 0 0 42px;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          border-radius: 12px;
-        }
-
-        .ot-sensory-card h3 {
-          margin: 0 0 4px;
-          font-size: 14px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-sensory-card p {
-          margin: 0;
-          font-size: 12px;
-          color: #607d8b;
-          line-height: 1.6;
-        }
-
-        /* 4. WHO MAY BENEFIT? */
-        .ot-benefit-section { background: white; }
-        .ot-benefit-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 14px;
-        }
-
-        .ot-benefit-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 15px 18px;
-          background: var(--bg-light);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--navy);
-          box-shadow: 0 4px 12px rgba(0,59,92,0.02);
-        }
-
-        .ot-benefit-dot {
-          display: grid;
-          place-items: center;
-          color: var(--teal);
-        }
-
-        .ot-multidisciplinary-panel {
-          display: flex;
-          align-items: center;
-          gap: 22px;
-          margin-top: 40px;
-          padding: 26px;
-          background: linear-gradient(135deg, var(--cyan), #f0fbff);
-          border: 1px solid rgba(0,168,205,0.25);
-          border-radius: 22px;
-          box-shadow: 0 12px 30px rgba(0,59,92,0.04);
-        }
-
-        .ot-panel-icon {
-          display: grid;
-          width: 58px;
-          height: 58px;
-          flex: 0 0 58px;
-          place-items: center;
-          background: var(--teal);
-          color: white;
-          border-radius: 16px;
-          box-shadow: 0 8px 18px rgba(0,168,205,0.25);
-        }
-
-        .ot-multidisciplinary-panel h4 {
-          margin: 0 0 6px;
-          font-size: 17px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-multidisciplinary-panel p {
-          margin: 0;
-          font-size: 13px;
-          color: #4a6572;
-          line-height: 1.65;
-        }
-
-        /* 5. FINE MOTOR & PRE-WRITING */
-        .ot-finemotor-section { background: var(--bg-light); }
-        .ot-fm-chips-grid {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 10px;
-          max-width: 850px;
-          margin: 0 auto 40px;
-        }
-
-        .ot-fm-chip {
+        .nutri-pill-badge {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 10px 18px;
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 50px;
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--navy);
-          box-shadow: 0 4px 12px rgba(0,59,92,0.03);
-        }
-
-        .ot-fm-chip svg {
-          color: var(--teal);
-        }
-
-        .ot-progress-roadmap {
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 24px;
-          padding: 30px;
-          box-shadow: 0 12px 35px rgba(0,59,92,0.04);
-        }
-
-        .ot-progress-roadmap h3 {
-          text-align: center;
-          margin: 0 0 25px;
-          font-size: 18px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-roadmap-steps {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 12px;
-          position: relative;
-        }
-
-        .ot-roadmap-step {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          position: relative;
-          padding: 8px;
-        }
-
-        .ot-roadmap-badge {
-          width: 38px;
-          height: 38px;
-          display: grid;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          font-weight: 800;
-          font-size: 12px;
-          border-radius: 50%;
-          margin-bottom: 10px;
-          box-shadow: 0 4px 12px rgba(0,168,205,0.12);
-        }
-
-        .ot-roadmap-step strong {
-          font-size: 12px;
-          color: var(--navy);
-          margin-bottom: 4px;
-        }
-
-        .ot-roadmap-step span {
+          padding: 6px 14px;
+          border-radius: 30px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           font-size: 11px;
-          color: #607d8b;
-          line-height: 1.4;
+          font-weight: 800;
+          letter-spacing: 1px;
+          color: var(--gold);
         }
 
-        .ot-roadmap-connector {
-          position: absolute;
-          top: 19px;
-          right: -50%;
+        .nutri-hero-text h1 {
+          font-size: clamp(34px, 4.2vw, 52px);
+          font-weight: 800;
+          line-height: 1.15;
+          margin: 18px 0;
+          letter-spacing: -1.5px;
+        }
+
+        .nutri-gradient-text {
+          background: linear-gradient(135deg, #f3e5c8 0%, var(--gold) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .nutri-hero-text p {
+          font-size: 15px;
+          color: rgba(255, 255, 255, 0.85);
+          margin-bottom: 28px;
+          max-width: 520px;
+        }
+
+        .nutri-hero-btns {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+
+        .nutri-hero-visual {
+          position: relative;
+        }
+
+        .nutri-hero-img-frame {
+          position: relative;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .nutri-hero-img-frame img {
           width: 100%;
-          height: 2px;
-          background: rgba(0,168,205,0.25);
-          z-index: 1;
+          height: 380px;
+          object-fit: cover;
         }
 
-        /* 6. PLAY & DEVELOPMENT */
-        .ot-play-section { background: white; }
-        .ot-play-statement-box {
+        .nutri-float-card {
+          position: absolute;
           display: flex;
           align-items: center;
-          justify-content: center;
+          gap: 12px;
+          padding: 12px 18px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border-radius: 16px;
+          color: var(--dark-text);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+          z-index: 4;
+        }
+
+        .card-top { top: 20px; left: -20px; }
+        .card-bottom { bottom: 20px; right: -20px; }
+
+        .nutri-float-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: var(--light-bg);
+          color: var(--emerald);
+          display: grid;
+          place-items: center;
+        }
+
+        .nutri-float-icon.gold {
+          color: var(--gold);
+        }
+
+        .nutri-float-card strong { display: block; font-size: 12px; font-weight: 800; }
+        .nutri-float-card span { font-size: 10px; color: #666; }
+
+        /* 2. ABOUT SECTION */
+        .nutri-about-section { background: var(--white); }
+        .nutri-about-grid {
+          display: grid;
+          grid-template-columns: 0.9fr 1.1fr;
+          gap: 60px;
+          align-items: center;
+        }
+
+        .nutri-profile-frame {
+          position: relative;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 15px 35px rgba(23, 107, 85, 0.1);
+        }
+
+        .nutri-profile-frame img {
+          width: 100%;
+          height: 420px;
+          object-fit: cover;
+        }
+
+        .nutri-profile-badge {
+          position: absolute;
+          bottom: 16px;
+          left: 16px;
+          right: 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: rgba(255, 255, 255, 0.95);
+          padding: 14px;
+          border-radius: 16px;
+          color: var(--emerald);
+        }
+
+        .nutri-profile-badge strong { display: block; font-size: 14px; color: var(--dark-text); }
+        .nutri-profile-badge span { font-size: 11px; color: #666; }
+
+        .nutri-about-text h2 {
+          font-size: clamp(26px, 3.2vw, 36px);
+          font-weight: 800;
+          color: var(--emerald);
+          margin: 10px 0 14px;
+        }
+
+        .nutri-lead { font-size: 15px; font-weight: 700; color: var(--dark-text); margin-bottom: 10px; }
+        .nutri-subtext { font-size: 14px; color: #536760; margin-bottom: 24px; }
+
+        .nutri-qualifications-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           gap: 14px;
-          max-width: 700px;
-          margin: 0 auto 40px;
-          padding: 20px 26px;
-          background: linear-gradient(135deg, var(--yellow), #fff9e6);
-          border: 1px solid rgba(255,183,3,0.3);
-          border-radius: 18px;
-          text-align: center;
-          color: #856404;
-          box-shadow: 0 8px 25px rgba(255,183,3,0.08);
         }
 
-        .ot-play-statement-box h3 {
-          margin: 0;
-          font-size: 17px;
-          font-weight: 800;
-        }
-
-        .ot-play-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 18px;
-        }
-
-        .ot-play-card {
-          padding: 22px;
-          background: var(--bg-light);
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          box-shadow: 0 6px 20px rgba(0,59,92,0.03);
-        }
-
-        .ot-play-icon {
-          display: grid;
-          width: 42px;
-          height: 42px;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          border-radius: 12px;
-          margin-bottom: 14px;
-        }
-
-        .ot-play-card h4 {
-          margin: 0 0 6px;
-          font-size: 15px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-play-card p {
-          margin: 0;
-          font-size: 12px;
-          color: #607d8b;
-          line-height: 1.6;
-        }
-
-        /* 7. FEEDING & ORAL-MOTOR SUPPORT */
-        .ot-feeding-section { background: var(--bg-light); }
-        .ot-feeding-content h2 {
-          font-size: clamp(26px, 3.2vw, 38px);
-          font-weight: 800;
-          letter-spacing: -1px;
-          line-height: 1.18;
-          margin: 10px 0 14px 0;
-          color: var(--navy);
-        }
-
-        .ot-feeding-alert-card {
-          padding: 30px;
-          background: white;
-          border: 1px solid rgba(255,82,113,0.25);
-          border-left: 5px solid var(--coral);
-          border-radius: 22px;
-          box-shadow: 0 12px 35px rgba(0,59,92,0.05);
-        }
-
-        .ot-alert-icon {
-          display: grid;
-          width: 48px;
-          height: 48px;
-          place-items: center;
-          background: rgba(255,82,113,0.12);
-          color: var(--coral);
-          border-radius: 12px;
-          margin-bottom: 14px;
-        }
-
-        .ot-feeding-alert-card h3 {
-          margin: 0 0 8px;
-          font-size: 17px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-feeding-alert-card p {
-          margin: 0;
-          font-size: 13px;
-          color: #556c78;
-          line-height: 1.7;
-        }
-
-        /* 8. FAMILY-CENTERED THERAPY */
-        .ot-family-section { background: white; }
-        .ot-family-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          margin-bottom: 35px;
-        }
-
-        .ot-family-card {
+        .nutri-qual-card {
           display: flex;
           align-items: flex-start;
-          gap: 12px;
-          padding: 20px;
-          background: var(--bg-light);
+          gap: 10px;
+          padding: 14px;
+          background: var(--light-bg);
+          border-radius: 14px;
           border: 1px solid var(--border);
-          border-radius: 16px;
-          box-shadow: 0 6px 20px rgba(0,59,92,0.02);
         }
 
-        .ot-family-check {
-          display: grid;
-          width: 34px;
-          height: 34px;
-          flex: 0 0 34px;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          border-radius: 10px;
-        }
+        .nutri-check-icon { color: var(--emerald); flex-shrink: 0; margin-top: 2px; }
+        .nutri-qual-card h4 { font-size: 12px; font-weight: 800; margin: 0; color: var(--dark-text); }
+        .nutri-qual-card p { font-size: 10px; color: #666; margin: 2px 0 0; }
 
-        .ot-family-card h4 {
-          margin: 0 0 4px;
-          font-size: 14px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-family-card p {
-          margin: 0;
-          font-size: 12px;
-          color: #607d8b;
-          line-height: 1.55;
-        }
-
-        .ot-family-quote-banner {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          max-width: 750px;
-          margin: 0 auto;
-          padding: 20px 26px;
-          background: linear-gradient(135deg, var(--navy), #00507a);
-          border-radius: 18px;
-          color: white;
-          text-align: center;
-          box-shadow: 0 12px 35px rgba(0,59,92,0.18);
-        }
-
-        .ot-family-quote-banner svg {
-          color: var(--coral);
-          flex: 0 0 24px;
-        }
-
-        .ot-family-quote-banner p {
-          margin: 0;
-          font-size: 14px;
-          font-weight: 700;
-          font-style: italic;
-        }
-
-        /* 9. MULTIDISCIPLINARY CHILD DEVELOPMENT */
-        .ot-multidisciplinary-section { background: var(--cyan); }
-        .ot-hub-container {
-          position: relative;
-          max-width: 800px;
-          margin: 35px auto 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 35px;
-        }
-
-        .ot-hub-center {
-          width: 160px;
-          height: 160px;
-          background: white;
-          border: 4px solid var(--teal);
-          border-radius: 50%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: var(--navy);
-          text-align: center;
-          box-shadow: 0 15px 35px rgba(0,168,205,0.18);
-          z-index: 3;
-        }
-
-        .ot-hub-center svg {
-          color: var(--teal);
-          margin-bottom: 4px;
-        }
-
-        .ot-hub-center strong { font-size: 14px; font-weight: 800; }
-        .ot-hub-center span { font-size: 11px; color: #607d8b; }
-
-        .ot-hub-services-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          width: 100%;
-        }
-
-        .ot-hub-service-card {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 18px;
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          box-shadow: 0 6px 20px rgba(0,59,92,0.04);
-        }
-
-        .ot-hub-icon {
-          display: grid;
-          width: 40px;
-          height: 40px;
-          flex: 0 0 40px;
-          place-items: center;
-          background: var(--cyan);
-          color: var(--teal);
-          border-radius: 12px;
-        }
-
-        .ot-hub-service-card span {
-          font-size: 12px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        /* 10. OUR OCCUPATIONAL THERAPY JOURNEY */
-        .ot-journey-section { background: white; }
-        .ot-journey-grid {
+        /* 3. SERVICES */
+        .nutri-services-section { background: var(--cream); }
+        .nutri-services-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 20px;
         }
 
-        .ot-journey-card {
-          padding: 26px;
-          background: var(--bg-light);
-          border: 1px solid var(--border);
+        .nutri-service-card {
+          background: var(--white);
+          padding: 28px;
           border-radius: 20px;
-          box-shadow: 0 8px 25px rgba(0,59,92,0.03);
-          position: relative;
-        }
-
-        .ot-journey-number {
-          display: inline-block;
-          font-size: 11px;
-          font-weight: 800;
-          color: var(--teal);
-          background: var(--cyan);
-          padding: 5px 10px;
-          border-radius: 6px;
-          margin-bottom: 14px;
-        }
-
-        .ot-journey-card h3 {
-          margin: 0 0 6px;
-          font-size: 16px;
-          font-weight: 800;
-          color: var(--navy);
-        }
-
-        .ot-journey-card p {
-          margin: 0;
-          font-size: 12px;
-          color: #607d8b;
-          line-height: 1.65;
-        }
-
-        /* 11. INDIVIDUALIZED OCCUPATIONAL THERAPY */
-        .ot-individualized-section { background: var(--bg-light); }
-        .ot-ind-content h2 {
-          font-size: clamp(26px, 3.2vw, 38px);
-          font-weight: 800;
-          letter-spacing: -1px;
-          line-height: 1.18;
-          margin: 10px 0 14px 0;
-          color: var(--navy);
-        }
-
-        .ot-ind-chips-wrap {
+          border: 1px solid var(--border);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.02);
           display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 20px;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: all 0.3s ease;
         }
 
-        .ot-ind-chip {
+        .nutri-service-card:hover {
+          box-shadow: 0 15px 30px rgba(23, 107, 85, 0.08);
+          border-color: var(--sage);
+        }
+
+        .nutri-svc-icon-wrap {
+          width: 46px;
+          height: 46px;
+          border-radius: 12px;
+          background: var(--light-bg);
+          color: var(--emerald);
+          display: grid;
+          place-items: center;
+          margin-bottom: 18px;
+        }
+
+        .nutri-service-card h3 { font-size: 16px; font-weight: 800; color: var(--emerald); margin-bottom: 8px; }
+        .nutri-service-card p { font-size: 13px; color: #536760; margin-bottom: 20px; line-height: 1.6; }
+
+        .nutri-svc-link {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          padding: 9px 14px;
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 10px;
+          gap: 6px;
           font-size: 12px;
-          font-weight: 700;
-          color: var(--navy);
-          box-shadow: 0 3px 10px rgba(0,59,92,0.02);
+          font-weight: 800;
+          color: var(--emerald);
+          text-decoration: none;
         }
 
-        .ot-ind-chip svg {
-          color: var(--teal);
+        /* 4. INTEGRATED CARE */
+        .nutri-integrated-section { background: var(--white); }
+        .nutri-integrated-box {
+          background: linear-gradient(135deg, var(--emerald), #0e382d);
+          border-radius: 28px;
+          padding: 50px;
+          color: var(--white);
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr;
+          gap: 40px;
+          align-items: center;
         }
 
-        .ot-ind-quote-card {
-          position: relative;
-          padding: 38px;
-          background: white;
-          border: 1px solid var(--border);
-          border-radius: 24px;
-          box-shadow: 0 15px 40px rgba(0,59,92,0.06);
+        .nutri-integrated-content h2 { font-size: 32px; font-weight: 800; margin: 10px 0 14px; }
+        .nutri-integrated-content p { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 20px; }
+
+        .nutri-integrated-list { list-style: none; padding: 0; margin: 0; }
+        .nutri-integrated-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 8px; }
+
+        .nutri-integrated-card {
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.15);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 30px;
           text-align: center;
         }
 
-        .ot-big-quote-mark {
-          position: absolute;
-          top: 10px;
-          left: 24px;
-          font-size: 70px;
-          color: rgba(0,168,205,0.12);
-          font-family: serif;
-          line-height: 1;
+        .nutri-gold-icon { color: var(--gold); margin-bottom: 10px; }
+        .nutri-integrated-card h3 { font-size: 18px; font-weight: 800; }
+        .nutri-integrated-card p { font-size: 12px; color: rgba(255,255,255,0.7); margin: 0; }
+
+        /* 5. CARE PLANS */
+        .nutri-plans-section { background: var(--cream); }
+        .nutri-plans-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 25px;
+          max-width: 900px;
+          margin: 0 auto;
         }
 
-        .ot-ind-quote-card p {
+        .nutri-plan-card {
+          background: var(--white);
+          padding: 35px;
+          border-radius: 24px;
+          border: 1px solid var(--border);
           position: relative;
-          z-index: 2;
-          margin: 0 0 16px;
-          font-size: 15px;
-          font-weight: 700;
-          color: var(--navy);
-          line-height: 1.75;
-          font-style: italic;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
 
-        .ot-ind-quote-card strong {
-          font-size: 11px;
-          color: var(--teal);
-          letter-spacing: 1px;
+        .nutri-plan-card.highlighted {
+          border: 2px solid var(--emerald);
+          box-shadow: 0 15px 35px rgba(23, 107, 85, 0.1);
+        }
+
+        .nutri-popular-tag {
+          position: absolute;
+          top: -12px;
+          right: 24px;
+          background: var(--gold);
+          color: var(--white);
+          font-size: 10px;
+          font-weight: 800;
+          padding: 4px 12px;
+          border-radius: 20px;
           text-transform: uppercase;
         }
 
-        /* RESPONSIVE MEDIA QUERIES */
-        @media (max-width: 1100px) {
-          .ot-bento-skills-grid, .ot-benefit-grid, .ot-play-grid { grid-template-columns: repeat(2, 1fr); }
-          .ot-intro-bento-hero { grid-template-columns: 1fr; padding: 30px; }
-          .ot-sensory-cards-wrapper, .ot-hub-services-grid { grid-template-columns: repeat(2, 1fr); }
-          .ot-roadmap-steps { grid-template-columns: repeat(3, 1fr); row-gap: 25px; }
-          .ot-roadmap-connector { display: none; }
-          .ot-family-grid, .ot-journey-grid { grid-template-columns: repeat(2, 1fr); }
+        .nutri-plan-badge { font-size: 11px; font-weight: 800; color: var(--emerald); text-transform: uppercase; }
+        .nutri-plan-card h3 { font-size: 20px; font-weight: 800; color: var(--dark-text); margin: 6px 0 10px; }
+        .nutri-plan-desc { font-size: 13px; color: #536760; margin-bottom: 20px; }
+
+        .nutri-plan-divider { height: 1px; background: var(--border); margin-bottom: 20px; }
+
+        .nutri-plan-features { list-style: none; padding: 0; margin: 0 0 25px; }
+        .nutri-plan-features li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--dark-text); margin-bottom: 10px; }
+        .nutri-plan-features svg { color: var(--emerald); flex-shrink: 0; }
+
+        /* 6. HOW IT WORKS */
+        .nutri-how-section { background: var(--white); }
+        .nutri-timeline-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
         }
 
-        @media (max-width: 900px) {
-          .ot-hero-layout, .ot-two-column { grid-template-columns: 1fr; gap: 40px; }
-          .ot-hero-text-content { text-align: center; }
-          .ot-hero-btn-group { justify-content: center; }
+        .nutri-timeline-item {
+          background: var(--light-bg);
+          padding: 24px;
+          border-radius: 18px;
+          border: 1px solid var(--border);
         }
 
-        @media (max-width: 640px) {
-          .ot-bento-skills-grid, .ot-benefit-grid, .ot-play-grid, .ot-sensory-cards-wrapper, .ot-hub-services-grid, .ot-roadmap-steps, .ot-family-grid, .ot-journey-grid { grid-template-columns: 1fr; }
-          .ot-multidisciplinary-panel { flex-direction: column; text-align: center; }
-          .ot-hero-float-tag { display: none; }
+        .nutri-timeline-num {
+          font-size: 12px;
+          font-weight: 800;
+          color: var(--gold);
+          background: var(--white);
+          padding: 4px 10px;
+          border-radius: 8px;
+          display: inline-block;
+          margin-bottom: 12px;
+        }
+
+        .nutri-timeline-item h3 { font-size: 15px; font-weight: 800; color: var(--emerald); margin-bottom: 6px; }
+        .nutri-timeline-item p { font-size: 12px; color: #536760; margin: 0; }
+
+        /* 7. FAQ */
+        .nutri-faq-section { background: var(--cream); }
+        .nutri-faq-list { max-width: 750px; margin: 0 auto; }
+
+        .nutri-faq-item {
+          background: var(--white);
+          border-radius: 14px;
+          border: 1px solid var(--border);
+          margin-bottom: 12px;
+          overflow: hidden;
+        }
+
+        .nutri-faq-question {
+          width: 100%;
+          padding: 18px 22px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: transparent;
+          border: none;
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--dark-text);
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .nutri-faq-arrow { transition: transform 0.3s ease; color: var(--emerald); }
+        .nutri-faq-arrow.rotate { transform: rotate(180deg); }
+
+        .nutri-faq-answer {
+          padding: 0 22px 18px;
+          font-size: 13px;
+          color: #536760;
+        }
+
+        /* 8. CONTACT CTA */
+        .nutri-contact-section { background: var(--white); }
+        .nutri-contact-card {
+          background: linear-gradient(135deg, var(--emerald), #0e382d);
+          border-radius: 28px;
+          padding: 50px;
+          color: var(--white);
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 40px;
+          align-items: center;
+        }
+
+        .nutri-contact-info h2 { font-size: 32px; font-weight: 800; margin: 10px 0 14px; }
+        .nutri-contact-info p { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
+
+        .nutri-contact-details { display: flex; flex-direction: column; gap: 12px; }
+        .nutri-contact-item { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,0.9); }
+
+        .nutri-action-box {
+          background: var(--white);
+          color: var(--dark-text);
+          padding: 30px;
+          border-radius: 20px;
+          text-align: center;
+        }
+
+        .nutri-action-box h3 { font-size: 18px; font-weight: 800; color: var(--emerald); margin: 10px 0 4px; }
+        .nutri-action-box p { font-size: 12px; color: #666; margin-bottom: 20px; }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 992px) {
+          .nutri-hero-layout, .nutri-about-grid, .nutri-integrated-box, .nutri-contact-card {
+            grid-template-columns: 1fr;
+            gap: 35px;
+          }
+
+          .nutri-services-grid, .nutri-timeline-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .nutri-plans-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .nutri-services-grid, .nutri-timeline-grid, .nutri-qualifications-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .nutri-hero-btns {
+            flex-direction: column;
+          }
+
+          .nutri-btn {
+            width: 100%;
+          }
+
+          .nutri-float-card {
+            display: none;
+          }
         }
       `}</style>
 
-      <main className="ot-page">
+      <main className="nutri-page">
         <HeroSection />
-        <IntroSection />
-        <SensoryIntegrationSection />
-        <WhoMayBenefitSection />
-        <FineMotorSection />
-        <PlayDevelopmentSection />
-        <FeedingSection />
-        <FamilyTherapySection />
-        <MultidisciplinarySection />
-        <JourneySection />
-        <IndividualizedSection />
+        <AboutSection />
+        <ServicesSection />
+        <IntegratedCareSection />
+        <CarePlansSection />
+        <HowItWorksSection />
+        <FaqSection />
+        <ContactCtaSection />
       </main>
     </>
   );

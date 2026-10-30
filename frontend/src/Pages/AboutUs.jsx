@@ -8,6 +8,8 @@ import drBilal from '../assets/dr-Bilal.jpeg';
 import drAliRaza from '../assets/dr-AliRaza.jpeg';
 import drZobia from '../assets/dr-Zobia.jpeg';
 import drMonina from '../assets/dr-Monina.jpeg';
+import abaImg from '../assets/ABA2.jpg';
+
 
 /* =========================================================
    STATS DATA
@@ -358,8 +360,8 @@ const AboutUs = () => {
             className="lg:col-span-5 relative"
           >
             <div className="relative rounded-[28px] overflow-hidden border-4 border-white shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=1000"
+<img
+                src={abaImg}
                 alt="Therapist supporting a child"
                 className="w-full h-[390px] sm:h-[500px] object-cover transition-transform duration-700 hover:scale-105"
               />

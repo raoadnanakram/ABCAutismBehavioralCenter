@@ -14,6 +14,9 @@ import Contact from './Pages/Contact';
 import Team from './Pages/OurTeam';
 import BookAppointment from './Pages/BookAppointment';
 import Careerpage from './Pages/Careerpage'; // Career page (file name: Careerpage.jsx)
+import FAQ from './Pages/FAQ';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
+import TermsOfService from './Pages/TermsOfService';
 
 // Admin Pages Import
 import AdminLogin from './Pages/AdminLogin';
@@ -67,6 +70,10 @@ const SLUG_REDIRECTS = {
   '/book-appointment': '/book-a-free-consult',
   '/book': '/book-a-free-consult',
   '/career': '/careers',
+  '/faqs': '/faq',
+  '/privacy': '/privacy-policy',
+  '/terms-of-service': '/terms',
+  '/terms-and-conditions': '/terms',
   '/join-us': '/careers',
   '/speech-therapy': '/Pages/speech-therapy',
   '/nutrition-dietetics': '/Pages/nutrition-dietetics',
@@ -79,20 +86,6 @@ const SLUG_REDIRECTS = {
   '/aba-psychology': '/Pages/aba-psychology',
   '/aba-therapy': '/Pages/aba-psychology',
 };
-
-function InfoPage({ title }) {
-  return (
-    <section className="min-h-[60vh] flex items-center justify-center px-6 py-24 bg-[#F8F9FA]">
-      <div className="max-w-xl text-center">
-        <h1 className="text-3xl font-bold text-[#003B5C] mb-4">{title}</h1>
-        <p className="text-slate-600 mb-8">
-          This page is being prepared. For any question please contact us and our team will help you.
-        </p>
-        <a href="/contact" className="inline-block bg-[#003B5C] text-white px-6 py-3 rounded-lg font-semibold">Contact Us</a>
-      </div>
-    </section>
-  );
-}
 
 function NotFound() {
   return (
@@ -151,9 +144,9 @@ function Layout() {
           ))}
 
           {/* Footer pages */}
-          <Route path="/faq" element={<InfoPage title="FAQ's" />} />
-          <Route path="/privacy-policy" element={<InfoPage title="Privacy Policy" />} />
-          <Route path="/terms" element={<InfoPage title="Terms of Service" />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
 
           {/* 404 page */}
           <Route path="*" element={<NotFound />} />

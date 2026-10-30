@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Local Images Import
+import bookingImg from "../assets/ABA2.jpg";
+import speechImg from "../assets/Dysphagia1.jpg";
+
 const servicesList = [
   "Speech Therapy",
   "Nutrition Therapy & Dietetics",
@@ -465,11 +469,11 @@ const BookingAppointment = () => {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-[32px] p-8 sm:p-12 shadow-2xl border border-slate-100 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
         >
-          {/* Left Image */}
+          {/* Left Image - Speech Therapy */}
           <div className="lg:col-span-4 rounded-2xl overflow-hidden shadow-lg h-72 bg-slate-100 relative group">
             <img 
-              src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=800" 
-              alt="Clinic Therapy Room" 
+              src={speechImg} 
+              alt="Speech Therapy Room" 
               className="w-full h-full object-cover group-hover:scale-105 transition duration-700" 
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/40 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
@@ -500,11 +504,11 @@ const BookingAppointment = () => {
             </div>
           </div>
 
-          {/* Right Image */}
+          {/* Right Image - Booking Appointment Setup */}
           <div className="lg:col-span-4 rounded-2xl overflow-hidden shadow-lg h-72 bg-slate-100 relative group">
             <img 
-              src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=800" 
-              alt="Therapy Setup" 
+              src={bookingImg} 
+              alt="Booking Appointment Room Setup" 
               className="w-full h-full object-cover group-hover:scale-105 transition duration-700" 
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/40 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />

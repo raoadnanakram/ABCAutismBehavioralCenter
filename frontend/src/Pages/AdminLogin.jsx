@@ -5,19 +5,18 @@ import { api, setToken, getToken } from '../api';
 
 /* ==========================================================================
    BRAND THEME CONFIGURATION
-   ========================================================================== */
+   ========================================================================= */
 const THEME = {
   navy: '#003B5C',
   deepNavy: '#001E30',
   cyan: '#1CA7C7',
   coral: '#F5456B',
   amber: '#F5A623',
-  lightBg: '#F8FAFC',
 };
 
 /* ==========================================================================
-   PARTICLE & BACKGROUND LIGHTING COMPONENT
-   ========================================================================== */
+   DYNAMIC BACKGROUND WITH AMBIENT PARTICLES
+   ========================================================================= */
 function AmbientBackground() {
   const reduceMotion = useReducedMotion();
 
@@ -43,16 +42,16 @@ function AmbientBackground() {
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(circle at 10% 15%, #0d5573 0%, transparent 45%),
-            radial-gradient(circle at 90% 85%, #8a243a 0%, transparent 40%),
+            radial-gradient(circle at 12% 18%, #0d5573 0%, transparent 45%),
+            radial-gradient(circle at 88% 82%, #8a243a 0%, transparent 40%),
             radial-gradient(circle at 50% 50%, #032b42 0%, #001624 100%)
           `,
         }}
       />
 
-      {/* High-tech Sub-pixel Matrix Grid */}
+      {/* Modern Sub-pixel Dot Matrix Grid */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.045]"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
@@ -68,9 +67,9 @@ function AmbientBackground() {
           reduceMotion
             ? {}
             : {
-                x: [0, 40, -30, 0],
-                y: [0, -35, 25, 0],
-                scale: [1, 1.15, 0.95, 1],
+                x: [0, 35, -25, 0],
+                y: [0, -30, 20, 0],
+                scale: [1, 1.12, 0.96, 1],
               }
         }
         transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
@@ -83,9 +82,9 @@ function AmbientBackground() {
           reduceMotion
             ? {}
             : {
-                x: [0, -45, 30, 0],
-                y: [0, 40, -25, 0],
-                scale: [1, 1.1, 0.9, 1],
+                x: [0, -40, 25, 0],
+                y: [0, 35, -20, 0],
+                scale: [1, 1.08, 0.94, 1],
               }
         }
         transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
@@ -121,12 +120,12 @@ function AmbientBackground() {
           />
         ))}
 
-      {/* Modern Rotating Tech Rings (Desktop Aesthetic) */}
+      {/* Tech Rings (Desktop Aesthetic) */}
       <div className="absolute -left-20 bottom-10 hidden lg:block">
         <motion.div
           animate={reduceMotion ? {} : { rotate: 360 }}
           transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-          className="h-80 w-80 rounded-full border border-white/[0.07] border-dashed"
+          className="h-80 w-80 rounded-full border border-dashed border-white/[0.08]"
         />
         <motion.div
           animate={reduceMotion ? {} : { rotate: -360 }}
@@ -139,8 +138,8 @@ function AmbientBackground() {
 }
 
 /* ==========================================================================
-   REUSABLE BRAND LOGO
-   ========================================================================== */
+   OFFICIAL BRAND LOGO COMPONENT
+   ========================================================================= */
 function CenterLogo({ className = 'h-12 w-auto' }) {
   return (
     <motion.div
@@ -154,7 +153,6 @@ function CenterLogo({ className = 'h-12 w-auto' }) {
         alt="ABC Autism Behavioral Center"
         className={`${className} object-contain transition-all duration-300 drop-shadow-sm`}
         onError={(e) => {
-          // Graceful fallback if Logo.png has alternate naming
           if (e.target.src.indexOf('Logo%20(2).png') === -1) {
             e.target.src = '/Logo (2).png';
           }
@@ -165,8 +163,8 @@ function CenterLogo({ className = 'h-12 w-auto' }) {
 }
 
 /* ==========================================================================
-   PILL BADGE WITH HOVER GLOW
-   ========================================================================== */
+   INTERACTIVE VALUE PILL
+   ========================================================================= */
 function ValuePill({ color, label, icon }) {
   return (
     <motion.div
@@ -189,7 +187,7 @@ function ValuePill({ color, label, icon }) {
 
 /* ==========================================================================
    MAIN ADMIN LOGIN COMPONENT
-   ========================================================================== */
+   ========================================================================= */
 export default function AdminLogin() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -209,7 +207,7 @@ export default function AdminLogin() {
     }
 
     if (new URLSearchParams(window.location.search).get('expired')) {
-      setMsg('Your session has expired for security. Please sign in again.');
+      setMsg('Your session has expired for security reasons. Please sign in again.');
     }
   }, [navigate]);
 
@@ -238,7 +236,7 @@ export default function AdminLogin() {
       setToken(data.token);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      setMsg(err.message || 'Authentication error. Please verify phone & password.');
+      setMsg(err.message || 'Authentication error. Please verify your phone & password.');
     } finally {
       setLoading(false);
     }
@@ -247,14 +245,14 @@ export default function AdminLogin() {
   return (
     <main className="relative flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#001E30] px-4 py-8 font-sans text-slate-800 antialiased sm:px-6 lg:px-8">
       
-      {/* Dynamic Background Atmosphere */}
+      {/* Background Atmosphere & Ambient Light */}
       <AmbientBackground />
 
-      {/* Main Responsive Grid Container */}
+      {/* Main Grid Layout */}
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-12 lg:gap-14">
 
         {/* =================================================================
-            LEFT COLUMN: BRAND SHOWCASE & CLINICAL IMPACT (Desktop)
+            LEFT COLUMN: BRAND SHOWCASE & EDITORIAL TYPOGRAPHY (Desktop)
            ================================================================= */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -262,7 +260,7 @@ export default function AdminLogin() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="hidden flex-col justify-between space-y-8 text-white lg:col-span-7 lg:flex"
         >
-          {/* Logo & Portal Status */}
+          {/* Top Logo & Status */}
           <div className="flex items-center justify-between">
             <CenterLogo className="h-12 w-auto" />
 
@@ -283,21 +281,33 @@ export default function AdminLogin() {
             <span className="text-xs text-slate-400">| Behavior & Child Development</span>
           </div>
 
-          {/* Emotional & Professional Hero Headline */}
+          {/* Editorial & Emotional Headline with Luxury Font Pairing */}
           <div className="space-y-4">
-            <h1 className="text-4xl font-extrabold leading-[1.14] tracking-tight xl:text-[50px]">
-              Every child's journey <br />
-              deserves a compassionate, <br />
-              <span className="bg-gradient-to-r from-[#F5456B] via-[#F5A623] to-[#1CA7C7] bg-clip-text text-transparent">
-                brighter tomorrow.
+            <h1 className="text-[38px] font-bold leading-[1.18] tracking-tight text-white xl:text-[48px]">
+              <span className="block font-medium tracking-tight text-slate-100 opacity-95">
+                Every child's journey
+              </span>
+              
+              <span className="block text-white">
+                deserves a{' '}
+                <span className="font-serif font-medium italic text-[#1CA7C7] underline decoration-[#1CA7C7]/30 decoration-wavy decoration-1 underline-offset-8">
+                  compassionate,
+                </span>
+              </span>
+
+              <span className="mt-1 block font-serif font-extrabold italic tracking-normal">
+                <span className="bg-gradient-to-r from-[#F5456B] via-[#F5A623] to-[#1CA7C7] bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(245,69,107,0.35)]">
+                  brighter tomorrow.
+                </span>
               </span>
             </h1>
-            <p className="max-w-lg text-base leading-relaxed text-slate-300">
+
+            <p className="max-w-md text-sm font-normal leading-relaxed text-slate-300">
               Welcome to the administrative portal for ABC Autism Behavioral Center. Securely access clinical therapy trackers, behavioral assessments, and student progress records.
             </p>
           </div>
 
-          {/* Interactive Therapist Daily Inspiration Card */}
+          {/* Therapist Daily Inspiration Card */}
           <motion.div
             whileHover={{ y: -3, scale: 1.01 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -340,7 +350,7 @@ export default function AdminLogin() {
         </motion.div>
 
         {/* =================================================================
-            RIGHT COLUMN: THE LOGIN CARD (SUPER POLISHED & INTERACTIVE)
+            RIGHT COLUMN: INTERACTIVE IRIDESCENT LOGIN CARD
            ================================================================= */}
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.96 }}
@@ -351,7 +361,7 @@ export default function AdminLogin() {
           {/* Card Border Glowing Wrap */}
           <div className="group relative">
             
-            {/* Dynamic Animated Glow Border */}
+            {/* Dynamic Iridescent Glowing Border */}
             <div
               className="absolute -inset-[2px] rounded-[30px] opacity-75 blur-[4px] transition-all duration-700 group-hover:opacity-100 group-hover:blur-[8px]"
               style={{
@@ -400,7 +410,7 @@ export default function AdminLogin() {
                 </p>
               </div>
 
-              {/* FORM */}
+              {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 
                 {/* Phone Field */}
@@ -500,7 +510,7 @@ export default function AdminLogin() {
                   </span>
                 </div>
 
-                {/* Animated Error / Expired Alert */}
+                {/* Animated Error Alert */}
                 <AnimatePresence mode="wait">
                   {msg && (
                     <motion.div
@@ -528,7 +538,7 @@ export default function AdminLogin() {
                   )}
                 </AnimatePresence>
 
-                {/* Eye-Catching Shimmer Submit Button */}
+                {/* Shimmer Submit Button */}
                 <motion.button
                   type="submit"
                   disabled={loading}
@@ -537,7 +547,6 @@ export default function AdminLogin() {
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   className="group/btn relative mt-2 flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-[#F5456B] via-[#ea335a] to-[#d4234b] text-sm font-bold text-white shadow-[0_10px_25px_rgba(245,69,107,0.35)] transition-all hover:shadow-[0_14px_32px_rgba(245,69,107,0.45)] disabled:cursor-not-allowed disabled:opacity-75"
                 >
-                  {/* Dynamic Shimmer Light Flare */}
                   <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover/btn:translate-x-full" />
 
                   {loading ? (
@@ -572,7 +581,7 @@ export default function AdminLogin() {
                 </p>
               </div>
 
-              {/* Card Footer: Brand Dot Matrix */}
+              {/* Card Footer */}
               <div className="mt-5 flex items-center justify-center gap-2 border-t border-slate-100 pt-4">
                 <div className="flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#F5A623]" />
@@ -590,8 +599,18 @@ export default function AdminLogin() {
 
       </div>
 
-      {/* Embedded Dynamic Keyframe Animations */}
+      {/* Embedded Google Fonts & Keyframe Styles */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600;1,700&display=swap');
+
+        h1 span.font-serif {
+          font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        body, main {
+          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
         @keyframes borderGlow {
           0%, 100% {
             background-position: 0% 50%;

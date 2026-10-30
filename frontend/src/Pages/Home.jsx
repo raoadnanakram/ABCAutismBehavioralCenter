@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Assets folder se image imports (Exact matching file extensions)
-import heroImg from '../assets/hero-banner.jpg';
+import heroImg from '../assets/Dysphagiapic.jpg';
 // Exact Image Imports matching your assets folder
 import drBilal from '../assets/dr-Bilal.jpeg';
 import drAliRaza from '../assets/dr-AliRaza.jpeg';
@@ -14,79 +14,87 @@ import drRimsha from '../assets/dr-Rimsha.jpg';
 import zobiaPervaiz from '../assets/dr-Zobiaaba.jpeg';
 import drNaba from '../assets/dr-Naba.jpeg';
 
+import speechImg from '../assets/speechtherapy.jpg';
+import specialEduImg from '../assets/SpecialEducation.jpg';
+import physioImg from '../assets/Physio.jpg';
+import occupationImg from '../assets/Occupation.jpg';
+import dayCareImg from '../assets/daycare.jpg';
+import montessoriImg from '../assets/Montessori.jpg';
+import dysphagiaImg from '../assets/Dysphagia1.jpg';
+import abaImg from '../assets/ABA2.jpg';
+import dysphagiaImg1 from '../assets/Nutrition.jpg';
 
 
 
 
 const dynamicWords = ["Building", "Better", "Future", "Together"];
 
-// 9 Services Data
+
 const servicesData = [
   {
     title: "Speech & Language Therapy",
     desc: "Improving articulation, expressive/receptive language capabilities, and functional communication skills.",
     color: "#00A8CD",
-    img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=600",
+    img: speechImg,
     path: "/Pages/speech-therapy"
   },
   {
     title: "Nutrition Therapy & Dietetics",
     desc: "Specialized pediatric dietary plans and nutritional guidance tailored to support growth and sensory needs.",
     color: "#FF5271",
-    img: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600",
+    img: dysphagiaImg1,
     path: "/Pages/nutrition-dietetics"
   },
   {
     title: "Special Education",
     desc: "Customized academic and cognitive learning frameworks designed to unlock every child's unique potential.",
     color: "#F5A623",
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=600",
+    img:specialEduImg,
     path: "/Pages/special-education"
   },
   {
     title: "Physiotherapy",
     desc: "Improving gross motor skills, core posture, physical strength, and overall bodily coordination.",
     color: "#003B5C",
-    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600",
+    img: physioImg,
     path: "/Pages/physiotherapy"
   },
   {
     title: "Occupational Therapy & Sensory Integration",
     desc: "Developing fine motor skills, independence in daily routines, and healthy sensory regulation.",
     color: "#00A8CD",
-    img: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=600",
+    img: occupationImg,
     path: "/Pages/occupational-therapy"
   },
   {
     title: "Day Care",
     desc: "A secure, nurturing, and highly structured environment designed for safe supervision and holistic care.",
     color: "#FF5271",
-    img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
+    img: dayCareImg,
     path: "/Pages/day-care"
   },
   {
     title: "Montessori & Early Childhood Education",
     desc: "Guided interactive learning that promotes natural confidence, attention spans, and self-reliance.",
     color: "#F5A623",
-    img: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=600",
+    img: montessoriImg,
     path: "/Pages/montessori-education"
   },
   {
     title: "Dysphagia Management & NG Tube Feeding",
     desc: "Specialized clinical swallowing therapy and tube feeding support administered by expert practitioners.",
     color: "#003B5C",
-    img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600",
+    img: dysphagiaImg,
     path: "/Pages/dysphagia-management"
   },
   {
     title: "ABA Therapy & Psychology",
     desc: "Evidence-based behavior analysis and psychological counseling fostering positive reinforcement and emotional health.",
     color: "#FF5271",
-    img: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600",
+    img: abaImg,
     path: "/Pages/aba-psychology"
   }
 ];
-
 // Why Choose Us Data Points
 const whyChooseData = [
   {
@@ -2072,7 +2080,11 @@ function Home() {
 
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-5 relative">
               <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-900/15 border-4 border-white">
-                <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=1000" alt="Therapy Session" className="w-full h-[450px] sm:h-[500px] object-cover object-center transform hover:scale-105 transition-transform duration-700" />
+                <img 
+  src={abaImg} 
+  alt="Therapy Session" 
+  className="w-full h-[450px] sm:h-[500px] object-cover object-center transform hover:scale-105 transition-transform duration-700" 
+/>
               </div>
             </motion.div>
           </div>

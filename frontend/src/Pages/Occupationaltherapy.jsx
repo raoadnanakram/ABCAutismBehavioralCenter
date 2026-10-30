@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   Sparkles,
   ArrowRight,
@@ -24,6 +25,10 @@ import {
   HelpCircle,
   Utensils
 } from "lucide-react";
+
+// Image Imports
+import occupationImg from "../assets/Occupation.jpg";
+import dysphagiaImg1 from "../assets/Nutrition.jpg";
 
 /* =========================================================
     ANIMATION SYSTEM
@@ -141,15 +146,18 @@ const HeroSection = () => {
               <ArrowRight size={16} />
             </motion.a>
 
-            <motion.a 
-              href="/book-a-free-consult" 
-              className="ot-btn ot-btn-frosted"
+            <motion.div
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
             >
-              <CalendarCheck size={16} />
-              <span>Book Assessment</span>
-            </motion.a>
+              <Link
+                to="/book-a-free-consult"
+                className="ot-btn ot-btn-frosted"
+              >
+                <CalendarCheck size={16} />
+                <span>Book Assessment</span>
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -162,7 +170,7 @@ const HeroSection = () => {
         >
           <div className="ot-hero-main-photo-frame">
             <img
-              src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1000&q=85"
+              src={occupationImg}
               alt="Child engaged in occupational therapy"
               loading="lazy"
             />
@@ -255,14 +263,14 @@ const IntroSection = () => {
           >
             <div className="ot-media-card-inner">
               <img
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=85"
+                src={occupationImg}
                 alt="Occupational therapy session with children"
                 loading="lazy"
               />
               <div className="ot-media-floating-badge">
                 <Award size={22} />
                 <div>
-                  <strong>REX Medical Center</strong>
+                  <strong>ABC Autism Behavioral Center</strong>
                   <span>Pediatric Excellence</span>
                 </div>
               </div>
@@ -885,25 +893,21 @@ const CtaSection = () => {
           <p>Every child deserves support that understands their strengths, needs, and goals.</p>
 
           <div className="ot-cta-buttons">
-            <motion.a 
-              href="/book-a-free-consult" 
+            <Link
+              to="/book-a-free-consult"
               className="ot-btn ot-btn-white"
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
             >
               <CalendarCheck size={18} />
               <span>Book an Assessment</span>
               <ArrowRight size={17} />
-            </motion.a>
-            <motion.a 
-              href="/about/our-team" 
+            </Link>
+            <Link
+              to="/about/our-team"
               className="ot-btn ot-btn-transparent"
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.98 }}
             >
               <Phone size={17} />
               <span>Contact Our Team</span>
-            </motion.a>
+            </Link>
           </div>
         </motion.div>
       </div>
