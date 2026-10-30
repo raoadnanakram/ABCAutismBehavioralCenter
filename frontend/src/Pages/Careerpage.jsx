@@ -32,7 +32,6 @@ const ROLES = [
   'Front Desk / Admin Officer',
 ];
 
-const ROLE_ICONS = ['🗣️', '🧩', '🖐️', '🏃', '🎨', '🧸', '🩺', '💼'];
 const MARQUEE_COLORS = [BRAND.pink, BRAND.cyan, BRAND.orange];
 
 const COUNTRY_CODES = [
@@ -133,41 +132,6 @@ function Reveal({ children, delay = 0, className = '', y = 32 }) {
     >
       {children}
     </motion.div>
-  );
-}
-
-function CountUp({ value, suffix = '' }) {
-  const ref = useRef(null);
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return undefined;
-    let raf;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        io.disconnect();
-        const start = performance.now();
-        const step = (t) => {
-          const p = Math.min(1, (t - start) / 1400);
-          setN(Math.round(value * (1 - Math.pow(1 - p, 3))));
-          if (p < 1) raf = requestAnimationFrame(step);
-        };
-        raf = requestAnimationFrame(step);
-      },
-      { threshold: 0.4 }
-    );
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      cancelAnimationFrame(raf);
-    };
-  }, [value]);
-  return (
-    <span ref={ref}>
-      {n}
-      {suffix}
-    </span>
   );
 }
 
@@ -346,180 +310,43 @@ export default function Careerpage() {
     <main className="overflow-x-hidden bg-[#F1F6FA]">
       <style>{STYLES}</style>
 
-      {/* ============================== HERO ============================== */}
-      <section
-        className="cp-shift relative overflow-hidden pb-28 pt-28 text-white sm:pt-32 lg:pb-36"
-        style={{ backgroundImage: `linear-gradient(125deg, ${BRAND.navyDark} 0%, ${BRAND.navy} 45%, #04507a 75%, ${BRAND.navyDark} 100%)` }}
-      >
-        <div className="cp-dots pointer-events-none absolute inset-0" />
-        <div className="cp-float pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full blur-3xl" style={{ background: `${BRAND.pink}55` }} />
-        <div className="cp-float-b pointer-events-none absolute bottom-0 left-1/4 h-72 w-72 rounded-full blur-3xl" style={{ background: `${BRAND.cyan}55` }} />
-        <div className="cp-float pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full blur-3xl" style={{ background: `${BRAND.orange}40` }} />
+{/* ============================== HERO ============================== */}
+<section
+  className="relative px-5 pb-10 pt-14 text-center text-white sm:pb-12 sm:pt-16"
+  style={{ background: BRAND.navy }}
+>
+  <div className="mx-auto max-w-3xl">
+    <p
+      className="text-[11px] font-bold uppercase tracking-[0.3em] sm:text-xs"
+      style={{ color: BRAND.cyan }}
+    >
+      Your trusted child development center
+    </p>
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
-          {/* ---- left: message ---- */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs font-semibold backdrop-blur sm:text-sm"
-            >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="cp-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-              </span>
-              We are hiring
-              <span className="text-white/40">|</span>
-              <span style={{ color: BRAND.orange }}>Join ABC Autism Behavioral Center</span>
-            </motion.div>
+    <h1 className="mt-3 font-sans text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl">
+      Careers at ABC Autism Behavioral Center
+    </h1>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="mt-6 font-serif text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-6xl"
-            >
-              Build a career that helps every child{' '}
-              <span className="relative inline-block italic" style={{ color: BRAND.pink }}>
-                grow
-                <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 120 12" fill="none" preserveAspectRatio="none">
-                  <motion.path
-                    d="M2 8 Q 18 1, 34 7 T 66 7 T 98 7 T 118 6"
-                    stroke={BRAND.orange}
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1.1, delay: 0.9, ease: 'easeOut' }}
-                  />
-                </svg>
-              </span>
-            </motion.h1>
+    <div
+      className="mx-auto mt-4 h-1 w-16 rounded-full"
+      style={{ background: `linear-gradient(90deg, ${BRAND.orange}, ${BRAND.pink}, ${BRAND.cyan})` }}
+    />
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25 }}
-              className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg"
-            >
-              We are looking for caring and skilled professionals to provide child therapy, developmental support and
-              expert clinical care. Bring your skills, and grow with a team that puts children first.
-            </motion.p>
+    <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/85 sm:text-base">
+      Join our team of experts in Lahore. We are looking for caring and skilled professionals to provide child
+      therapy, developmental support and expert clinical care.
+    </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="mt-8 flex flex-wrap items-center gap-4"
-            >
-              <motion.button
-                type="button"
-                onClick={goTo(formRef)}
-                whileHover={{ y: -4, scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                className="cp-shine rounded-full bg-gradient-to-r from-[#F5456B] to-[#F5A623] px-9 py-4 text-base font-bold text-white shadow-xl shadow-[#F5456B]/40"
-              >
-                Apply Now →
-              </motion.button>
-              <motion.button
-                type="button"
-                onClick={goTo(rolesRef)}
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.97 }}
-                className="rounded-full border-2 border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold backdrop-blur transition hover:border-white hover:bg-white/15"
-              >
-                View open roles
-              </motion.button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-white/15 pt-6"
-            >
-              {[
-                { v: 500, s: '+', l: 'children supported', c: BRAND.orange },
-                { v: 9, s: '', l: 'care services', c: BRAND.pink },
-                { v: ROLES.length, s: '', l: 'role types', c: BRAND.cyan },
-              ].map((x) => (
-                <div key={x.l}>
-                  <p className="font-serif text-3xl font-bold sm:text-4xl" style={{ color: x.c }}>
-                    <CountUp value={x.v} suffix={x.s} />
-                  </p>
-                  <p className="mt-1 text-xs text-white/70 sm:text-sm">{x.l}</p>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* ---- right: floating roles panel ---- */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-            className="relative mx-auto w-full max-w-md"
-          >
-            <div
-              className="absolute -inset-4 rounded-[2.5rem] opacity-60 blur-2xl"
-              style={{ background: `conic-gradient(from 0deg, ${BRAND.pink}, ${BRAND.orange}, ${BRAND.cyan}, ${BRAND.pink})` }}
-            />
-            <div className="cp-bob relative rounded-[2rem] border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-xl">
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <p className="font-serif text-xl font-bold">Open positions</p>
-                  <p className="text-xs text-white/60">Tap apply to start</p>
-                </div>
-                <span className="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-bold text-emerald-300">Hiring</span>
-              </div>
-              <div className="space-y-3">
-                {ROLES.slice(0, 4).map((r, i) => (
-                  <motion.button
-                    type="button"
-                    key={r}
-                    onClick={goTo(formRef)}
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 + i * 0.12 }}
-                    whileHover={{ x: 8, backgroundColor: 'rgba(255,255,255,0.22)' }}
-                    className="group flex w-full items-center gap-4 rounded-2xl bg-white/10 p-3.5 text-left"
-                  >
-                    <span
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl shadow-lg"
-                      style={{ background: `linear-gradient(135deg, ${MARQUEE_COLORS[i % 3]}, ${MARQUEE_COLORS[i % 3]}99)` }}
-                    >
-                      {ROLE_ICONS[i]}
-                    </span>
-                    <span className="flex-1 text-sm font-semibold">{r}</span>
-                    <span className="text-lg text-white/50 transition group-hover:translate-x-1 group-hover:text-white">→</span>
-                  </motion.button>
-                ))}
-              </div>
-              <p className="mt-4 text-center text-xs text-white/60">and more roles in the application form</p>
-            </div>
-
-            {[
-              { t: 'Support', c: BRAND.orange, pos: '-left-6 top-8', d: '0s' },
-              { t: 'Learn', c: BRAND.pink, pos: '-right-5 top-1/2', d: '1.2s' },
-              { t: 'Grow', c: BRAND.cyan, pos: 'left-8 -bottom-5', d: '2.4s' },
-            ].map((b) => (
-              <span
-                key={b.t}
-                className={`cp-bob absolute ${b.pos} rounded-full px-5 py-2 text-sm font-bold text-white shadow-xl`}
-                style={{ background: b.c, animationDelay: b.d }}
-              >
-                {b.t}
-              </span>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* wave divider */}
-        <svg className="absolute bottom-[-1px] left-0 w-full" viewBox="0 0 1440 90" preserveAspectRatio="none" fill="#F1F6FA">
-          <path d="M0 40 C 240 100, 480 0, 720 40 C 960 80, 1200 10, 1440 50 L1440 90 L0 90 Z" />
-        </svg>
-      </section>
+    <button
+      type="button"
+      onClick={goTo(formRef)}
+      className="mt-6 rounded-full px-8 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+      style={{ background: BRAND.pink }}
+    >
+      Apply Now
+    </button>
+  </div>
+</section>
 
       {/* ============================ ROLES MARQUEE ============================ */}
       <section ref={rolesRef} className="relative -mt-2 pb-4 pt-6" style={{ scrollMarginTop: 90 }}>
