@@ -15,7 +15,9 @@ import drSidra from '../assets/dr-Sidra.jpeg';
 import drqandeel from '../assets/dr-Qandeel.jpg';
 import drMuhammadSaiulla from "../assets/drMuhammadSaiulla.jpeg";
 import raiShahzadImg from "../assets/raiShahzad.jpeg"; // Apni image ka path check kar lein
-
+import drSania from "../assets/drSania.jpeg";
+import drTaliya from "../assets/drTaliya.jpeg";
+import drRafia from "../assets/drRafia.jpeg";
  // Agar drRimsha ka import nahi tha toh upar add kar lein
 
 export const teamMembers = [
@@ -207,9 +209,39 @@ export const teamMembers = [
   slug: "rai-shahzad-ahmed-kalyar",
   name: "Rai Shahzad Ahmed Kalyar",
   designation: "Advocate High Court",
-  category: "Mentors",
+  category: "Legal Advisor",
   image: raiShahzadImg,
   specialization: "Legal Services & Law",
   bio: "Kalyar & Associates Law Firm, Al-Rehman Garden Phase II, Lahore. Contact: 0300-0744785"
-}
+},
+{
+  id: 19,
+  slug: "sania-qaisar",
+  name: "Sania Qaisar",
+  designation: "Speech Language Therapist (SLP)",
+  category: "Speech Therapy Department",
+  image: drSania,
+  specialization: "Speech Language Therapy - Riphah International University, Lahore",
+  bio: "Sania Qaisar is a Speech Language Therapist (SLP) from Riphah International University, Lahore, with clinical experience in managing autism, ADHD, cerebral palsy (CP) in children, stammering, articulation disorders, and speech delays."
+},
+{
+  id: 20,
+  slug: "taliya-speech-language-pathologist",
+  name: "Taliya",
+  designation: "Speech Language Pathologist (SLP)",
+  category: "Speech Therapy Department",
+  image: drTaliya,
+  specialization: "Speech Language Pathology - Riphah International University",
+  bio: "Taliya is a Speech Language Pathologist from Riphah International University, with clinical and rotational experience at Ghurki Trust Teaching Hospital and professional experience at REX Clinic. She is currently working at ABC Centre, an Autism and Behavioural Centre, where she works with children with autism and other communication and developmental needs."
+},
+{
+  id: 21,
+  slug: "rafia-iqbal-applied-psychologist",
+  name: "Rafia Iqbal",
+  designation: "Applied psychologist/ABA Therapist",
+  category: "Psychology Department",
+  image: drRafia,
+  specialization: "BS (Hons) Applied Psychology - University of the Punjab",
+  bio: "Rafia Iqbal is a BS (Hons) Applied Psychology graduate from the University of the Punjab. With an academic background in clinical psychology, psychological assessment, and counseling, she has developed an understanding of human behavior and mental health. Her interests include psychological well-being, mental health awareness, and evidence-based therapeutic approaches. She aspires to contribute to creating a supportive environment where individuals feel understood, valued, and empowered."
+},
 ];
