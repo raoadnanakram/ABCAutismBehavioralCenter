@@ -104,6 +104,11 @@ function Footer() {
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF5271]" /> Contact Us
                 </Link>
               </li>
+                <li>
+                <Link to="/Career" className="flex items-center gap-2 hover:text-white hover:translate-x-1 transition-all duration-200 py-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF5271]" /> Career Opportunities
+                </Link>
+              </li>
             </ul>
           </div>
 {/* Column 3: Our Specialties */}

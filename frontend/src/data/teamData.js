@@ -13,7 +13,7 @@ import drZobiaaba from '../assets/dr-Zobiaaba.jpeg';
 import sirBasit from '../assets/sir-Basit.jpeg';
 import drSidra from '../assets/dr-Sidra.jpeg';
 import drqandeel from '../assets/dr-Qandeel.jpg';
-import drMaryam from '../assets/dr-Maryam.jpeg';
+import drMuhammadSaiulla from "../assets/drMuhammadSaiulla.jpeg";
 import raiShahzadImg from "../assets/raiShahzad.jpeg"; // Apni image ka path check kar lein
 
  // Agar drRimsha ka import nahi tha toh upar add kar lein
@@ -72,16 +72,16 @@ export const teamMembers = [
     specialization: "MS Sports Physical Therapy",
     bio: ""
   },
-  {
-    id: 6,
-    slug: "dr-maryam-nazir-bhutta",
-    name: "Dr. Maryam Nazir Bhutta",
-    designation: "Physical Therapist ",
-    category: "Occupational Therapy & Physiotherapy Department",
-    image: drMaryam,
-    specialization: "DPT - Lahore Medical and Dental College (LMDC)(UHS)",
-    bio: ""
-  },
+{
+  id: 6,
+  slug: "dr-muhammad-saifullah",
+  name: "Dr. Muhammad Saifullah",
+  designation: "Doctor of Physical Therapy (DPT)",
+  category: "Occupational Therapy & Physiotherapy Department",
+  image: drMuhammadSaiulla,
+  specialization: "DPT - King Edward Medical University, Mayo Hospital Lahore",
+  bio: "Dr. Muhammad Saifullah is a Doctor of Physical Therapy (DPT) from King Edward Medical University, Mayo Hospital Lahore, with 7 years of clinical experience in stroke rehabilitation, paralysis, pediatric physiotherapy (including CP children), geriatric care, and post-operative stiffness management."
+},
   {
     id: 7,
     slug: "ms-atiya-akbar",
