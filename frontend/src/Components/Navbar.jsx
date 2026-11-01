@@ -215,7 +215,8 @@ function Navbar() {
 
             <Link to="/conditions" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Conditions</Link>
             <Link to="/contact" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Contact</Link>
-            
+            <Link to="/career" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Career</Link>
+
             <div className="pt-3">
               <Link 
                 to="/book-a-free-consult" 
