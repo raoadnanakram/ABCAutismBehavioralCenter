@@ -205,20 +205,20 @@ const teamMembersData = [
   },
   {
 name: "Ms. Zobia Pervaiz",
-role: "Senior Speech & Language Pathologist",
+role: "HOD Speech & Language Pathologist",
 degree: "MS Speech & Language Pathology",
 image: zobiaPervaiz
 },
  {
     name: "Mr. Ali Raza",
-    role: " Special Educator & Speech Therapist",
+    role: " Special Educator & SLT",
     degree: " MA Special Education Intellectual Development Disability Diploma in Behaviour Management Autism Spectrum Disorder PGD Speech and Language Therapy ",
     image: drAliRaza
   },
     {
   
     name: "Ms. Rimsha",
-    role: "Senior Special Educator",
+    role: "Coordinator & SLT",
     degree: "MA Special Education",
     image: drRimsha
   },
@@ -231,9 +231,9 @@ image: zobiaPervaiz
   },
 
   {
-    name: "Ms. Atiya",
+    name: "Ms. Atiya Akbar",
     role: " PET & Sports Therapist",
-    degree: "Ms Sports physical therapy",
+    degree: "BS Sports Sciences (GCU)",
     image: drAtiya
   },
 
