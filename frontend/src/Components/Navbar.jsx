@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,35 +9,34 @@ function Navbar() {
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
   const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
 
-  // Top bar search state
+  // Search States
   const [query, setQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchContainerRef = useRef(null);
 
+  // 1. Navigation Links Arrays
   const serviceDropdownLinks = [
-    { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy' },
-    { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics' },
-    { name: 'Special Education', path: '/Pages/special-education' },
-    { name: 'Physiotherapy', path: '/Pages/physiotherapy' },
-    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy' },
-    { name: 'Day Care', path: '/Pages/day-care' },
-    { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education' },
-    { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management' },
-    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology' },
+    { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy', category: 'Service', tags: ['speech', 'language', 'stuttering', 'communication', 'bolna'] },
+    { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics', category: 'Service', tags: ['nutrition', 'diet', 'food', 'weight', 'health'] },
+    { name: 'Special Education', path: '/Pages/special-education', category: 'Service', tags: ['education', 'learning', 'school', 'special child'] },
+    { name: 'Physiotherapy', path: '/Pages/physiotherapy', category: 'Service', tags: ['physio', 'exercise', 'motor skills', 'body movement'] },
+    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy', category: 'Service', tags: ['ot', 'sensory', 'occupational', 'motor control'] },
+    { name: 'Day Care', path: '/Pages/day-care', category: 'Service', tags: ['daycare', 'childcare', 'supervision'] },
+    { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education', category: 'Service', tags: ['montessori', 'early childhood', 'nursery', 'play'] },
+    { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management', category: 'Service', tags: ['dysphagia', 'swallowing', 'ng tube', 'feeding tube'] },
+    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology', category: 'Service', tags: ['aba', 'behavior', 'psychology', 'autism therapy', 'counseling'] },
   ];
 
   const aboutDropdownLinks = [
-    { name: 'Our Team', path: '/about/our-team' },
+    { name: 'Our Team', path: '/about/our-team', category: 'About', tags: ['team', 'doctors', 'therapists', 'staff', 'experts'] },
   ];
 
-  // News & Events dropdown (Community Services yahan hai)
   const newsDropdownLinks = [
-    { name: 'Community Services', path: '/community-services' },
+    { name: 'Community Services', path: '/community-services', category: 'News', tags: ['community', 'social work', 'drives', 'free camps'] },
   ];
 
-  // Patti ke left side ka text
   const topBarTexts = ['Al Rehman Garden', 'Sadar Cantt'];
 
-  // Social icons — Official Brand Colors
   const socialLinks = [
     { label: 'Facebook', icon: 'fa-brands fa-facebook-f', href: 'https://facebook.com/ABCAutismBehavioralCenter', bg: '#1877F2', color: '#ffffff' },
     { label: 'Instagram', icon: 'fa-brands fa-instagram', href: 'https://instagram.com/abcautismbehavioral', isGradient: true, color: '#ffffff' },
@@ -45,29 +44,37 @@ function Navbar() {
     { label: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: 'https://linkedin.com/in/abcautismbehavioralcenter', bg: '#0A66C2', color: '#ffffff' },
   ];
 
-  // Search ke liye saare pages ki list
+  // 2. Comprehensive Searchable Pages Index with Meta Keywords
   const searchablePages = useMemo(
     () => [
-      { name: 'Home', path: '/' },
-      { name: 'About Us', path: '/about' },
+      { name: 'Home', path: '/', category: 'Main', tags: ['home', 'main', 'index', 'abc center'] },
+      { name: 'About Us', path: '/about', category: 'About', tags: ['about', 'mission', 'vision', 'story'] },
       ...aboutDropdownLinks,
-      { name: 'All Services', path: '/services' },
+      { name: 'All Services', path: '/services', category: 'Services', tags: ['services', 'therapies', 'treatments'] },
       ...serviceDropdownLinks,
-      { name: 'Conditions', path: '/conditions' },
-      { name: 'Contact', path: '/contact' },
-      { name: 'News & Events', path: '/news-events' },
+      { name: 'Conditions We Treat', path: '/conditions', category: 'Clinical', tags: ['conditions', 'autism', 'asd', 'adhd', 'down syndrome', 'delay'] },
+      { name: 'Contact Us & Locations', path: '/contact', category: 'Main', tags: ['contact', 'address', 'phone', 'location', 'email', 'map'] },
+      { name: 'News & Events', path: '/news-events', category: 'News', tags: ['news', 'events', 'updates', 'workshops', 'seminars'] },
       ...newsDropdownLinks,
-      { name: 'Book a Free Consultation', path: '/book-a-free-consult' },
+      { name: 'Book Free Consultation', path: '/book-a-free-consult', category: 'Booking', tags: ['appointment', 'consultation', 'book', 'free', 'doctor'] },
     ],
     []
   );
 
+  // 3. Real-Time Filter Logic (Matches Title & Keywords)
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return searchablePages.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 6);
+    return searchablePages
+      .filter((p) => {
+        const matchTitle = p.name.toLowerCase().includes(q);
+        const matchTag = p.tags && p.tags.some((t) => t.toLowerCase().includes(q));
+        return matchTitle || matchTag;
+      })
+      .slice(0, 6);
   }, [query, searchablePages]);
 
+  // Navigate to Page
   const goTo = (path) => {
     navigate(path);
     setQuery('');
@@ -77,52 +84,96 @@ function Navbar() {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (results.length > 0) goTo(results[0].path);
+    if (results.length > 0) {
+      goTo(results[0].path);
+    }
   };
 
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Real-Time Search Box Component
   const SearchBox = ({ className = '' }) => (
-    <div className={`relative ${className}`}>
-      <form onSubmit={handleSearchSubmit} role="search" className="flex items-center bg-white/10 hover:bg-white/15 focus-within:bg-white/20 rounded-lg transition-colors border border-white/20">
+    <div ref={searchContainerRef} className={`relative ${className}`}>
+      <form onSubmit={handleSearchSubmit} role="search" className="flex items-center bg-white/10 hover:bg-white/15 focus-within:bg-white/20 rounded-lg transition-all border border-white/20">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setTimeout(() => setIsSearchFocused(false), 150)}
-          placeholder="Search..."
+          placeholder="Search therapies, conditions..."
           aria-label="Search the site"
-          className="w-full bg-transparent text-white placeholder-white/70 text-sm font-medium px-3 py-1.5 focus:outline-none"
+          className="w-full bg-transparent text-white placeholder-white/70 text-xs sm:text-sm font-medium px-3 py-1.5 focus:outline-none"
         />
+        {query ? (
+          <button 
+            type="button" 
+            onClick={() => setQuery('')} 
+            className="px-2 text-white/70 hover:text-white text-xs transition-colors"
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
+        ) : null}
         <button type="submit" aria-label="Search" className="px-3 text-white/80 hover:text-white transition-colors">
           <i className="fa-solid fa-magnifying-glass text-xs"></i>
         </button>
       </form>
 
+      {/* Real-Time Floating Search Results Dropdown */}
       <AnimatePresence>
         {isSearchFocused && query.trim() && (
-          <motion.ul
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 w-72 max-w-[85vw] bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-[60]"
+            className="absolute right-0 top-full mt-2 w-80 max-w-[90vw] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-[100]"
           >
+            <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <span>Matching Results ({results.length})</span>
+              <span className="text-[#00A8CD]">Real-time</span>
+            </div>
+
             {results.length > 0 ? (
-              results.map((item) => (
-                <li key={item.path}>
-                  <button
-                    type="button"
-                    onMouseDown={() => goTo(item.path)}
-                    className="w-full text-left px-4 py-2.5 text-sm font-medium text-[#003B5C] hover:bg-slate-50 hover:text-[#00A8CD] border-b border-slate-50 last:border-none transition-colors"
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ))
+              <ul className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
+                {results.map((item) => (
+                  <li key={item.path}>
+                    <button
+                      type="button"
+                      onClick={() => goTo(item.path)}
+                      className="w-full text-left px-4 py-3 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors group"
+                    >
+                      <div>
+                        <p className="text-sm font-bold text-[#003B5C] group-hover:text-[#00A8CD] transition-colors">
+                          {item.name}
+                        </p>
+                        <p className="text-[11px] text-slate-400 font-medium">
+                          {item.path}
+                        </p>
+                      </div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 group-hover:bg-[#003B5C] group-hover:text-white transition-all flex-shrink-0">
+                        {item.category}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             ) : (
-              <li className="px-4 py-3 text-sm text-slate-500">"{query}" ke liye koi result nahi mila</li>
+              <div className="px-4 py-6 text-center space-y-1">
+                <i className="fa-solid fa-magnifying-glass text-slate-300 text-xl mb-1 block"></i>
+                <p className="text-xs font-bold text-slate-600">No results found for "{query}"</p>
+                <p className="text-[11px] text-slate-400">Try searching for ABA, Speech, OT, or Conditions</p>
+              </div>
             )}
-          </motion.ul>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
@@ -130,9 +181,9 @@ function Navbar() {
 
   return (
     <>
-      {/* ===== Top Bar (Patti) ===== */}
+      {/* ===== Top Bar ===== */}
       <div className="bg-[#003B5C] relative z-[60] border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-center md:justify-between gap-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-5">
           {/* Left side text */}
           <div className="hidden md:flex items-center gap-4 text-xs tracking-wider uppercase font-semibold text-white/90">
             {topBarTexts.map((text, idx) => (
@@ -143,9 +194,9 @@ function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-5">
-            {/* Real Social Media Icons */}
-            <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-between w-full md:w-auto gap-4">
+            {/* Social Media Icons */}
+            <div className="flex items-center gap-2">
               {socialLinks.map((s) => (
                 <a
                   key={s.label}
@@ -159,14 +210,15 @@ function Navbar() {
                       : s.bg,
                     color: s.color,
                   }}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs transition-transform duration-200 hover:scale-110 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs transition-transform duration-200 hover:scale-110 shadow-sm focus:outline-none"
                 >
                   <i className={s.icon}></i>
                 </a>
               ))}
             </div>
 
-            <SearchBox className="w-44 sm:w-56" />
+            {/* Realtime Search Bar */}
+            <SearchBox className="w-48 sm:w-64" />
           </div>
         </div>
       </div>
