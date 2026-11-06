@@ -1,13 +1,15 @@
+// src/Components/Navbar.jsx
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import Fuse from 'fuse.js';
+import { searchablePages } from '../data/searchData';
 
 function Navbar() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
-  const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
 
   // Search States
   const [query, setQuery] = useState('');
@@ -16,23 +18,19 @@ function Navbar() {
 
   // 1. Navigation Links Arrays
   const serviceDropdownLinks = [
-    { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy', category: 'Service', tags: ['speech', 'language', 'stuttering', 'communication', 'bolna'] },
-    { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics', category: 'Service', tags: ['nutrition', 'diet', 'food', 'weight', 'health'] },
-    { name: 'Special Education', path: '/Pages/special-education', category: 'Service', tags: ['education', 'learning', 'school', 'special child'] },
-    { name: 'Physiotherapy', path: '/Pages/physiotherapy', category: 'Service', tags: ['physio', 'exercise', 'motor skills', 'body movement'] },
-    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy', category: 'Service', tags: ['ot', 'sensory', 'occupational', 'motor control'] },
-    { name: 'Day Care', path: '/Pages/day-care', category: 'Service', tags: ['daycare', 'childcare', 'supervision'] },
-    { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education', category: 'Service', tags: ['montessori', 'early childhood', 'nursery', 'play'] },
-    { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management', category: 'Service', tags: ['dysphagia', 'swallowing', 'ng tube', 'feeding tube'] },
-    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology', category: 'Service', tags: ['aba', 'behavior', 'psychology', 'autism therapy', 'counseling'] },
+    { name: 'Speech & Language Therapy', path: '/services/speech-therapy' },
+    { name: 'Nutrition Therapy & Dietetics', path: '/services/nutrition-dietetics' },
+    { name: 'Special Education', path: '/services/special-education' },
+    { name: 'Physiotherapy', path: '/services/physiotherapy' },
+    { name: 'Occupational Therapy & Sensory Integration', path: '/services/occupational-therapy' },
+    { name: 'Day Care', path: '/services/day-care' },
+    { name: 'Montessori & Early Childhood Education', path: '/services/montessori-education' },
+    { name: 'Dysphagia Management & NG Tube Feeding', path: '/services/dysphagia-management' },
+    { name: 'ABA Therapy & Psychology', path: '/services/aba-psychology' },
   ];
 
   const aboutDropdownLinks = [
-    { name: 'Our Team', path: '/about/our-team', category: 'About', tags: ['team', 'doctors', 'therapists', 'staff', 'experts'] },
-  ];
-
-  const newsDropdownLinks = [
-    { name: 'Community Services', path: '/community-services', category: 'News', tags: ['community', 'social work', 'drives', 'free camps'] },
+    { name: 'Our Team', path: '/about/our-team' },
   ];
 
   const topBarTexts = ['Al Rehman Garden', 'Sadar Cantt'];
@@ -44,37 +42,22 @@ function Navbar() {
     { label: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: 'https://linkedin.com/in/abcautismbehavioralcenter', bg: '#0A66C2', color: '#ffffff' },
   ];
 
-  // 2. Comprehensive Searchable Pages Index with Meta Keywords
-  const searchablePages = useMemo(
-    () => [
-      { name: 'Home', path: '/', category: 'Main', tags: ['home', 'main', 'index', 'abc center'] },
-      { name: 'About Us', path: '/about', category: 'About', tags: ['about', 'mission', 'vision', 'story'] },
-      ...aboutDropdownLinks,
-      { name: 'All Services', path: '/services', category: 'Services', tags: ['services', 'therapies', 'treatments'] },
-      ...serviceDropdownLinks,
-      { name: 'Conditions We Treat', path: '/conditions', category: 'Clinical', tags: ['conditions', 'autism', 'asd', 'adhd', 'down syndrome', 'delay'] },
-      { name: 'Contact Us & Locations', path: '/contact', category: 'Main', tags: ['contact', 'address', 'phone', 'location', 'email', 'map'] },
-      { name: 'News & Events', path: '/news-events', category: 'News', tags: ['news', 'events', 'updates', 'workshops', 'seminars'] },
-      ...newsDropdownLinks,
-      { name: 'Book Free Consultation', path: '/book-a-free-consult', category: 'Booking', tags: ['appointment', 'consultation', 'book', 'free', 'doctor'] },
-    ],
-    []
-  );
+  // 2. Fuse.js Instance Setup
+  const fuse = useMemo(() => {
+    return new Fuse(searchablePages, {
+      keys: ['name', 'tags', 'category'],
+      threshold: 0.35, // Typos aur flexible matching ke liye setting
+      distance: 100,
+    });
+  }, []);
 
-  // 3. Real-Time Filter Logic (Matches Title & Keywords)
+  // 3. Real-Time Fuse Search Results Filter
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = query.trim();
     if (!q) return [];
-    return searchablePages
-      .filter((p) => {
-        const matchTitle = p.name.toLowerCase().includes(q);
-        const matchTag = p.tags && p.tags.some((t) => t.toLowerCase().includes(q));
-        return matchTitle || matchTag;
-      })
-      .slice(0, 6);
-  }, [query, searchablePages]);
+    return fuse.search(q).map((res) => res.item).slice(0, 6);
+  }, [query, fuse]);
 
-  // Navigate to Page
   const goTo = (path) => {
     navigate(path);
     setQuery('');
@@ -89,7 +72,7 @@ function Navbar() {
     }
   };
 
-  // Close search dropdown on click outside
+  // Click Outside Handler
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
@@ -100,7 +83,7 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Real-Time Search Box Component
+  // Search Box Component
   const SearchBox = ({ className = '' }) => (
     <div ref={searchContainerRef} className={`relative ${className}`}>
       <form onSubmit={handleSearchSubmit} role="search" className="flex items-center bg-white/10 hover:bg-white/15 focus-within:bg-white/20 rounded-lg transition-all border border-white/20">
@@ -113,7 +96,7 @@ function Navbar() {
           aria-label="Search the site"
           className="w-full bg-transparent text-white placeholder-white/70 text-xs sm:text-sm font-medium px-3 py-1.5 focus:outline-none"
         />
-        {query ? (
+        {query && (
           <button 
             type="button" 
             onClick={() => setQuery('')} 
@@ -121,13 +104,13 @@ function Navbar() {
           >
             <i className="fa-solid fa-xmark"></i>
           </button>
-        ) : null}
+        )}
         <button type="submit" aria-label="Search" className="px-3 text-white/80 hover:text-white transition-colors">
           <i className="fa-solid fa-magnifying-glass text-xs"></i>
         </button>
       </form>
 
-      {/* Real-Time Floating Search Results Dropdown */}
+      {/* Floating Real-Time Dropdown */}
       <AnimatePresence>
         {isSearchFocused && query.trim() && (
           <motion.div
@@ -139,7 +122,7 @@ function Navbar() {
           >
             <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               <span>Matching Results ({results.length})</span>
-              <span className="text-[#00A8CD]">Real-time</span>
+              <span className="text-[#00A8CD]">Fuse.js Engine</span>
             </div>
 
             {results.length > 0 ? (
@@ -184,7 +167,6 @@ function Navbar() {
       {/* ===== Top Bar ===== */}
       <div className="bg-[#003B5C] relative z-[60] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-5">
-          {/* Left side text */}
           <div className="hidden md:flex items-center gap-4 text-xs tracking-wider uppercase font-semibold text-white/90">
             {topBarTexts.map((text, idx) => (
               <React.Fragment key={text}>
@@ -195,7 +177,6 @@ function Navbar() {
           </div>
 
           <div className="flex items-center justify-between w-full md:w-auto gap-4">
-            {/* Social Media Icons */}
             <div className="flex items-center gap-2">
               {socialLinks.map((s) => (
                 <a
@@ -217,7 +198,6 @@ function Navbar() {
               ))}
             </div>
 
-            {/* Realtime Search Bar */}
             <SearchBox className="w-48 sm:w-64" />
           </div>
         </div>
@@ -232,7 +212,6 @@ function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-24">
-            {/* Logo Section */}
             <Link to="/" className="flex items-center group">
               <motion.img
                 whileHover={{ scale: 1.03 }}
@@ -243,7 +222,6 @@ function Navbar() {
               />
             </Link>
 
-            {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center space-x-8 text-base font-semibold text-[#003B5C]">
               <Link to="/" className="relative group py-1 hover:text-[#00A8CD] transition-colors duration-200">
                 Home
@@ -339,49 +317,8 @@ function Navbar() {
                 Contact
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
               </Link>
-
-              {/* News & Events Dropdown */}
-              <div
-                className="relative py-1"
-                onMouseEnter={() => setIsNewsDropdownOpen(true)}
-                onMouseLeave={() => setIsNewsDropdownOpen(false)}
-              >
-                <Link to="/news-events" className="relative group hover:text-[#00A8CD] transition-colors duration-200 flex items-center gap-1.5 cursor-pointer">
-                  News &amp; Events
-                  <motion.i
-                    animate={{ rotate: isNewsDropdownOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="fa-solid fa-chevron-down text-xs text-slate-400 group-hover:text-[#00A8CD]"
-                  ></motion.i>
-                  <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
-                </Link>
-
-                <AnimatePresence>
-                  {isNewsDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="absolute top-full -left-4 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 mt-2 overflow-hidden"
-                    >
-                      {newsDropdownLinks.map((item, index) => (
-                        <Link
-                          key={index}
-                          to={item.path}
-                          onClick={() => setIsNewsDropdownOpen(false)}
-                          className="block px-5 py-2.5 text-sm text-[#003B5C] hover:bg-slate-50 hover:text-[#00A8CD] font-medium transition-colors border-b border-slate-50 last:border-none"
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
             </div>
 
-            {/* CTA Button */}
             <div className="hidden lg:flex items-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
@@ -393,7 +330,6 @@ function Navbar() {
               </motion.div>
             </div>
 
-            {/* Mobile Menu Icon */}
             <div className="lg:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -448,20 +384,7 @@ function Navbar() {
 
               <Link to="/conditions" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Conditions</Link>
               <Link to="/contact" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Contact</Link>
-              <Link to="/news-events" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors">News &amp; Events</Link>
-              <div className="pl-4 border-l-2 border-[#00A8CD]/30 space-y-2 mb-3">
-                {newsDropdownLinks.map((item, index) => (
-                  <Link
-                    key={index}
-                    to={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className="block py-1.5 text-sm text-slate-600 hover:text-[#00A8CD] font-medium"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-
+              
               <div className="pt-3">
                 <Link
                   to="/book-a-free-consult"
