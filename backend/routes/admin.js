@@ -189,6 +189,7 @@ router.get(
 /* ---------- News & Events / Community Services posts ---------- */
 const SECTIONS = ['news', 'community'];
 const MAX_IMG = 4 * 1024 * 1024;
+const MAX_PICS = 10;
 
 function checkImage(img) {
   const raw = img && typeof img.data === 'string' ? img.data.replace(/^data:[^;]+;base64,/, '') : '';
@@ -217,15 +218,80 @@ function readPost(body) {
   return { title, content, date };
 }
 
-async function saveImage(img) {
-  const [r] = await pool.query('INSERT INTO media_files (mime, size, data) VALUES (?,?,?)', [
-    img.mime,
-    img.buf.length,
-    img.buf,
-  ]);
-  return r.insertId;
+const dropImages = async (ids) => {
+  if (ids.length) await pool.query('DELETE FROM media_files WHERE id IN (?)', [ids]);
+};
+
+// every picture that belongs to a post (new table + old single "cover" column)
+async function currentImageIds(postId) {
+  const [a] = await pool.query('SELECT image_id FROM post_images WHERE post_id = ?', [postId]);
+  const [b] = await pool.query('SELECT image_id FROM posts WHERE id = ?', [postId]);
+  const ids = new Set(a.map((r) => r.image_id));
+  b.forEach((r) => r.image_id && ids.add(r.image_id));
+  return [...ids];
 }
-const dropImage = (id) => (id ? pool.query('DELETE FROM media_files WHERE id = ?', [id]) : null);
+
+// picture ids sent by the dashboard must exist and must not belong to another post
+async function checkImageIds(ids, postId) {
+  if (!Array.isArray(ids)) return { error: 'Invalid pictures.' };
+  const list = [...new Set(ids.map(Number).filter((n) => n > 0))];
+  if (list.length > MAX_PICS) return { error: `You can add up to ${MAX_PICS} pictures.` };
+  if (!list.length) return { ids: [] };
+  const [used] = await pool.query('SELECT post_id FROM post_images WHERE image_id IN (?)', [list]);
+  const [cover] = await pool.query('SELECT id FROM posts WHERE image_id IN (?)', [list]);
+  if (used.some((r) => r.post_id !== postId) || cover.some((r) => r.id !== postId))
+    return { error: 'A picture is already used by another post.' };
+  const [found] = await pool.query('SELECT id FROM media_files WHERE id IN (?)', [list]);
+  if (found.length !== list.length) return { error: 'A picture was not found. Please upload it again.' };
+  return { ids: list };
+}
+
+async function setImages(postId, newIds) {
+  const old = await currentImageIds(postId);
+  await pool.query('DELETE FROM post_images WHERE post_id = ?', [postId]);
+  if (newIds.length)
+    await pool.query('INSERT INTO post_images (post_id, image_id, position) VALUES ?', [
+      newIds.map((id, i) => [postId, id, i]),
+    ]);
+  await pool.query('UPDATE posts SET image_id = ? WHERE id = ?', [newIds[0] || null, postId]);
+  await dropImages(old.filter((id) => !newIds.includes(id)));
+}
+
+// pictures uploaded but never saved in a post (form abandoned) are removed after a day
+const cleanOrphans = () =>
+  pool
+    .query(
+      'DELETE FROM media_files WHERE created_at < (NOW() - INTERVAL 1 DAY) AND id NOT IN (SELECT image_id FROM post_images) AND id NOT IN (SELECT image_id FROM posts WHERE image_id IS NOT NULL)'
+    )
+    .catch(() => {});
+
+// one picture per request: keeps every upload small and gives the dashboard progress
+router.post(
+  '/media',
+  h(async (req, res) => {
+    const img = checkImage(req.body);
+    if (img.error) return res.status(400).json({ message: img.error });
+    const [r] = await pool.query('INSERT INTO media_files (mime, size, data) VALUES (?,?,?)', [
+      img.mime,
+      img.buf.length,
+      img.buf,
+    ]);
+    cleanOrphans();
+    res.json({ ok: true, id: r.insertId });
+  })
+);
+
+// removes a picture only if no post uses it yet (user removed it before saving)
+router.delete(
+  '/media/:id',
+  h(async (req, res) => {
+    const id = Number(req.params.id) || 0;
+    const [a] = await pool.query('SELECT id FROM post_images WHERE image_id = ?', [id]);
+    const [b] = await pool.query('SELECT id FROM posts WHERE image_id = ?', [id]);
+    if (!a.length && !b.length) await dropImages([id]);
+    res.json({ ok: true });
+  })
+);
 
 router.post(
   '/posts',
@@ -234,17 +300,16 @@ router.post(
     if (!SECTIONS.includes(section)) return res.status(400).json({ message: 'Invalid section' });
     const post = readPost(req.body);
     if (post.error) return res.status(400).json({ message: post.error });
+    const pics = await checkImageIds(req.body.images || [], 0);
+    if (pics.error) return res.status(400).json({ message: pics.error });
 
-    let imageId = null;
-    if (req.body.image) {
-      const img = checkImage(req.body.image);
-      if (img.error) return res.status(400).json({ message: img.error });
-      imageId = await saveImage(img);
-    }
-    const [r] = await pool.query(
-      'INSERT INTO posts (section, title, content, post_date, image_id) VALUES (?,?,?,?,?)',
-      [section, post.title, post.content, post.date, imageId]
-    );
+    const [r] = await pool.query('INSERT INTO posts (section, title, content, post_date) VALUES (?,?,?,?)', [
+      section,
+      post.title,
+      post.content,
+      post.date,
+    ]);
+    await setImages(r.insertId, pics.ids);
     res.json({ ok: true, id: r.insertId });
   })
 );
@@ -253,29 +318,22 @@ router.put(
   '/posts/:id',
   h(async (req, res) => {
     const id = Number(req.params.id) || 0;
-    const [rows] = await pool.query('SELECT id, image_id FROM posts WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT id FROM posts WHERE id = ?', [id]);
     if (!rows.length) return res.status(404).json({ message: 'Post not found' });
     const post = readPost(req.body);
     if (post.error) return res.status(400).json({ message: post.error });
-
-    let imageId = rows[0].image_id;
-    if (req.body.image) {
-      const img = checkImage(req.body.image);
-      if (img.error) return res.status(400).json({ message: img.error });
-      const newId = await saveImage(img);
-      await dropImage(imageId);
-      imageId = newId;
-    } else if (req.body.removeImage) {
-      await dropImage(imageId);
-      imageId = null;
+    let pics = null;
+    if (req.body.images !== undefined) {
+      pics = await checkImageIds(req.body.images, id);
+      if (pics.error) return res.status(400).json({ message: pics.error });
     }
-    await pool.query('UPDATE posts SET title = ?, content = ?, post_date = ?, image_id = ? WHERE id = ?', [
+    await pool.query('UPDATE posts SET title = ?, content = ?, post_date = ? WHERE id = ?', [
       post.title,
       post.content,
       post.date,
-      imageId,
       id,
     ]);
+    if (pics) await setImages(id, pics.ids);
     res.json({ ok: true });
   })
 );
@@ -284,9 +342,10 @@ router.delete(
   '/posts/:id',
   h(async (req, res) => {
     const id = Number(req.params.id) || 0;
-    const [rows] = await pool.query('SELECT image_id FROM posts WHERE id = ?', [id]);
-    if (rows.length) await dropImage(rows[0].image_id);
+    const ids = await currentImageIds(id);
+    await pool.query('DELETE FROM post_images WHERE post_id = ?', [id]);
     await pool.query('DELETE FROM posts WHERE id = ?', [id]);
+    await dropImages(ids);
     res.json({ ok: true });
   })
 );

@@ -21,14 +21,28 @@ router.get(
       "SELECT id, title, content, DATE_FORMAT(post_date,'%Y-%m-%d') AS date, image_id FROM posts WHERE section = ? ORDER BY post_date DESC, id DESC LIMIT 300",
       [section]
     );
+    const pics = {};
+    if (rows.length) {
+      const [imgs] = await pool.query(
+        'SELECT post_id, image_id FROM post_images WHERE post_id IN (?) ORDER BY post_id, position, id',
+        [rows.map((r) => r.id)]
+      );
+      imgs.forEach((r) => (pics[r.post_id] = pics[r.post_id] || []).push(r.image_id));
+    }
     res.set('Cache-Control', 'no-cache').json(
-      rows.map((r) => ({
-        id: r.id,
-        title: r.title,
-        content: r.content || '',
-        date: r.date,
-        image: r.image_id ? `/api/media/${r.image_id}` : '',
-      }))
+      rows.map((r) => {
+        // posts saved before multi-picture support only have the single cover picture
+        const ids = pics[r.id] || (r.image_id ? [r.image_id] : []);
+        const images = ids.map((i) => `/api/media/${i}`);
+        return {
+          id: r.id,
+          title: r.title,
+          content: r.content || '',
+          date: r.date,
+          image: images[0] || '',
+          images,
+        };
+      })
     );
   })
 );

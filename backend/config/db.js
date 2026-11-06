@@ -100,6 +100,17 @@ const connectDB = async () => {
         INDEX idx_section_date (section, post_date)
       )`);
 
+    // All pictures of a post, in order (the first one is the cover)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS post_images (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        post_id INT NOT NULL,
+        image_id INT NOT NULL,
+        position INT NOT NULL DEFAULT 0,
+        INDEX idx_post (post_id),
+        INDEX idx_image (image_id)
+      )`);
+
     const phone = process.env.ADMIN_PHONE || '03001234567';
     const plain = process.env.ADMIN_PASSWORD || 'Admin@12345';
     const [rows] = await pool.query('SELECT id FROM admins WHERE phone = ?', [phone]);

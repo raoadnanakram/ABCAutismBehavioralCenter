@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api';
-import { MONTHS, parseDate, formatDate } from '../Components/PostParts';
+import { MONTHS, parseDate, formatDate, picturesOf } from '../Components/PostParts';
 
 /* Admin tab used for both "News & Events" (section = 'news')
-   and "Community Services" (section = 'community'). */
+   and "Community Services" (section = 'community').
+   Each post can have up to 10 pictures; the first one is the cover. */
+
+const MAX_PICS = 10;
 
 const COPY = {
   news: {
@@ -14,7 +17,7 @@ const COPY = {
   community: {
     noun: 'update',
     heading: 'Community Services',
-    help: 'Add a photo and update. It appears on the Community Services page with the month and date on the picture.',
+    help: 'Add photos and an update. It appears on the Community Services page with the month and date on the picture.',
   },
 };
 
@@ -22,7 +25,8 @@ const today = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
-const EMPTY = () => ({ id: null, title: '', content: '', date: today(), image: '', imageData: '', removeImage: false });
+const EMPTY = () => ({ id: null, title: '', content: '', date: today(), images: [] });
+const idFromUrl = (url) => Number(String(url).split('/').pop());
 
 // Shrinks the picture in the browser (max 1600px, JPEG) so uploads stay small and fast.
 function compressImage(file) {
@@ -72,6 +76,7 @@ export default function AdminPosts({ section, say }) {
   const [confirmId, setConfirmId] = useState(null);
   const fileRef = useRef(null);
   const formRef = useRef(null);
+  const fresh = useRef(new Set()); // pictures uploaded in this form but not saved yet
   const sayRef = useRef(say);
   useEffect(() => {
     sayRef.current = say;
@@ -91,40 +96,75 @@ export default function AdminPosts({ section, say }) {
     load();
   }, [load]);
 
-  const reset = () => {
+  const uploading = form.images.some((i) => i.uploading);
+
+  // removes pictures that were uploaded but never saved
+  const discardFresh = () => {
+    fresh.current.forEach((id) => api('/admin/media/' + id, { method: 'DELETE' }).catch(() => {}));
+    fresh.current = new Set();
+  };
+
+  const reset = (discard) => {
+    if (discard) discardFresh();
+    else fresh.current = new Set();
     setForm(EMPTY());
     if (fileRef.current) fileRef.current.value = '';
   };
 
   const pick = async (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    try {
-      const out = await compressImage(file);
-      setForm((f) => ({ ...f, image: out.preview, imageData: out.data, removeImage: false }));
-    } catch (err) {
-      say(err.message);
-      e.target.value = '';
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (!files.length) return;
+    const room = MAX_PICS - form.images.length;
+    if (room <= 0) return say(`You can add up to ${MAX_PICS} pictures.`);
+    if (files.length > room) say(`Only ${room} more picture${room === 1 ? '' : 's'} can be added.`);
+
+    for (const file of files.slice(0, room)) {
+      const key = `n${Date.now()}${Math.random()}`;
+      try {
+        const out = await compressImage(file);
+        setForm((f) => ({ ...f, images: [...f.images, { key, src: out.preview, uploading: true }] }));
+        const r = await api('/admin/media', { method: 'POST', body: JSON.stringify({ data: out.data }) });
+        fresh.current.add(r.id);
+        setForm((f) => ({
+          ...f,
+          images: f.images.map((i) => (i.key === key ? { ...i, id: r.id, uploading: false } : i)),
+        }));
+      } catch (err) {
+        say(err.message);
+        setForm((f) => ({ ...f, images: f.images.filter((i) => i.key !== key) }));
+      }
     }
   };
 
-  const removePicture = () => {
-    setForm((f) => ({ ...f, image: '', imageData: '', removeImage: true }));
-    if (fileRef.current) fileRef.current.value = '';
+  const removePicture = (img) => {
+    if (img.id && fresh.current.has(img.id)) {
+      fresh.current.delete(img.id);
+      api('/admin/media/' + img.id, { method: 'DELETE' }).catch(() => {});
+    }
+    setForm((f) => ({ ...f, images: f.images.filter((i) => i.key !== img.key) }));
   };
+
+  const makeCover = (img) =>
+    setForm((f) => ({ ...f, images: [img, ...f.images.filter((i) => i.key !== img.key)] }));
 
   const save = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return say('Please write a title');
+    if (uploading) return say('Please wait, pictures are still uploading');
     setSaving(true);
     try {
-      const body = { section, title: form.title, content: form.content, date: form.date };
-      if (form.imageData) body.image = { data: form.imageData };
-      if (form.removeImage) body.removeImage = true;
+      const body = {
+        section,
+        title: form.title,
+        content: form.content,
+        date: form.date,
+        images: form.images.map((i) => i.id),
+      };
       if (form.id) await api('/admin/posts/' + form.id, { method: 'PUT', body: JSON.stringify(body) });
       else await api('/admin/posts', { method: 'POST', body: JSON.stringify(body) });
       say(form.id ? 'Changes saved ✓' : 'Published ✓');
-      reset();
+      reset(false);
       load();
     } catch (err) {
       say(err.message);
@@ -133,7 +173,14 @@ export default function AdminPosts({ section, say }) {
   };
 
   const edit = (p) => {
-    setForm({ id: p.id, title: p.title, content: p.content, date: p.date, image: p.image, imageData: '', removeImage: false });
+    discardFresh();
+    setForm({
+      id: p.id,
+      title: p.title,
+      content: p.content,
+      date: p.date,
+      images: picturesOf(p).map((src) => ({ key: src, id: idFromUrl(src), src })),
+    });
     if (fileRef.current) fileRef.current.value = '';
     formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -142,7 +189,7 @@ export default function AdminPosts({ section, say }) {
     try {
       await api('/admin/posts/' + id, { method: 'DELETE' });
       say('Deleted');
-      if (form.id === id) reset();
+      if (form.id === id) reset(true);
       setConfirmId(null);
       load();
     } catch (err) {
@@ -152,9 +199,10 @@ export default function AdminPosts({ section, say }) {
 
   const field = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-[#1CA7C7] focus:ring-2 focus:ring-[#1CA7C7]/20';
   const monthName = form.date ? MONTHS[parseDate(form.date).month] : '';
+  const cover = form.images[0];
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
       {/* ---------- form ---------- */}
       <section ref={formRef} className="h-fit rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
         <h3 className="font-serif text-lg font-bold text-[#003B5C]">
@@ -184,37 +232,85 @@ export default function AdminPosts({ section, say }) {
           </div>
 
           <div>
-            <p className="mb-1 text-xs font-semibold text-slate-500">Picture</p>
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs font-semibold text-slate-500">Pictures</p>
+              <p className="text-xs text-slate-400">{form.images.length} / {MAX_PICS}</p>
+            </div>
+
+            {/* cover preview, as it will look on the website card */}
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-dashed border-slate-300 bg-slate-50">
-              {form.image ? (
-                <img src={form.image} alt="Preview" className="h-full w-full object-cover" />
+              {cover ? (
+                <img src={cover.src} alt="Cover preview" className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-slate-400">No picture chosen</div>
               )}
               <Badge date={form.date} />
-            </div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <label className="cursor-pointer rounded-xl bg-[#003B5C] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#02263b]">
-                {form.image ? 'Change picture' : 'Choose picture'}
-                <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={pick} />
-              </label>
-              {form.image && (
-                <button type="button" onClick={removePicture}
-                  className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-200">
-                  Remove picture
-                </button>
+              {form.images.length > 1 && (
+                <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white">
+                  {form.images.length} photos
+                </span>
               )}
             </div>
-            <p className="mt-1 text-xs text-slate-400">JPG, PNG or WebP. Large pictures are shrunk automatically.</p>
+
+            {form.images.length > 0 && (
+              <ul className="mt-3 grid grid-cols-3 gap-2">
+                {form.images.map((img, i) => (
+                  <li key={img.key} className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="relative aspect-square bg-slate-100">
+                      <img src={img.src} alt="" className="h-full w-full object-cover" />
+                      {img.uploading && (
+                        <span className="absolute inset-0 flex items-center justify-center bg-white/70 text-xs font-semibold text-[#003B5C]">
+                          Uploading...
+                        </span>
+                      )}
+                      {i === 0 && !img.uploading && (
+                        <span className="absolute left-1 top-1 rounded-md bg-[#F5456B] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                          Cover
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex divide-x divide-slate-100 text-[11px] font-semibold">
+                      {i !== 0 ? (
+                        <button type="button" disabled={img.uploading} onClick={() => makeCover(img)}
+                          className="flex-1 py-1.5 text-[#1CA7C7] hover:bg-slate-50 disabled:opacity-40">
+                          Make cover
+                        </button>
+                      ) : (
+                        <span className="flex-1 py-1.5 text-center text-slate-300">Main</span>
+                      )}
+                      <button type="button" disabled={img.uploading} onClick={() => removePicture(img)}
+                        className="flex-1 py-1.5 text-[#F5456B] hover:bg-slate-50 disabled:opacity-40">
+                        Remove
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="mt-3">
+              <label
+                className={`inline-block cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-white transition ${
+                  form.images.length >= MAX_PICS ? 'bg-slate-300' : 'bg-[#003B5C] hover:bg-[#02263b]'
+                }`}
+              >
+                {form.images.length ? 'Add more pictures' : 'Choose pictures'}
+                <input ref={fileRef} type="file" multiple accept="image/jpeg,image/png,image/webp" className="sr-only"
+                  disabled={form.images.length >= MAX_PICS} onChange={pick} />
+              </label>
+            </div>
+            <p className="mt-1 text-xs text-slate-400">
+              Select one or many (up to {MAX_PICS}). JPG, PNG or WebP. The Cover picture shows on the card; visitors see all pictures when they open the post.
+            </p>
           </div>
 
           <div className="flex gap-2 pt-1">
-            <button type="submit" disabled={saving}
+            <button type="submit" disabled={saving || uploading}
               className="flex-1 rounded-xl bg-gradient-to-r from-[#F5456B] to-[#F5A623] py-3 text-sm font-bold text-white shadow-lg shadow-[#F5456B]/25 transition hover:-translate-y-0.5 disabled:opacity-60">
-              {saving ? 'Saving...' : form.id ? 'Save changes' : 'Publish'}
+              {saving ? 'Saving...' : uploading ? 'Uploading...' : form.id ? 'Save changes' : 'Publish'}
             </button>
-            {form.id && (
-              <button type="button" onClick={reset}
+            {(form.id || form.images.length > 0 || form.title) && (
+              <button type="button" onClick={() => reset(true)}
                 className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200">
                 Cancel
               </button>
@@ -236,41 +332,49 @@ export default function AdminPosts({ section, say }) {
           </p>
         ) : (
           <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-            {items.map((p) => (
-              <li key={p.id} className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
-                <div className="relative aspect-[4/3] bg-[#003B5C]/10">
-                  {p.image ? (
-                    <img src={p.image} alt="" className="h-full w-full object-cover" loading="lazy" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-3xl font-bold text-[#003B5C]/25">ABC</div>
-                  )}
-                  <Badge date={p.date} />
-                </div>
-                <div className="p-4">
-                  <p className="line-clamp-2 text-sm font-semibold text-[#003B5C]">{p.title}</p>
-                  <p className="mt-1 text-xs text-slate-400">{formatDate(p.date)}</p>
-                  <div className="mt-3 flex items-center gap-2">
-                    <button onClick={() => edit(p)}
-                      className="rounded-lg bg-[#1CA7C7]/10 px-3 py-1.5 text-xs font-semibold text-[#1CA7C7] transition hover:bg-[#1CA7C7]/20">
-                      Edit
-                    </button>
-                    {confirmId === p.id ? (
-                      <>
-                        <button onClick={() => del(p.id)}
-                          className="rounded-lg bg-[#F5456B] px-3 py-1.5 text-xs font-semibold text-white">Yes, delete</button>
-                        <button onClick={() => setConfirmId(null)}
-                          className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">No</button>
-                      </>
+            {items.map((p) => {
+              const pics = picturesOf(p);
+              return (
+                <li key={p.id} className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
+                  <div className="relative aspect-[4/3] bg-[#003B5C]/10">
+                    {pics[0] ? (
+                      <img src={pics[0]} alt="" className="h-full w-full object-cover" loading="lazy" />
                     ) : (
-                      <button onClick={() => setConfirmId(p.id)}
-                        className="rounded-lg bg-[#F5456B]/10 px-3 py-1.5 text-xs font-semibold text-[#F5456B] transition hover:bg-[#F5456B]/20">
-                        Delete
-                      </button>
+                      <div className="flex h-full items-center justify-center text-3xl font-bold text-[#003B5C]/25">ABC</div>
+                    )}
+                    <Badge date={p.date} />
+                    {pics.length > 1 && (
+                      <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] text-white">
+                        {pics.length} photos
+                      </span>
                     )}
                   </div>
-                </div>
-              </li>
-            ))}
+                  <div className="p-4">
+                    <p className="text-sm font-semibold text-[#003B5C]">{p.title}</p>
+                    <p className="mt-1 text-xs text-slate-400">{formatDate(p.date)}</p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button onClick={() => edit(p)}
+                        className="rounded-lg bg-[#1CA7C7]/10 px-3 py-1.5 text-xs font-semibold text-[#1CA7C7] transition hover:bg-[#1CA7C7]/20">
+                        Edit
+                      </button>
+                      {confirmId === p.id ? (
+                        <>
+                          <button onClick={() => del(p.id)}
+                            className="rounded-lg bg-[#F5456B] px-3 py-1.5 text-xs font-semibold text-white">Yes, delete</button>
+                          <button onClick={() => setConfirmId(null)}
+                            className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">No</button>
+                        </>
+                      ) : (
+                        <button onClick={() => setConfirmId(p.id)}
+                          className="rounded-lg bg-[#F5456B]/10 px-3 py-1.5 text-xs font-semibold text-[#F5456B] transition hover:bg-[#F5456B]/20">
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
