@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api, getToken, clearToken } from '../api';
+import AdminPosts from './AdminPosts';
 
 /* ==========================================================================
    ABC Autism Behavioral Center - Admin Dashboard
@@ -29,6 +30,8 @@ const TABS = [
   { id: 'appointment', label: 'Appointments', icon: '📅' },
   { id: 'contact', label: 'Contact Messages', icon: '✉️' },
   { id: 'career', label: 'Career Applications', icon: '💼' },
+  { id: 'news', label: 'News & Events', icon: '📰' },
+  { id: 'community', label: 'Community Services', icon: '🤝' },
   { id: 'security', label: 'Security & System', icon: '🔒' },
 ];
 
@@ -61,6 +64,8 @@ const SUBTITLE = {
   appointment: META.appointment.blurb,
   contact: META.contact.blurb,
   career: META.career.blurb,
+  news: 'Add events with a picture, date and details',
+  community: 'Add community photos and updates',
   security: 'System health and account safety',
 };
 
@@ -1723,6 +1728,8 @@ export default function AdminDashboard() {
               exportCsv={exportCsv}
             />
           )}
+
+          {(tab === 'news' || tab === 'community') && <AdminPosts key={tab} section={tab} say={say} />}
 
           {tab === 'security' && <SecurityTab sys={sys} logins={logins} pw={pw} setPw={setPw} changePw={changePw} />}
 

@@ -186,4 +186,109 @@ router.get(
   })
 );
 
+/* ---------- News & Events / Community Services posts ---------- */
+const SECTIONS = ['news', 'community'];
+const MAX_IMG = 4 * 1024 * 1024;
+
+function checkImage(img) {
+  const raw = img && typeof img.data === 'string' ? img.data.replace(/^data:[^;]+;base64,/, '') : '';
+  if (!raw) return { error: 'Please choose a picture.' };
+  if (raw.length > Math.ceil((MAX_IMG * 4) / 3) + 16) return { error: 'Picture is too large (max 4 MB).' };
+  const buf = Buffer.from(raw, 'base64');
+  if (!buf.length) return { error: 'Picture looks empty.' };
+  if (buf.length > MAX_IMG) return { error: 'Picture is too large (max 4 MB).' };
+  // real type is checked from the first bytes, not from the file name
+  let mime = null;
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) mime = 'image/jpeg';
+  else if (buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) mime = 'image/png';
+  else if (buf.slice(0, 4).toString('latin1') === 'RIFF' && buf.slice(8, 12).toString('latin1') === 'WEBP') mime = 'image/webp';
+  if (!mime) return { error: 'Only JPG, PNG or WebP pictures are allowed.' };
+  return { buf, mime };
+}
+
+function readPost(body) {
+  const b = body || {};
+  const title = String(b.title || '').trim().slice(0, 200);
+  const content = String(b.content || '').trim().slice(0, 8000);
+  const date = String(b.date || '');
+  if (!title) return { error: 'Title is required.' };
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(new Date(date + 'T00:00:00Z').getTime()))
+    return { error: 'Please choose a valid date.' };
+  return { title, content, date };
+}
+
+async function saveImage(img) {
+  const [r] = await pool.query('INSERT INTO media_files (mime, size, data) VALUES (?,?,?)', [
+    img.mime,
+    img.buf.length,
+    img.buf,
+  ]);
+  return r.insertId;
+}
+const dropImage = (id) => (id ? pool.query('DELETE FROM media_files WHERE id = ?', [id]) : null);
+
+router.post(
+  '/posts',
+  h(async (req, res) => {
+    const section = (req.body || {}).section;
+    if (!SECTIONS.includes(section)) return res.status(400).json({ message: 'Invalid section' });
+    const post = readPost(req.body);
+    if (post.error) return res.status(400).json({ message: post.error });
+
+    let imageId = null;
+    if (req.body.image) {
+      const img = checkImage(req.body.image);
+      if (img.error) return res.status(400).json({ message: img.error });
+      imageId = await saveImage(img);
+    }
+    const [r] = await pool.query(
+      'INSERT INTO posts (section, title, content, post_date, image_id) VALUES (?,?,?,?,?)',
+      [section, post.title, post.content, post.date, imageId]
+    );
+    res.json({ ok: true, id: r.insertId });
+  })
+);
+
+router.put(
+  '/posts/:id',
+  h(async (req, res) => {
+    const id = Number(req.params.id) || 0;
+    const [rows] = await pool.query('SELECT id, image_id FROM posts WHERE id = ?', [id]);
+    if (!rows.length) return res.status(404).json({ message: 'Post not found' });
+    const post = readPost(req.body);
+    if (post.error) return res.status(400).json({ message: post.error });
+
+    let imageId = rows[0].image_id;
+    if (req.body.image) {
+      const img = checkImage(req.body.image);
+      if (img.error) return res.status(400).json({ message: img.error });
+      const newId = await saveImage(img);
+      await dropImage(imageId);
+      imageId = newId;
+    } else if (req.body.removeImage) {
+      await dropImage(imageId);
+      imageId = null;
+    }
+    await pool.query('UPDATE posts SET title = ?, content = ?, post_date = ?, image_id = ? WHERE id = ?', [
+      post.title,
+      post.content,
+      post.date,
+      imageId,
+      id,
+    ]);
+    res.json({ ok: true });
+  })
+);
+
+router.delete(
+  '/posts/:id',
+  h(async (req, res) => {
+    const id = Number(req.params.id) || 0;
+    const [rows] = await pool.query('SELECT image_id FROM posts WHERE id = ?', [id]);
+    if (rows.length) await dropImage(rows[0].image_id);
+    await pool.query('DELETE FROM posts WHERE id = ?', [id]);
+    res.json({ ok: true });
+  })
+);
+
 module.exports = router;

@@ -77,6 +77,29 @@ const connectDB = async () => {
         UNIQUE KEY uq_cv_submission (submission_id)
       )`);
 
+    // Pictures uploaded from the admin dashboard (stored in the database, like CVs)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS media_files (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        mime VARCHAR(100) NOT NULL,
+        size INT NOT NULL,
+        data LONGBLOB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`);
+
+    // News & Events and Community Services posts
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS posts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        section VARCHAR(20) NOT NULL,
+        title VARCHAR(200) NOT NULL,
+        content TEXT NULL,
+        post_date DATE NOT NULL,
+        image_id INT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_section_date (section, post_date)
+      )`);
+
     const phone = process.env.ADMIN_PHONE || '03001234567';
     const plain = process.env.ADMIN_PASSWORD || 'Admin@12345';
     const [rows] = await pool.query('SELECT id FROM admins WHERE phone = ?', [phone]);

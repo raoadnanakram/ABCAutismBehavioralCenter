@@ -12,6 +12,8 @@ app.use(helmet({ contentSecurityPolicy: false }));
 // Career form sends the CV inside the request, so this one route may be bigger.
 // It must come BEFORE the general (small) limit below.
 app.use('/api/forms/career', express.json({ limit: '8mb' }));
+// Admin posts carry a picture (base64), so this route may be bigger too.
+app.use('/api/admin/posts', express.json({ limit: '6mb' }));
 app.use(express.json({ limit: '50kb' }));
 
 app.use(
@@ -25,6 +27,7 @@ app.use(
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/forms', require('./routes/forms'));
+app.use('/api', require('./routes/posts')); // public: GET /api/posts, GET /api/media/:id
 app.use('/api/admin', require('./routes/admin'));
 
 app.use(['/login', '/dashboard'], (req, res, next) => {

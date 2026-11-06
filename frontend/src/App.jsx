@@ -15,6 +15,8 @@ import Contact from './Pages/Contact';
 import Team from './Pages/OurTeam';
 import BookAppointment from './Pages/BookAppointment';
 import Careerpage from './Pages/Careerpage'; // Career page (file name: Careerpage.jsx)
+import CommunityService from './Pages/Communityservice'; // NEW
+import NewsEvents from './Pages/NewsEvents'; // NEW
 import FAQ from './Pages/FAQ';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
 import TermsOfService from './Pages/TermsOfService';
@@ -76,6 +78,11 @@ const SLUG_REDIRECTS = {
   '/terms-of-service': '/terms',
   '/terms-and-conditions': '/terms',
   '/join-us': '/careers',
+  '/community': '/community-services',
+  '/community-service': '/community-services',
+  '/news': '/news-events',
+  '/events': '/news-events',
+  '/news-and-events': '/news-events',
   '/speech-therapy': '/Pages/speech-therapy',
   '/nutrition-dietetics': '/Pages/nutrition-dietetics',
   '/special-education': '/Pages/special-education',
@@ -127,6 +134,8 @@ function Layout() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/book-a-free-consult" element={<BookAppointment />} />
           <Route path="/careers" element={<Careerpage />} />
+          <Route path="/community-services" element={<CommunityService />} />
+          <Route path="/news-events" element={<NewsEvents />} />
 
           {/* Individual Service Sub-Pages Routes */}
           <Route path="/Pages/speech-therapy" element={<SpeechLanguageTherapy />} />
