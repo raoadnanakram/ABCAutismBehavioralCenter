@@ -18,15 +18,15 @@ function Navbar() {
 
   // 1. Navigation Links Arrays
   const serviceDropdownLinks = [
-    { name: 'Speech & Language Therapy', path: '/services/speech-therapy' },
-    { name: 'Nutrition Therapy & Dietetics', path: '/services/nutrition-dietetics' },
-    { name: 'Special Education', path: '/services/special-education' },
-    { name: 'Physiotherapy', path: '/services/physiotherapy' },
-    { name: 'Occupational Therapy & Sensory Integration', path: '/services/occupational-therapy' },
-    { name: 'Day Care', path: '/services/day-care' },
-    { name: 'Montessori & Early Childhood Education', path: '/services/montessori-education' },
-    { name: 'Dysphagia Management & NG Tube Feeding', path: '/services/dysphagia-management' },
-    { name: 'ABA Therapy & Psychology', path: '/services/aba-psychology' },
+    { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy' },
+    { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics' },
+    { name: 'Special Education', path: '/Pages/special-education' },
+    { name: 'Physiotherapy', path: '/Pages/physiotherapy' },
+    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy' },
+    { name: 'Day Care', path: '/Pages/day-care' },
+    { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education' },
+    { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management' },
+    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology' },
   ];
 
   const aboutDropdownLinks = [
