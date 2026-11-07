@@ -10,6 +10,7 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
+  const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
 
   // Search States
   const [query, setQuery] = useState('');
@@ -31,6 +32,11 @@ function Navbar() {
 
   const aboutDropdownLinks = [
     { name: 'Our Team', path: '/about/our-team' },
+  ];
+
+  // News & Events dropdown (the News & Events link itself goes to /news-events)
+  const newsDropdownLinks = [
+    { name: 'Community Services', path: '/community-services' },
   ];
 
   const topBarTexts = ['Al Rehman Garden', 'Sadar Cantt'];
@@ -317,6 +323,46 @@ function Navbar() {
                 Contact
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
               </Link>
+
+              {/* News & Events Dropdown (after Contact) */}
+              <div
+                className="relative py-1"
+                onMouseEnter={() => setIsNewsDropdownOpen(true)}
+                onMouseLeave={() => setIsNewsDropdownOpen(false)}
+              >
+                <Link to="/news-events" className="relative group hover:text-[#00A8CD] transition-colors duration-200 flex items-center gap-1.5 cursor-pointer">
+                  News &amp; Events
+                  <motion.i
+                    animate={{ rotate: isNewsDropdownOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fa-solid fa-chevron-down text-xs text-slate-400 group-hover:text-[#00A8CD]"
+                  ></motion.i>
+                  <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#00A8CD] transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+
+                <AnimatePresence>
+                  {isNewsDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      className="absolute top-full -left-4 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 mt-2 overflow-hidden"
+                    >
+                      {newsDropdownLinks.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.path}
+                          onClick={() => setIsNewsDropdownOpen(false)}
+                          className="block px-5 py-2.5 text-sm text-[#003B5C] hover:bg-slate-50 hover:text-[#00A8CD] font-medium transition-colors border-b border-slate-50 last:border-none"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
 
             <div className="hidden lg:flex items-center">
@@ -384,7 +430,21 @@ function Navbar() {
 
               <Link to="/conditions" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Conditions</Link>
               <Link to="/contact" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors border-b border-slate-100">Contact</Link>
-              
+
+              <Link to="/news-events" onClick={() => setIsOpen(false)} className="block text-[#003B5C] hover:text-[#00A8CD] font-semibold py-2 transition-colors">News &amp; Events</Link>
+              <div className="pl-4 border-l-2 border-[#00A8CD]/30 space-y-2 mb-3">
+                {newsDropdownLinks.map((item, index) => (
+                  <Link
+                    key={index}
+                    to={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className="block py-1.5 text-sm text-slate-600 hover:text-[#00A8CD] font-medium"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+
               <div className="pt-3">
                 <Link
                   to="/book-a-free-consult"
