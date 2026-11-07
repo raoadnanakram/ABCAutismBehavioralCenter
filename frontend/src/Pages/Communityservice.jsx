@@ -1,181 +1,128 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MotionConfig, motion } from 'framer-motion';
-import { ArrowDown, ArrowRight, Droplets, Trophy } from 'lucide-react';
+import { MotionConfig, useReducedMotion } from 'framer-motion';
+import { ArrowDown, ArrowRight, Droplets, Trophy, Pause, Play, Heart, Users } from 'lucide-react';
 import { usePosts } from '../Components/PostParts';
 import { BRAND, CATEGORIES, CommunityCard, TriBar } from '../Components/CommunityParts';
 
-/* ==========================================================================
-   Community Services page (redesigned)
-   - Posts are managed in Admin Dashboard > ABC Filtration Plant / ABC Cricket Stadium
-   - All page text is in CONTENT below.
-   - Fonts: Bricolage Grotesque (headings) + Figtree (body), loaded in <Fonts />
-========================================================================== */
-
+// Add your own approved footage at public/videos/community-hero.mp4.
+const HERO_VIDEO = '/videos/community-hero.mp4';
+const HERO_POSTER = ''; 
+const HEAD = { fontFamily: "'Manrope', system-ui, sans-serif" };
 const CONTENT = {
-  hero: {
-    title: 'Care that reaches beyond the therapy room',
-    text: 'A strong community helps every child grow. At ABC Autism Behavioral Center, that means clean water for our neighbours and a field where everyone can play.',
-  },
   sections: {
-    filtration: {
-      id: 'filtration-plant',
-      icon: Droplets,
-      short: 'Clean water',
-      tagline: 'Clean, safe drinking water for our community',
-      intro:
-        'The ABC Filtration Plant gives children, families and neighbours access to filtered drinking water. Follow the posts below for news, photos and updates from the plant.',
-      empty: 'No updates yet. Posts from the ABC Filtration Plant will appear here.',
-    },
-    cricket: {
-      id: 'cricket-stadium',
-      icon: Trophy,
-      short: 'Sport for all',
-      tagline: 'A place to play, belong and cheer together',
-      intro:
-        'The ABC Cricket Stadium brings children, young people and families together through cricket, teamwork and friendly competition. Match days and events are shared below.',
-      empty: 'No updates yet. Posts from the ABC Cricket Stadium will appear here.',
-    },
-  },
-  cta: {
-    title: 'Want to know more about our community services?',
-    text: 'Visit us, call us or send a message. We would love to hear from you.',
-  },
+    filtration: { id: 'filtration-plant', icon: Droplets, short: 'Essential care', tagline: 'Clean water. Healthier everyday lives.', intro: 'Access to clean drinking water supports the wellbeing of every family. The ABC Filtration Plant serves our neighbours with filtered drinking water, extending our commitment to care into everyday community life.', empty: 'Community updates are on their way. Visit again for news from the ABC Filtration Plant.' },
+    cricket: { id: 'cricket-stadium', icon: Trophy, short: 'Shared experiences', tagline: 'A field for connection. A place to belong.', intro: 'Sport brings people together. The ABC Cricket Stadium creates space for children, young people and families to enjoy cricket, build friendships and share the spirit of teamwork.', empty: 'There are no stadium updates to share yet. Check back for match days, events and community stories.' }
+  }
 };
 
-const HEAD = { fontFamily: "'Bricolage Grotesque', 'Figtree', system-ui, sans-serif" };
-
-function Fonts() {
+function VideoHero() {
+  const videoRef = useRef(null);
+  const reducedMotion = useReducedMotion();
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (reducedMotion) { video.pause(); return; }
+    video.play().catch(() => setPlaying(false));
+    const visibility = () => { if (document.hidden) video.pause(); };
+    document.addEventListener('visibilitychange', visibility);
+    return () => document.removeEventListener('visibilitychange', visibility);
+  }, [reducedMotion]);
+  const toggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play().catch(() => setPlaying(false));
+    else video.pause();
+  };
   return (
-    <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap');
-      .cs-page { font-family: 'Figtree', system-ui, sans-serif; }
-      @keyframes cs-wave { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-      @keyframes cs-ring { 0% { transform: scale(.6); opacity: .55; } 100% { transform: scale(1.5); opacity: 0; } }
-      .cs-wave { animation: cs-wave 9s linear infinite; }
-      .cs-wave-b { animation-duration: 14s; animation-direction: reverse; }
-      .cs-ring { animation: cs-ring 4s ease-out infinite; }
-      @media (prefers-reduced-motion: reduce) { .cs-wave, .cs-ring { animation: none; } }
-    `}</style>
+    <section className="cs-hero" aria-labelledby="cs-hero-title">
+      <div className="cs-hero-backdrop" aria-hidden="true" />
+      {!failed && <video ref={videoRef} className="cs-hero-video" muted loop playsInline preload="metadata"
+        poster={HERO_POSTER || undefined} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
+        onError={() => { setFailed(true); setPlaying(false); }} aria-hidden="true">
+        <source src={HERO_VIDEO} type="video/mp4" />
+      </video>}
+      <div className="cs-hero-shade" aria-hidden="true" />
+      <div className="cs-container cs-hero-inner">
+        <div className="cs-hero-top"><span>ABC AUTISM BEHAVIORAL CENTER</span><span className="cs-top-label">Care beyond our centre</span></div>
+        <div className="cs-hero-copy">
+          <span className="cs-eyebrow cs-light"><span /> COMMUNITY SERVICES</span>
+          <h1 id="cs-hero-title">Stronger communities.<br /><em>Brighter possibilities.</em></h1>
+          <p>Care begins with people. From clean drinking water to a place to play, we help create everyday opportunities for families and neighbours to thrive together.</p>
+          <div className="cs-actions"><a href="#cs-initiatives" className="cs-button cs-button-gold">Explore our initiatives <ArrowDown size={18} /></a><Link to="/contact" className="cs-text-link">Connect with us <ArrowRight size={18} /></Link></div>
+        </div>
+        <div className="cs-hero-bottom"><span>A shared commitment to everyday wellbeing</span>{!failed && <button type="button" className="cs-video-control" onClick={toggle} aria-label={playing ? 'Pause background video' : 'Play background video'}>{playing ? <Pause size={16} /> : <Play size={16} />}<span>{playing ? 'Pause video' : 'Play video'}</span></button>}</div>
+      </div>
+    </section>
   );
 }
 
-/* Moving water, used in the Filtration door */
-function Waves() {
-  const path = 'M0 40 C 150 0, 300 80, 450 40 S 750 0, 900 40 S 1200 80, 1350 40 S 1650 0, 1800 40 V120 H0 Z';
-  return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 overflow-hidden" aria-hidden="true">
-      <svg className="cs-wave absolute bottom-0 h-24 w-[200%]" viewBox="0 0 1800 120" preserveAspectRatio="none">
-        <path d={path} fill="rgba(255,255,255,.18)" />
-      </svg>
-      <svg className="cs-wave cs-wave-b absolute -bottom-3 h-24 w-[200%]" viewBox="0 0 1800 120" preserveAspectRatio="none">
-        <path d={path} fill="rgba(255,255,255,.28)" />
-      </svg>
-    </div>
-  );
-}
-
-/* Cricket ground lines, used in the Cricket door */
-function Ground() {
-  return (
-    <svg className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 opacity-30" viewBox="0 0 200 200" fill="none" stroke="white" aria-hidden="true">
-      <circle cx="100" cy="100" r="92" strokeWidth="1.5" />
-      <circle cx="100" cy="100" r="62" strokeWidth="1.5" strokeDasharray="4 6" />
-      <rect x="88" y="52" width="24" height="96" rx="3" strokeWidth="1.5" />
-      <path d="M94 52v-8M100 52v-8M106 52v-8M94 148v8M100 148v8M106 148v8" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function Door({ category, index }) {
+function Initiative({ category, index }) {
   const meta = CONTENT.sections[category.id];
+  if (!meta) return null;
   const Icon = meta.icon;
-  return (
-    <motion.a
-      href={`#${meta.id}`}
-      initial={{ opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.25 + index * 0.15, ease: 'easeOut' }}
-      className="group relative flex min-h-[280px] flex-col justify-between overflow-hidden rounded-[2rem] p-7 text-white focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-white md:min-h-[340px] md:p-9"
-      style={{ background: category.accent, borderRadius: index === 0 ? '2.5rem 1rem 2.5rem 1rem' : '1rem 2.5rem 1rem 2.5rem' }}
-    >
-      {index === 0 ? <Waves /> : <Ground />}
-      <div className="relative flex items-center justify-between">
-        <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-          <span className="cs-ring absolute inset-0 rounded-full border-2 border-white/70" aria-hidden="true" />
-          <Icon className="h-7 w-7" aria-hidden="true" />
-        </span>
-        <span className="rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur">{meta.short}</span>
-      </div>
-      <div className="relative">
-        <h2 className="max-w-sm text-3xl font-extrabold leading-tight md:text-4xl" style={HEAD}>
-          {category.label}
-        </h2>
-        <p className="mt-2 max-w-sm text-white/90">{meta.tagline}</p>
-        <span className="mt-5 inline-flex items-center gap-2 font-bold">
-          See the latest posts
-          <ArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-1" aria-hidden="true" />
-        </span>
-      </div>
-    </motion.a>
-  );
+  return <a href={`#${meta.id}`} className={`cs-initiative ${index === 1 ? 'cs-initiative-blue' : ''}`}>
+    <div className="cs-card-top"><span className="cs-icon"><Icon size={27} /></span><span className="cs-number">0{index + 1}</span></div>
+    <span className="cs-eyebrow">{meta.short}</span><h3>{category.label}</h3><p>{meta.tagline}</p>
+    <span className="cs-card-link">Discover the initiative <ArrowRight size={20} /></span>
+    <div className="cs-card-decoration" aria-hidden="true" />
+  </a>;
 }
 
 function PostsSection({ category, index }) {
   const meta = CONTENT.sections[category.id];
   const Icon = meta.icon;
   const { items, loading, error } = usePosts(category.id);
-  const tint = `color-mix(in srgb, ${category.accent} 9%, white)`;
-  const flip = index % 2 === 1;
+  const tint = index % 2 === 0 ? '#fff7eb' : '#eaf8f7'; // Brand tinted backgrounds
 
   return (
     <section
       id={meta.id}
       aria-labelledby={`${meta.id}-title`}
-      className="scroll-mt-24 py-16 md:py-24"
-      style={{ background: flip ? '#fff' : tint }}
+      className="py-20 scroll-mt-24"
+      style={{ background: tint, borderTop: '1px solid rgba(0,0,0,0.04)' }}
     >
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-12">
-        {/* Intro column stays in view while posts scroll */}
-        <div className={`lg:col-span-4 ${flip ? 'lg:order-2' : ''}`}>
-          <div className="lg:sticky lg:top-28">
-            <span
-              className="inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white"
-              style={{ background: category.accent }}
-            >
-              <Icon className="h-7 w-7" aria-hidden="true" />
-            </span>
-            <h2 id={`${meta.id}-title`} className="mt-5 text-3xl font-extrabold leading-tight text-[#003B5C] md:text-4xl" style={HEAD}>
-              {category.label}
-            </h2>
-            <TriBar className="mt-4" />
-            <p className="mt-5 text-lg font-semibold leading-snug" style={{ color: category.accent }}>
-              {meta.tagline}
-            </p>
-            <p className="mt-3 max-w-md leading-relaxed text-slate-600">{meta.intro}</p>
-          </div>
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Separated Header Block for each section */}
+        <div className="mb-12 text-center max-w-2xl mx-auto">
+          <span
+            className="inline-flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-md mb-4"
+            style={{ background: category.accent }}
+          >
+            <Icon className="h-8 w-8" aria-hidden="true" />
+          </span>
+          <h2 id={`${meta.id}-title`} className="text-3xl font-extrabold tracking-tight text-[#073c49] md:text-4xl" style={HEAD}>
+            {category.label}
+          </h2>
+          <TriBar className="mx-auto mt-3" />
+          <p className="mt-3 text-lg font-semibold" style={{ color: category.accent }}>
+            {meta.tagline}
+          </p>
+          <p className="mt-3 text-slate-600 leading-relaxed text-sm md:text-base">{meta.intro}</p>
         </div>
 
-        {/* Posts column: first post is larger */}
-        <div className={`lg:col-span-8 ${flip ? 'lg:order-1' : ''}`}>
+        {/* Posts Grid: showing 3-4 posts clearly underneath */}
+        <div>
           {loading ? (
-            <div className="grid gap-6 sm:grid-cols-2" aria-busy="true">
-              <div className="h-80 animate-pulse rounded-3xl bg-slate-200/70 sm:col-span-2" />
-              <div className="h-72 animate-pulse rounded-3xl bg-slate-200/70" />
-              <div className="h-72 animate-pulse rounded-3xl bg-slate-200/70" />
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+              <div className="h-80 animate-pulse rounded-3xl bg-slate-200/70" />
+              <div className="h-80 animate-pulse rounded-3xl bg-slate-200/70" />
+              <div className="h-80 animate-pulse rounded-3xl bg-slate-200/70" />
             </div>
           ) : error ? (
             <p role="alert" className="rounded-3xl bg-white p-8 text-center text-slate-600 shadow-sm">
               We could not load these posts. Refresh the page or try again in a few minutes.
             </p>
           ) : items.length === 0 ? (
-            <p className="rounded-3xl border-2 border-dashed p-12 text-center text-slate-600" style={{ borderColor: category.accent }}>
+            <p className="rounded-3xl border-2 border-dashed p-12 text-center text-slate-600 bg-white/50" style={{ borderColor: category.accent }}>
               {meta.empty}
             </p>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {items.map((post, i) => (
-                <div key={post.id} className={i === 0 && items.length > 1 ? 'sm:col-span-2' : ''}>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {items.slice(0, 4).map((post, i) => (
+                <div key={post.id}>
                   <CommunityCard post={post} accent={category.accent} index={i} />
                 </div>
               ))}
@@ -187,70 +134,124 @@ function PostsSection({ category, index }) {
   );
 }
 
-function CommunityService() {
-  return (
-    <MotionConfig reducedMotion="user">
-      <Fonts />
-      <div className="cs-page bg-[#F8F9FA] text-slate-700">
-        {/* ---------- Hero: two doors, one for each service ---------- */}
-        <section className="relative overflow-hidden bg-[#003B5C] text-white">
-          <span className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full opacity-25 blur-3xl" style={{ background: BRAND.teal }} />
-          <span className="pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full opacity-20 blur-3xl" style={{ background: BRAND.yellow }} />
+export default function CommunityService() {
+  return <MotionConfig reducedMotion="user"><main className="cs-page">
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+.cs-page{--navy:#073c49;--yellow:#f4cc69;--pink:#f2657b;--teal:#1fb6ae;background:#fafbf8;color:#24464c;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden}.cs-page *{box-sizing:border-box}.cs-page h1,.cs-page h2,.cs-page h3{font-family:'Manrope',system-ui,sans-serif}.cs-page a{text-decoration:none}.cs-page button{font:inherit;cursor:pointer}.cs-container{width:min(1200px,calc(100% - 96px));margin-inline:auto}.cs-page a:focus-visible,.cs-page button:focus-visible{outline:3px solid var(--yellow);outline-offset:6px}
 
-          <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-20 md:pb-24 md:pt-28">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
-              className="max-w-3xl"
-            >
-              <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl" style={HEAD}>
-                {CONTENT.hero.title}
-              </h1>
-              <TriBar className="mt-6" />
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-sky-100">{CONTENT.hero.text}</p>
-            </motion.div>
+.cs-hero{position:relative;min-height:760px;min-height:min(920px,100svh);color:#fff;background:var(--navy);isolation:isolate}
+.cs-hero-backdrop,.cs-hero-video,.cs-hero-shade{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cs-hero-backdrop{background:radial-gradient(ellipse at 85% 35%,var(--teal) 0,transparent 48%),radial-gradient(ellipse at 70% 100%,var(--yellow) 0,transparent 50%),var(--navy)}
+.cs-hero-video{object-fit:cover;object-position:center}
+.cs-hero-shade{background:linear-gradient(90deg,rgba(7,60,73,.92),rgba(7,60,73,.7) 50%,rgba(7,60,73,.3)),linear-gradient(0deg,rgba(7,60,73,.7),transparent 30%)}
+.cs-hero-inner{position:relative;min-height:inherit;display:flex;flex-direction:column;justify-content:space-between;padding-top:34px;padding-bottom:28px}
+.cs-hero-top,.cs-hero-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.cs-hero-top{font-size:11px;letter-spacing:1.8px;font-weight:700;padding-bottom:25px;border-bottom:1px solid rgba(255,255,255,0.2)}
+.cs-top-label{font-weight:400;letter-spacing:.3px}
+.cs-hero-copy{padding:85px 0 80px;max-width:800px;animation:cs-enter .9s ease both}
+.cs-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:800;letter-spacing:2.1px;text-transform:uppercase;color:var(--teal)}
+.cs-light{color:var(--yellow)}
+.cs-light>span{height:7px;width:7px;background:currentColor;border-radius:50%}
+.cs-hero h1{font-size:clamp(42px,5.6vw,76px);font-weight:500;line-height:1.12;letter-spacing:-3px;margin:24px 0}
+.cs-hero h1 em{color:var(--yellow);font-style:normal}
+.cs-hero-copy>p{max-width:550px;font-size:17px;line-height:1.85;color:#e2eeec;margin:0}
+.cs-actions{display:flex;align-items:center;gap:30px;margin-top:34px;flex-wrap:wrap}
+.cs-button{display:inline-flex;align-items:center;justify-content:center;gap:20px;padding:17px 23px;border-radius:7px;font-size:13px;font-weight:700;transition:transform .2s,background .2s}
+.cs-button:hover{transform:translateY(-3px)}
+.cs-button-gold{background:var(--yellow);color:#173c43}
+.cs-button-gold:hover{background:#ffe09a}
+.cs-text-link{display:inline-flex;align-items:center;gap:13px;color:inherit;font-size:13px;font-weight:600;padding:12px 0}
+.cs-text-link:hover{text-decoration:underline;text-underline-offset:6px}
+.cs-hero-bottom{border-top:1px solid rgba(255,255,255,0.2);padding-top:22px;font-size:11px;color:#d4e0df}
+.cs-video-control{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:10px 15px}
 
-            <div className="mt-12 grid gap-5 md:grid-cols-2">
-              {CATEGORIES.map((c, i) => (
-                <Door key={c.id} category={c} index={i} />
-              ))}
-            </div>
-          </div>
-        </section>
+/* Redesigned 3rd section layout */
+.cs-intro-modern{padding:90px 0 60px;background:linear-gradient(180deg, #fafbf8 0%, #f4f8f7 100%);}
+.cs-intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+.cs-intro-left h2{font-size:clamp(32px,3.8vw,44px);line-height:1.25;letter-spacing:-1.2px;font-weight:700;margin:16px 0;color:var(--navy)}
+.cs-intro-left h2 span{color:var(--pink)}
+.cs-intro-right{background:#fff;padding:40px;border-radius:24px;box-shadow:0 10px 30px rgba(7,60,73,0.05);border:1px solid rgba(31,182,174,0.15)}
+.cs-intro-right p{font-size:15px;line-height:1.8;color:#4a625f;margin:0 0 16px}
 
-        {/* ---------- Posts ---------- */}
-        {CATEGORIES.map((c, i) => (
-          <PostsSection key={c.id} category={c} index={i} />
-        ))}
+.cs-initiatives{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:50px}
+.cs-initiative{position:relative;overflow:hidden;background:#fff8ee;border:2px solid #fceccf;border-radius:20px;padding:36px;color:#3e3522;transition:all .3s ease}
+.cs-initiative:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(244,204,105,0.18);border-color:var(--yellow)}
+.cs-initiative-blue{background:#eaf8f7;border-color:#c4ece9;color:#0f403d}
+.cs-initiative-blue:hover{box-shadow:0 20px 40px rgba(31,182,174,0.18);border-color:var(--teal)}
+.cs-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.cs-icon{display:grid;place-items:center;width:60px;height:60px;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);color:var(--pink)}
+.cs-initiative-blue .cs-icon{color:var(--teal)}
+.cs-number{font-size:12px;letter-spacing:2px;font-weight:700;opacity:.5}
+.cs-initiative h3{position:relative;font-size:28px;letter-spacing:-.8px;margin:12px 0}
+.cs-initiative p{position:relative;font-size:14px;line-height:1.6;margin-bottom:30px;opacity:.85}
+.cs-card-link{position:relative;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(0,0,0,0.06);padding-top:20px;font-size:13px;font-weight:700}
+.cs-card-decoration{position:absolute;width:240px;height:240px;border:2px dashed rgba(242,101,123,0.12);border-radius:50%;right:-100px;top:40px;pointer-events:none}
+.cs-initiative-blue .cs-card-decoration{border-color:rgba(31,182,174,0.15)}
 
-        {/* ---------- Call to action ---------- */}
-        <section className="bg-[#003B5C] text-white">
-          <div className="mx-auto grid max-w-6xl items-center gap-8 px-6 py-16 md:grid-cols-[1fr_auto]">
-            <div>
-              <h2 className="max-w-2xl text-2xl font-extrabold md:text-3xl" style={HEAD}>{CONTENT.cta.title}</h2>
-              <p className="mt-2 text-sky-100">{CONTENT.cta.text}</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold text-[#003B5C] transition duration-300 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-white"
-                style={{ background: BRAND.yellow }}
-              >
-                Contact us <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              <Link
-                to="/news-events"
-                className="rounded-full border border-white/60 px-7 py-3 text-sm font-bold text-white transition duration-300 hover:bg-white/10 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                News &amp; Events
-              </Link>
-            </div>
-          </div>
-        </section>
-      </div>
-    </MotionConfig>
-  );
+.cs-values{background:var(--navy);color:#fff;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1)}
+.cs-values-inner{display:flex;justify-content:space-around;gap:25px;padding-block:32px}
+.cs-values-inner>div{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:600;letter-spacing:0.3px}
+.cs-values svg{color:var(--yellow)}
+
+.cs-updates-heading{text-align:center;padding-top:90px;padding-bottom:10px}
+.cs-updates-heading h2{font-size:clamp(32px,3.5vw,46px);font-weight:700;color:var(--navy);letter-spacing:-1.2px;margin:12px 0 0}
+.cs-updates-heading p{color:#55706c;font-size:16px;line-height:1.7;margin-top:12px}
+
+@keyframes cs-enter{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+@media(max-width:767px){
+  .cs-container{width:calc(100% - 40px)}
+  .cs-hero{min-height:720px}
+  .cs-hero-inner{padding-top:22px}
+  .cs-top-label{display:none}
+  .cs-hero-top{font-size:9px;letter-spacing:1.2px}
+  .cs-hero-copy{padding:65px 0}
+  .cs-hero h1{letter-spacing:-1.8px;font-size:44px}
+  .cs-hero-copy>p{font-size:15px;line-height:1.8}
+  .cs-actions{gap:15px;margin-top:27px}
+  .cs-hero-bottom{font-size:10px;align-items:flex-start}
+  .cs-video-control{flex-shrink:0;font-size:10px}
+  .cs-intro-grid{grid-template-columns:1fr;gap:25px}
+  .cs-intro-right{padding:25px}
+  .cs-initiatives{grid-template-columns:1fr;margin-top:30px;gap:20px}
+  .cs-initiative{padding:28px}
+  .cs-values-inner{flex-direction:column;gap:20px;align-items:flex-start;padding-block:25px}
+  .cs-updates-heading{padding-top:60px}
 }
+@media(prefers-reduced-motion:reduce){.cs-page *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+`}</style>
+    <VideoHero />
+    
+    <section className="cs-intro-modern" id="cs-initiatives" aria-labelledby="cs-intro-title">
+      <div className="cs-container">
+        <div className="cs-intro-grid">
+          <div className="cs-intro-left">
+            <span className="cs-eyebrow">ROOTED IN CARE. OPEN TO EVERYONE.</span>
+            <h2 id="cs-intro-title">Small acts of care.<br /><span>Meaningful community connections.</span></h2>
+          </div>
+          <div className="cs-intro-right">
+            <p>At ABC Autism Behavioral Center, our commitment reaches beyond the therapy room. We believe that access to essentials and opportunities to come together help build a more connected community.</p>
+            <p>Our initiatives put that belief into practice.</p>
+          </div>
+        </div>
+        <div className="cs-initiatives">{CATEGORIES.map((c, i) => <Initiative key={c.id} category={c} index={i} />)}</div>
+      </div>
+    </section>
 
-export default CommunityService;
+    <section className="cs-values" aria-label="Our community approach">
+      <div className="cs-container cs-values-inner">
+        <div><Heart size={22} /><span>People at the heart</span></div>
+        <div><Droplets size={22} /><span>Care in everyday life</span></div>
+        <div><Users size={22} /><span>Connection through community</span></div>
+      </div>
+    </section>
+
+    <div className="cs-updates-heading cs-container">
+      <span className="cs-eyebrow">FROM OUR COMMUNITY</span>
+      <h2>Every initiative has a story.</h2>
+      <p>Explore the latest news, moments and updates from our community services.</p>
+    </div>
+
+    {CATEGORIES.filter(c => CONTENT.sections[c.id]).map((c, i) => <PostsSection key={c.id} category={c} index={i} />)}
+  </main></MotionConfig>;
+}
