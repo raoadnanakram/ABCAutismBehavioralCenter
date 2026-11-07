@@ -1,188 +1,181 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Droplets, ShieldCheck, HeartHandshake, MapPin, Clock, Phone } from 'lucide-react';
-import { usePosts, PostCard, PostModal } from '../Components/PostParts';
+import { MotionConfig, motion } from 'framer-motion';
+import { ArrowDown, Droplets, Trophy } from 'lucide-react';
+import { usePosts } from '../Components/PostParts';
+import { BRAND, CATEGORIES, CommunityCard, TriBar } from '../Components/CommunityParts';
 
-/* ------------------------------------------------------------------
-   Colors (same scheme as the Conditions page)
-   Navy: #003B5C  |  Page bg: #F8F9FA  |  Text: slate
-------------------------------------------------------------------- */
+/* ==========================================================================
+   Community Services page
+   - Two sections, each with its own posts:  ABC Filtration Plant, ABC Cricket Stadium
+   - Posts are managed in  Admin Dashboard > ABC Filtration Plant / ABC Cricket Stadium
+   - Page text is in CONTENT below, edit it here any time.
+========================================================================== */
 
-// TODO: Replace text / numbers below with your real plant details.
-// Photos and updates are added from Admin Dashboard > Community Services.
-const PLANT = {
-  name: 'ABC Filtration Plant',
-  tagline: 'Clean, safe drinking water for our families and neighbours.',
-  intro:
-    'The ABC Filtration Plant is a community initiative of ABC Autism Behavioral Center. It provides filtered drinking water to families, children and residents around the center, so that safe water is never a barrier to health.',
-  facts: [
-    { label: 'Water served daily', value: '5,000 L' },
-    { label: 'Filtration stages', value: '5' },
-    { label: 'Cost to families', value: 'Free' },
-  ],
-  steps: [
-    { title: 'Intake', text: 'Raw water is drawn and passed through a sediment filter to remove sand and visible particles.' },
-    { title: 'Carbon filtration', text: 'Activated carbon removes odor, taste and chlorine residues.' },
-    { title: 'Membrane purification', text: 'A fine membrane removes dissolved impurities and harmful microorganisms.' },
-    { title: 'Testing and dispensing', text: 'Water is checked regularly before it is dispensed to the community.' },
-  ],
-  benefits: [
-    { icon: Droplets, title: 'Safe drinking water', text: 'Filtered water that meets everyday drinking standards.' },
-    { icon: ShieldCheck, title: 'Regularly maintained', text: 'Filters are cleaned and replaced on a fixed schedule.' },
-    { icon: HeartHandshake, title: 'Open to everyone', text: 'Available to families and residents in our community.' },
-  ],
-  info: [
-    { icon: MapPin, label: 'Location', value: 'ABC Autism Behavioral Center, Lahore' },
-    { icon: Clock, label: 'Collection timings', value: 'Mon - Sat, 9:00 AM - 5:00 PM' },
-    { icon: Phone, label: 'Questions', value: 'Call or WhatsApp our front desk' },
-  ],
+const CONTENT = {
+  hero: {
+    eyebrow: 'Community Services',
+    title: 'Care that reaches beyond the therapy room',
+    text: 'At ABC Autism Behavioral Center we believe a strong community helps every child grow. Our community services bring clean water and the joy of sport to the families and neighbours around us.',
+  },
+  sections: {
+    filtration: {
+      id: 'filtration-plant',
+      icon: Droplets,
+      tagline: 'Clean, safe drinking water for our community',
+      intro:
+        'The ABC Filtration Plant is a community service of ABC Autism Behavioral Center. It was set up so that children, families and neighbours around us can have access to filtered drinking water. Follow the posts below for news, photos and updates from the plant.',
+      empty: 'Updates from the ABC Filtration Plant will appear here soon.',
+    },
+    cricket: {
+      id: 'cricket-stadium',
+      icon: Trophy,
+      tagline: 'A place to play, belong and cheer together',
+      intro:
+        'The ABC Cricket Stadium is our community sports initiative. It brings children, young people and families together through the joy of cricket, teamwork and friendly competition. Match days, events and special moments from the ground are shared below.',
+      empty: 'Updates from the ABC Cricket Stadium will appear here soon.',
+    },
+  },
+  cta: {
+    title: 'Want to know more about our community services?',
+    text: 'Visit us, call us or send a message. We would love to hear from you.',
+  },
 };
 
-function CommunityService() {
-  const { items: posts, loading } = usePosts('community');
-  const [open, setOpen] = useState(null);
-  const heroImage = (posts.find((p) => p.image) || {}).image;
+function PostsSection({ category }) {
+  const meta = CONTENT.sections[category.id];
+  const Icon = meta.icon;
+  const { items, loading, error } = usePosts(category.id);
 
   return (
-    <div className="bg-[#F8F9FA] text-slate-700">
-      {/* Hero */}
-      <section className="bg-[#003B5C] text-white">
-        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
-          <p className="text-sm text-sky-200 mb-3">Community Services</p>
-          <h1 className="text-4xl md:text-5xl font-bold max-w-3xl leading-tight">
-            Caring for our community beyond the therapy room
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg text-sky-100">
-            ABC Autism Behavioral Center runs services that support families and neighbours
-            in everyday life. Our first initiative is the {PLANT.name}.
-          </p>
-          <a
-            href="#filtration-plant"
-            className="inline-block mt-8 bg-white text-[#003B5C] px-6 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors"
+    <section id={meta.id} className="scroll-mt-28 py-16 md:py-20" aria-labelledby={`${meta.id}-title`}>
+      <div className="mx-auto max-w-6xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+          className="max-w-3xl"
+        >
+          <span
+            className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg"
+            style={{ background: category.accent }}
           >
-            See the filtration plant
-          </a>
-        </div>
-      </section>
+            <Icon className="h-6 w-6" aria-hidden="true" />
+          </span>
+          <h2 id={`${meta.id}-title`} className="mt-4 text-3xl font-extrabold tracking-tight text-[#003B5C] md:text-4xl">
+            {category.label}
+          </h2>
+          <TriBar className="mt-3" />
+          <p className="mt-4 text-lg font-medium" style={{ color: category.accent }}>
+            {meta.tagline}
+          </p>
+          <p className="mt-3 leading-relaxed text-slate-600">{meta.intro}</p>
+        </motion.div>
 
-      {/* Filtration plant */}
-      <section id="filtration-plant" className="max-w-6xl mx-auto px-6 py-16 md:py-20 scroll-mt-24">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#003B5C]">{PLANT.name}</h2>
-            <p className="mt-2 text-lg text-[#003B5C]/80">{PLANT.tagline}</p>
-            <p className="mt-5 leading-relaxed">{PLANT.intro}</p>
-          </div>
-
-          {/* Main image slot */}
-          <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#003B5C]/10 flex items-center justify-center border border-[#003B5C]/15">
-            {heroImage ? (
-              <img src={heroImage} alt={PLANT.name} className="w-full h-full object-cover" />
-            ) : (
-              <Droplets className="w-16 h-16 text-[#003B5C]/40" aria-hidden="true" />
-            )}
-          </div>
-        </div>
-
-        {/* Facts */}
-        <dl className="mt-12 grid sm:grid-cols-3 gap-4">
-          {PLANT.facts.map((f) => (
-            <div key={f.label} className="bg-white rounded-xl border border-slate-200 p-6">
-              <dt className="text-sm text-slate-500">{f.label}</dt>
-              <dd className="mt-1 text-3xl font-bold text-[#003B5C]">{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* How it works */}
-      <section className="bg-white border-y border-slate-200">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#003B5C]">How the water is filtered</h2>
-          <ol className="mt-8 grid md:grid-cols-2 gap-5">
-            {PLANT.steps.map((s, i) => (
-              <li key={s.title} className="flex gap-4 rounded-xl bg-[#F8F9FA] p-5 border border-slate-200">
-                <span className="shrink-0 w-9 h-9 rounded-full bg-[#003B5C] text-white font-semibold flex items-center justify-center">
-                  {i + 1}
-                </span>
-                <div>
-                  <h3 className="font-semibold text-[#003B5C]">{s.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed">{s.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#003B5C]">Why it matters</h2>
-        <div className="mt-8 grid md:grid-cols-3 gap-5">
-          {PLANT.benefits.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="bg-white rounded-xl border border-slate-200 p-6">
-              <div className="w-11 h-11 rounded-lg bg-[#003B5C]/10 flex items-center justify-center mb-4">
-                <Icon className="w-5 h-5 text-[#003B5C]" aria-hidden="true" />
-              </div>
-              <h3 className="font-semibold text-[#003B5C]">{title}</h3>
-              <p className="mt-1 text-sm leading-relaxed">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Updates (added from Admin Dashboard > Community Services) */}
-      <section className="max-w-6xl mx-auto px-6 pb-16">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#003B5C]">Latest updates and photos</h2>
-        {loading ? (
-          <p className="mt-6 text-slate-500">Loading...</p>
-        ) : posts.length === 0 ? (
-          <p className="mt-6 text-slate-500">Updates from our community services will appear here.</p>
-        ) : (
-          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((item) => (
-              <PostCard key={item.id} item={item} onOpen={setOpen} />
-            ))}
-          </div>
-        )}
-      </section>
-
-
-      {/* Visit info + CTA */}
-      <section className="bg-[#003B5C] text-white">
-        <div className="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold">Visit or ask about the plant</h2>
-            <ul className="mt-6 space-y-4">
-              {PLANT.info.map(({ icon: Icon, label, value }) => (
-                <li key={label} className="flex items-start gap-3">
-                  <Icon className="w-5 h-5 mt-0.5 text-sky-200" aria-hidden="true" />
-                  <div>
-                    <p className="text-sm text-sky-200">{label}</p>
-                    <p className="font-medium">{value}</p>
-                  </div>
-                </li>
+        <div className="mt-10">
+          {loading ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-80 animate-pulse rounded-2xl bg-slate-200/70" />
               ))}
-            </ul>
-          </div>
-          <div className="flex flex-wrap gap-3 md:justify-end">
-            <Link
-              to="/contact"
-              className="bg-white text-[#003B5C] px-6 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors"
-            >
-              Contact us
-            </Link>
-            <Link
-              to="/news-events"
-              className="border border-white/70 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-            >
-              See news and events
-            </Link>
-          </div>
+            </div>
+          ) : error ? (
+            <p className="rounded-2xl bg-white p-8 text-center text-slate-500 shadow-sm">
+              Posts could not be loaded right now. Please try again later.
+            </p>
+          ) : items.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-10 text-center text-slate-500">
+              {meta.empty}
+            </p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {items.map((post, i) => (
+                <CommunityCard key={post.id} post={post} accent={category.accent} index={i} />
+              ))}
+            </div>
+          )}
         </div>
-      </section>
-      {open && <PostModal item={open} onClose={() => setOpen(null)} />}
-    </div>
+      </div>
+    </section>
+  );
+}
+
+function CommunityService() {
+  return (
+    <MotionConfig reducedMotion="user">
+      <div className="bg-[#F8F9FA] text-slate-700">
+        {/* ---------- Hero ---------- */}
+        <section className="relative overflow-hidden bg-[#003B5C] text-white">
+          <span className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full opacity-25 blur-3xl" style={{ background: BRAND.teal }} />
+          <span className="pointer-events-none absolute -bottom-28 left-1/3 h-72 w-72 rounded-full opacity-20 blur-3xl" style={{ background: BRAND.pink }} />
+          <span className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full opacity-20 blur-3xl" style={{ background: BRAND.yellow }} />
+
+          <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="max-w-3xl"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.2em]" style={{ color: BRAND.yellow }}>
+                {CONTENT.hero.eyebrow}
+              </p>
+              <h1 className="mt-4 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">{CONTENT.hero.title}</h1>
+              <TriBar className="mt-5" />
+              <p className="mt-6 text-lg leading-relaxed text-sky-100">{CONTENT.hero.text}</p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                {CATEGORIES.map((c) => (
+                  <a
+                    key={c.id}
+                    href={`#${CONTENT.sections[c.id].id}`}
+                    className="group inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                    style={{ background: c.accent }}
+                  >
+                    {c.label}
+                    <ArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ---------- The two sections ---------- */}
+        {CATEGORIES.map((c, i) => (
+          <div key={c.id} className={i % 2 === 1 ? 'bg-white' : ''}>
+            <PostsSection category={c} />
+          </div>
+        ))}
+
+        {/* ---------- Call to action ---------- */}
+        <section className="relative overflow-hidden bg-[#003B5C] text-white">
+          <span className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full opacity-25 blur-3xl" style={{ background: BRAND.pink }} />
+          <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-6 py-16 md:grid-cols-[1fr_auto]">
+            <div>
+              <h2 className="text-2xl font-extrabold md:text-3xl">{CONTENT.cta.title}</h2>
+              <p className="mt-2 text-sky-100">{CONTENT.cta.text}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/contact"
+                className="rounded-full px-7 py-3 text-sm font-bold text-[#003B5C] shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                style={{ background: BRAND.yellow }}
+              >
+                Contact us
+              </Link>
+              <Link
+                to="/news-events"
+                className="rounded-full border border-white/60 px-7 py-3 text-sm font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+              >
+                News &amp; Events
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    </MotionConfig>
   );
 }
 

@@ -100,6 +100,10 @@ const connectDB = async () => {
         INDEX idx_section_date (section, post_date)
       )`);
 
+    // Community Services now has two sections: 'filtration' and 'cricket'.
+    // Any older post saved under the single 'community' section moves to the Filtration Plant.
+    await pool.query("UPDATE posts SET section = 'filtration' WHERE section = 'community'");
+
     // All pictures of a post, in order (the first one is the cover)
     await pool.query(`
       CREATE TABLE IF NOT EXISTS post_images (

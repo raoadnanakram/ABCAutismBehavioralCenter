@@ -17,6 +17,7 @@ import BookAppointment from './Pages/BookAppointment';
 import Careerpage from './Pages/Careerpage'; // Career page (file name: Careerpage.jsx)
 import CommunityService from './Pages/Communityservice'; // NEW
 import NewsEvents from './Pages/NewsEvents'; // NEW
+import CommunityPost from './Pages/CommunityPost'; // NEW
 import FAQ from './Pages/FAQ';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
 import TermsOfService from './Pages/TermsOfService';
@@ -135,6 +136,7 @@ function Layout() {
           <Route path="/book-a-free-consult" element={<BookAppointment />} />
           <Route path="/careers" element={<Careerpage />} />
           <Route path="/community-services" element={<CommunityService />} />
+          <Route path="/community-services/:id" element={<CommunityPost />} />
           <Route path="/news-events" element={<NewsEvents />} />
 
           {/* Individual Service Sub-Pages Routes */}

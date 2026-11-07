@@ -31,7 +31,8 @@ const TABS = [
   { id: 'contact', label: 'Contact Messages', icon: '✉️' },
   { id: 'career', label: 'Career Applications', icon: '💼' },
   { id: 'news', label: 'News & Events', icon: '📰' },
-  { id: 'community', label: 'Community Services', icon: '🤝' },
+  { id: 'filtration', label: 'ABC Filtration Plant', icon: '💧' },
+  { id: 'cricket', label: 'ABC Cricket Stadium', icon: '🏏' },
   { id: 'security', label: 'Security & System', icon: '🔒' },
 ];
 
@@ -65,7 +66,8 @@ const SUBTITLE = {
   contact: META.contact.blurb,
   career: META.career.blurb,
   news: 'Add events with a picture, date and details',
-  community: 'Add community photos and updates',
+  filtration: 'Posts for the ABC Filtration Plant section',
+  cricket: 'Posts for the ABC Cricket Stadium section',
   security: 'System health and account safety',
 };
 
@@ -1729,7 +1731,7 @@ export default function AdminDashboard() {
             />
           )}
 
-          {(tab === 'news' || tab === 'community') && <AdminPosts key={tab} section={tab} say={say} />}
+          {(tab === 'news' || tab === 'filtration' || tab === 'cricket') && <AdminPosts key={tab} section={tab} say={say} />}
 
           {tab === 'security' && <SecurityTab sys={sys} logins={logins} pw={pw} setPw={setPw} changePw={changePw} />}
 

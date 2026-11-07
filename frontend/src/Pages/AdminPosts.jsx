@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { MONTHS, parseDate, formatDate, picturesOf } from '../Components/PostParts';
+import { CATEGORIES, categoryOf } from '../Components/CommunityParts';
 
-/* Admin tab used for both "News & Events" (section = 'news')
-   and "Community Services" (section = 'community').
+/* Admin tab used for "News & Events" (section = 'news') and for the two
+   Community Services sections: 'filtration' (ABC Filtration Plant) and 'cricket' (ABC Cricket Stadium).
    Each post can have up to 10 pictures; the first one is the cover. */
 
 const MAX_PICS = 10;
@@ -11,13 +12,21 @@ const MAX_PICS = 10;
 const COPY = {
   news: {
     noun: 'event',
+    listTitle: 'News & Events',
     heading: 'News & Events',
     help: 'Add an event or news item. It appears on the News & Events page with the month and date on the picture.',
   },
-  community: {
-    noun: 'update',
-    heading: 'Community Services',
-    help: 'Add photos and an update. It appears on the Community Services page with the month and date on the picture.',
+  filtration: {
+    noun: 'post',
+    listTitle: 'ABC Filtration Plant posts',
+    heading: 'ABC Filtration Plant',
+    help: 'Add a post for the ABC Filtration Plant section of the Community Services page. Visitors can open it to read more and see all photos.',
+  },
+  cricket: {
+    noun: 'post',
+    listTitle: 'ABC Cricket Stadium posts',
+    heading: 'ABC Cricket Stadium',
+    help: 'Add a post for the ABC Cricket Stadium section of the Community Services page. Visitors can open it to read more and see all photos.',
   },
 };
 
@@ -25,7 +34,7 @@ const today = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
-const EMPTY = () => ({ id: null, title: '', content: '', date: today(), images: [] });
+const EMPTY = (category) => ({ id: null, category, title: '', content: '', date: today(), images: [] });
 const idFromUrl = (url) => Number(String(url).split('/').pop());
 
 // Shrinks the picture in the browser (max 1600px, JPEG) so uploads stay small and fast.
@@ -69,9 +78,10 @@ function Badge({ date }) {
 
 export default function AdminPosts({ section, say }) {
   const copy = COPY[section];
+  const isCommunity = section === 'filtration' || section === 'cricket';
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState(EMPTY());
+  const [form, setForm] = useState(EMPTY(section));
   const [saving, setSaving] = useState(false);
   const [confirmId, setConfirmId] = useState(null);
   const fileRef = useRef(null);
@@ -107,7 +117,7 @@ export default function AdminPosts({ section, say }) {
   const reset = (discard) => {
     if (discard) discardFresh();
     else fresh.current = new Set();
-    setForm(EMPTY());
+    setForm(EMPTY(section));
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -145,6 +155,25 @@ export default function AdminPosts({ section, say }) {
     setForm((f) => ({ ...f, images: f.images.filter((i) => i.key !== img.key) }));
   };
 
+  // swaps one picture for another file, keeping its place in the order
+  const replacePicture = async (img, file) => {
+    if (!file) return;
+    try {
+      const out = await compressImage(file);
+      setForm((f) => ({ ...f, images: f.images.map((i) => (i.key === img.key ? { ...i, src: out.preview, uploading: true } : i)) }));
+      const r = await api('/admin/media', { method: 'POST', body: JSON.stringify({ data: out.data }) });
+      if (img.id && fresh.current.has(img.id)) {
+        fresh.current.delete(img.id);
+        api('/admin/media/' + img.id, { method: 'DELETE' }).catch(() => {});
+      }
+      fresh.current.add(r.id);
+      setForm((f) => ({ ...f, images: f.images.map((i) => (i.key === img.key ? { ...i, id: r.id, uploading: false } : i)) }));
+    } catch (err) {
+      say(err.message);
+      setForm((f) => ({ ...f, images: f.images.map((i) => (i.key === img.key ? { ...img, uploading: false } : i)) }));
+    }
+  };
+
   const makeCover = (img) =>
     setForm((f) => ({ ...f, images: [img, ...f.images.filter((i) => i.key !== img.key)] }));
 
@@ -154,8 +183,9 @@ export default function AdminPosts({ section, say }) {
     if (uploading) return say('Please wait, pictures are still uploading');
     setSaving(true);
     try {
+      const category = isCommunity ? form.category : section;
       const body = {
-        section,
+        section: category,
         title: form.title,
         content: form.content,
         date: form.date,
@@ -163,7 +193,8 @@ export default function AdminPosts({ section, say }) {
       };
       if (form.id) await api('/admin/posts/' + form.id, { method: 'PUT', body: JSON.stringify(body) });
       else await api('/admin/posts', { method: 'POST', body: JSON.stringify(body) });
-      say(form.id ? 'Changes saved ✓' : 'Published ✓');
+      const moved = category !== section ? ` in ${categoryOf(category).label}` : '';
+      say((form.id ? 'Changes saved ✓' : 'Published ✓') + moved);
       reset(false);
       load();
     } catch (err) {
@@ -176,6 +207,7 @@ export default function AdminPosts({ section, say }) {
     discardFresh();
     setForm({
       id: p.id,
+      category: p.section || section,
       title: p.title,
       content: p.content,
       date: p.date,
@@ -216,6 +248,25 @@ export default function AdminPosts({ section, say }) {
             <input id={`t-${section}`} className={field} maxLength={200} value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Short, clear title" />
           </div>
+
+          {isCommunity && (
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-500" htmlFor={`cat-${section}`}>
+                Community Services Category
+              </label>
+              <select id={`cat-${section}`} className={field} value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                {CATEGORIES.map((c) => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
+                ))}
+              </select>
+              {form.category !== section && (
+                <p className="mt-1 text-xs text-[#F5456B]">
+                  This post will be saved in {categoryOf(form.category).label}, not in this list.
+                </p>
+              )}
+            </div>
+          )}
 
           <div>
             <label className="mb-1 block text-xs font-semibold text-slate-500" htmlFor={`d-${section}`}>
@@ -269,17 +320,24 @@ export default function AdminPosts({ section, say }) {
                         </span>
                       )}
                     </div>
-                    <div className="flex divide-x divide-slate-100 text-[11px] font-semibold">
-                      {i !== 0 ? (
-                        <button type="button" disabled={img.uploading} onClick={() => makeCover(img)}
-                          className="flex-1 py-1.5 text-[#1CA7C7] hover:bg-slate-50 disabled:opacity-40">
-                          Make cover
-                        </button>
-                      ) : (
-                        <span className="flex-1 py-1.5 text-center text-slate-300">Main</span>
-                      )}
+                    <div className="divide-y divide-slate-100 text-[11px] font-semibold">
+                      <div className="flex divide-x divide-slate-100">
+                        {i !== 0 ? (
+                          <button type="button" disabled={img.uploading} onClick={() => makeCover(img)}
+                            className="flex-1 py-1.5 text-[#1CA7C7] hover:bg-slate-50 disabled:opacity-40">
+                            Make cover
+                          </button>
+                        ) : (
+                          <span className="flex-1 py-1.5 text-center text-slate-300">Main</span>
+                        )}
+                        <label className={`flex-1 cursor-pointer py-1.5 text-center text-[#003B5C] hover:bg-slate-50 ${img.uploading ? 'pointer-events-none opacity-40' : ''}`}>
+                          Replace
+                          <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only"
+                            onChange={(e) => { const f = e.target.files && e.target.files[0]; e.target.value = ''; replacePicture(img, f); }} />
+                        </label>
+                      </div>
                       <button type="button" disabled={img.uploading} onClick={() => removePicture(img)}
-                        className="flex-1 py-1.5 text-[#F5456B] hover:bg-slate-50 disabled:opacity-40">
+                        className="block w-full py-1.5 text-[#F5456B] hover:bg-slate-50 disabled:opacity-40">
                         Remove
                       </button>
                     </div>
@@ -321,7 +379,7 @@ export default function AdminPosts({ section, say }) {
 
       {/* ---------- list ---------- */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-        <h3 className="font-serif text-lg font-bold text-[#003B5C]">Published {copy.heading}</h3>
+        <h3 className="font-serif text-lg font-bold text-[#003B5C]">Published {copy.listTitle}</h3>
         <p className="mt-0.5 text-xs text-slate-400">{items.length} item{items.length === 1 ? '' : 's'}, newest first</p>
 
         {loading ? (

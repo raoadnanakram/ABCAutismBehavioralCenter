@@ -187,7 +187,8 @@ router.get(
 );
 
 /* ---------- News & Events / Community Services posts ---------- */
-const SECTIONS = ['news', 'community'];
+const SECTIONS = ['news', 'filtration', 'cricket'];
+const COMMUNITY = ['filtration', 'cricket']; // posts can be moved between these two
 const MAX_IMG = 4 * 1024 * 1024;
 const MAX_PICS = 10;
 
@@ -318,8 +319,16 @@ router.put(
   '/posts/:id',
   h(async (req, res) => {
     const id = Number(req.params.id) || 0;
-    const [rows] = await pool.query('SELECT id FROM posts WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT id, section FROM posts WHERE id = ?', [id]);
     if (!rows.length) return res.status(404).json({ message: 'Post not found' });
+    // category change (Filtration Plant <-> Cricket Stadium)
+    let section = rows[0].section;
+    const want = (req.body || {}).section;
+    if (want && want !== section) {
+      if (!COMMUNITY.includes(want) || !COMMUNITY.includes(section))
+        return res.status(400).json({ message: 'This post cannot be moved to that category.' });
+      section = want;
+    }
     const post = readPost(req.body);
     if (post.error) return res.status(400).json({ message: post.error });
     let pics = null;
@@ -327,7 +336,8 @@ router.put(
       pics = await checkImageIds(req.body.images, id);
       if (pics.error) return res.status(400).json({ message: pics.error });
     }
-    await pool.query('UPDATE posts SET title = ?, content = ?, post_date = ? WHERE id = ?', [
+    await pool.query('UPDATE posts SET section = ?, title = ?, content = ?, post_date = ? WHERE id = ?', [
+      section,
       post.title,
       post.content,
       post.date,
