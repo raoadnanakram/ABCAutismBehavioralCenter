@@ -60,7 +60,7 @@ const leadershipData = [
     image: drBilal,
     qualification:
       "PhD Speech therapy from Tehran University of Medical sciences (Continue)",
-    experience: "5+ Years",
+    experience: "6+ Years",
     specialization: "Center Administration & Child Care Advocacy",
     areasOfExpertise: [
       "Healthcare Leadership",
@@ -90,7 +90,7 @@ Chairman, Autism Behavioral Center (ABC)`,
     image: drMonina,
     qualification:
       "MPhil Food Science (FST, UET) Doctor of Nutrition & Dietetics (DND, UVAS)",
-    experience: "2+ Years",
+    experience: "5+ Years",
     specialization: "Consultant Nutritionist & Dietitian",
     areasOfExpertise: [
       "Disease-Specific & Therapeutic Nutrition",

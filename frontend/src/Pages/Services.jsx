@@ -2,72 +2,84 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+// ===== Local Images (src/assets folder) =====
+import speechImg from '../assets/speechtherapy.jpg';
+import specialEduImg from '../assets/SpecialEducation.jpg';
+import physioImg from '../assets/Physio.jpg';
+import occupationImg from '../assets/Occupation.jpg';
+import dayCareImg from '../assets/daycare.jpg';
+import montessoriImg from '../assets/Montessori.jpg';
+import dysphagiaImg from '../assets/Dysphagia1.jpg';
+import abaImg from '../assets/ABA2.jpg';
+import nutritionImg from '../assets/Nutrition.jpg';
+
 function Services() {
   const servicesData = [
     {
       title: "Speech & Language Therapy",
       desc: "Improving articulation, expressive/receptive language capabilities, and functional communication skills.",
-      img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=600",
+      img: speechImg,
       path: "/Pages/speech-therapy"
     },
     {
       title: "Nutrition Therapy & Dietetics",
       desc: "Specialized pediatric dietary plans and nutritional guidance tailored to support growth and sensory needs.",
-      img: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600",
+      img: nutritionImg,
       path: "/Pages/nutrition-dietetics"
     },
     {
       title: "Special Education",
       desc: "Customized academic and cognitive learning frameworks designed to unlock every child's unique potential.",
-      img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=600",
+      img: specialEduImg,
       path: "/Pages/special-education"
     },
     {
       title: "Physiotherapy",
       desc: "Improving gross motor skills, core posture, physical strength, and overall bodily coordination.",
-      img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600",
+      img: physioImg,
       path: "/Pages/physiotherapy"
     },
     {
       title: "Occupational Therapy & Sensory Integration",
       desc: "Developing fine motor skills, independence in daily routines, and healthy sensory regulation.",
-      img: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&q=80&w=600",
+      img: occupationImg,
       path: "/Pages/occupational-therapy"
     },
     {
       title: "Day Care",
       desc: "A secure, nurturing, and highly structured environment designed for safe supervision and holistic care.",
-      img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600",
+      img: dayCareImg,
       path: "/Pages/day-care"
     },
     {
       title: "Montessori & Early Childhood Education",
       desc: "Guided interactive learning that promotes natural confidence, attention spans, and self-reliance.",
-      img: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=600",
+      img: montessoriImg,
       path: "/Pages/montessori-education"
     },
     {
       title: "Dysphagia Management & NG Tube Feeding",
       desc: "Specialized clinical swallowing therapy and tube feeding support administered by expert practitioners.",
-      img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600",
+      img: dysphagiaImg,
       path: "/Pages/dysphagia-management"
     },
     {
       title: "ABA Therapy & Psychology",
       desc: "Evidence-based behavior analysis and psychological counseling fostering positive reinforcement and emotional health.",
-      img: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=600",
+      img: abaImg,
       path: "/Pages/aba-psychology"
     }
   ];
+
   return (
     <div className="w-full font-sans text-[#334155] bg-[#FFFDF9] overflow-x-hidden">
-      
+
       {/* 1. HERO SECTION */}
       <section className="relative w-full bg-[#003B5C] text-white py-24 lg:py-32 px-5 sm:px-8 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#003B5C]/95 via-[#003B5C]/90 to-[#00A8CD]/75 z-0" />
-        
+
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-block"
@@ -77,7 +89,7 @@ function Services() {
             </span>
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -86,7 +98,7 @@ function Services() {
             Our Services & Expert Care in <span className="text-[#F5A623]">LAHORE</span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -95,13 +107,13 @@ function Services() {
             “Comprehensive, Personalized & Child-Centered Care for Every Stage of Development”
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="pt-4"
           >
-            <Link 
+            <Link
               to="/book-a-free-consult"
               className="inline-block bg-[#FF5271] hover:bg-[#e04360] text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-[#FF5271]/30 transition-all duration-300 transform hover:-translate-y-0.5"
             >
@@ -114,22 +126,23 @@ function Services() {
       {/* 2. INTRODUCTION SECTION */}
       <section className="py-20 px-5 sm:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
             className="lg:col-span-6 rounded-3xl overflow-hidden shadow-xl border-4 border-white"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=1000" 
-              alt="Child therapy and care" 
-              className="w-full h-[400px] object-cover hover:scale-105 transition duration-700" 
+            {/* ABA2 image yahan laga di gayi hai */}
+            <img
+              src={abaImg}
+              alt="Child therapy and care"
+              className="w-full h-[400px] object-cover hover:scale-105 transition duration-700"
             />
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -146,7 +159,7 @@ function Services() {
               At ABC Autism & Behavioral Center, Our Centre is a multidisciplinary healthcare, rehabilitation, education, and child development centre dedicated to helping individuals achieve better health, development, learning, independence, and quality of life.
 
 Our team of qualified professionals—including Nutrition & Dietetics, Physiotherapy, Speech & Language Therapy, Occupational Therapy & Sensory Integration, Special Education, ABA therapy and Early Childhood Education—works collaboratively to provide personalized, evidence-based care under one roof.
-</p>
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               {[
                 "Personalized Care",
@@ -170,13 +183,13 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
       {/* 3 & 4. 9 SERVICES CARDS GRID WITH HOVER & RED/BLUE BUTTONS */}
       <section className="py-20 bg-[#F1F5F9] border-y border-slate-200 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto">
-          
+
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="bg-[#FFF3CD] text-[#856404] font-bold text-xs uppercase tracking-widest px-4 py-1.5 rounded-full border border-[#FFEEBA]">
               OUR SERVICES
             </span>
             <h2 className="text-4xl sm:text-5xl font-extrabold text-[#003B5C]">
-                Our Services & Expert Care in <span className="text-[#F5A623]">ABC Center</span>
+              Our Services & Expert Care in <span className="text-[#F5A623]">ABC Center</span>
             </h2>
             <p className="text-slate-600 text-base sm:text-lg font-medium">
               Transformative Care for Your Child's Recovery Journey
@@ -198,10 +211,10 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
                   {/* Image Container */}
                   <div className="p-4 pb-0">
                     <div className="relative h-56 rounded-2xl overflow-hidden shadow-sm">
-                      <img 
-                        src={service.img} 
-                        alt={service.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                      <img
+                        src={service.img}
+                        alt={service.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
                     </div>
                   </div>
@@ -219,15 +232,15 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
 
                 {/* Bottom Buttons: Learn More (Blue text/bg) & Book Appointment (Solid Red Background #FF5271) */}
                 <div className="p-6 pt-3 grid grid-cols-2 gap-3">
-                  <Link 
+                  <Link
                     to={service.path}
                     className="text-center bg-[#003B5C]/10 hover:bg-[#003B5C] hover:text-white text-[#003B5C] font-semibold py-3 px-3 rounded-xl text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center"
                   >
                     Learn More
                   </Link>
-                  
-                  <Link 
-                    to="/book-a-free-consult" 
+
+                  <Link
+                    to="/book-a-free-consult"
                     className="text-center bg-[#FF5271] hover:bg-[#e04360] text-white font-bold py-3 px-3 rounded-xl text-xs sm:text-sm transition-all shadow-md shadow-[#FF5271]/20 flex items-center justify-center transform hover:-translate-y-0.5"
                   >
                     Book Appointment
@@ -331,11 +344,10 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
         </div>
       </section>
 
-   
-{/* 3. MULTIDISCIPLINARY APPROACH (CHILD DEVELOPMENT CENTER) - BILKUL NEECHE */}
+      {/* 7. MULTIDISCIPLINARY APPROACH (CHILD DEVELOPMENT CENTER) */}
       <section className="py-20 bg-[#F1F5F9] border-t border-slate-200 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           <div className="lg:col-span-6 space-y-6">
             <span className="text-[#00A8CD] font-bold text-xs uppercase tracking-[0.2em] bg-[#00A8CD]/10 px-3.5 py-1.5 rounded-full border border-[#00A8CD]/20">
               CHILD DEVELOPMENT & FAMILY SUPPORT
@@ -344,13 +356,12 @@ Our team of qualified professionals—including Nutrition & Dietetics, Physiothe
               A Multidisciplinary Approach for Children
             </h2>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              
-We provide personalized, multidisciplinary support designed to understand each child’s unique strengths, needs, and developmental goals while supporting communication, learning, behavior, sensory development, and independence.
-</p>
-           
+              We provide personalized, multidisciplinary support designed to understand each child’s unique strengths, needs, and developmental goals while supporting communication, learning, behavior, sensory development, and independence.
+            </p>
+
             <div className="pt-2">
-              <Link 
-                to="/book-a-free-consult" 
+              <Link
+                to="/book-a-free-consult"
                 className="inline-block bg-[#FF5271] hover:bg-[#e04360] text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-[#FF5271]/30 transition-all duration-300"
               >
                 Book Child Consultation
@@ -383,10 +394,10 @@ We provide personalized, multidisciplinary support designed to understand each c
         </div>
       </section>
 
-      {/* 4. MULTIDISCIPLINARY APPROACH (ADULT REHABILITATION CENTER) - BILKUL NEECHE */}
+      {/* 8. MULTIDISCIPLINARY APPROACH (ADULT REHABILITATION CENTER) */}
       <section className="py-20 px-5 sm:px-8 max-w-7xl mx-auto">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           <div className="lg:col-span-6 space-y-6">
             <span className="text-[#FF5271] font-bold text-xs uppercase tracking-[0.2em] bg-[#FF5271]/10 px-3.5 py-1.5 rounded-full border border-[#FF5271]/20">
               ADULT HEALTH & WELLNESS
@@ -396,11 +407,11 @@ We provide personalized, multidisciplinary support designed to understand each c
             </h2>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
               We provide personalized, multidisciplinary support for adults focused on improving nutrition, physical function, communication, swallowing, healthy lifestyle habits, and overall quality of life.
-               </p>
-          
+            </p>
+
             <div className="pt-2">
-              <Link 
-                to="/book-a-free-consult" 
+              <Link
+                to="/book-a-free-consult"
                 className="inline-block bg-[#003B5C] hover:bg-[#002840] text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-[#003B5C]/30 transition-all duration-300"
               >
                 Book Adult Consultation
@@ -432,7 +443,6 @@ We provide personalized, multidisciplinary support designed to understand each c
 
         </div>
       </section>
-      
 
     </div>
   );

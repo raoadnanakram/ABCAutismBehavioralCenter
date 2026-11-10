@@ -1426,11 +1426,11 @@ const MissionSection = () => {
             </h2>
 
             <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
-              Our mission is to provide <strong className="text-white">integrated, personalized, and compassionate care</strong> for health, nutrition, rehabilitation, learning, and child development under one roof[cite: 1, 2].
+              Our mission is to provide <strong className="text-white">integrated, personalized, and compassionate care</strong> for health, nutrition, rehabilitation, learning, and child development under one roof.
             </p>
 
             <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
-              Through our multidisciplinary team and individualized care plans, we aim to address each person's unique needs, strengthen their abilities, promote independence, and empower children and families to achieve better health, development, and quality of life[cite: 1, 2].
+              Through our multidisciplinary team and individualized care plans, we aim to address each person's unique needs, strengthen their abilities, promote independence, and empower children and families to achieve better health, development, and quality of life.
             </p>
 
             <div className="pt-2">
@@ -1500,7 +1500,7 @@ const WhyChooseSection = () => {
             Why Choose ABC Centre?
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
-            We combine expert multidisciplinary therapy, evidence-based methods, and compassionate care to empower your child's journey[cite: 1, 2].
+            We combine expert multidisciplinary therapy, evidence-based methods, and compassionate care to empower your child's journey.
           </p>
         </motion.div>
 

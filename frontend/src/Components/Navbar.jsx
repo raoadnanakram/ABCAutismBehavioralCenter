@@ -38,7 +38,7 @@ function Navbar() {
   const socialLinks = [
     { label: 'Facebook', icon: 'fa-brands fa-facebook-f', href: 'https://facebook.com/ABCAutismBehavioralCenter', bg: '#1877F2', color: '#ffffff' },
     { label: 'Instagram', icon: 'fa-brands fa-instagram', href: 'https://instagram.com/abcautismbehavioral', isGradient: true, color: '#ffffff' },
-    { label: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/923001234567', bg: '#25D366', color: '#ffffff' },
+    { label: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/923458471692', bg: '#25D366', color: '#ffffff' },
     { label: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: 'https://linkedin.com/in/abcautismbehavioralcenter', bg: '#0A66C2', color: '#ffffff' },
   ];
 

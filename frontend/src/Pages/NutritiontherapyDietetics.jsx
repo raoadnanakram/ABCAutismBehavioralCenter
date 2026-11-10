@@ -26,8 +26,11 @@ import {
 } from "lucide-react";
 
 // Local Images Import
-import nutritionImg from "../assets/Nutrition.jpg";
-import occupationImg from "../assets/Occupation.jpg";
+
+import dysphagiaImg1 from '../assets/Nutrition.jpg';
+
+import drMonina from '../assets/dr-Monina.jpeg';
+
 
 /* =========================================================
     ANIMATION SYSTEM
@@ -149,7 +152,7 @@ const HeroSection = () => {
         >
           <div className="nutri-hero-img-frame">
             <img
-              src={nutritionImg}
+              src={dysphagiaImg1}
               alt="Clinical Nutrition and Dietetics"
               loading="lazy"
             />
@@ -212,7 +215,7 @@ const AboutSection = () => {
             viewport={viewport}
           >
             <div className="nutri-profile-frame">
-              <img src={occupationImg} alt="Ms. Momna - Consultant Nutritionist & Dietitian" />
+              <img src={drMonina} alt="Ms. Momna - Consultant Nutritionist & Dietitian" />
               <div className="nutri-profile-badge">
                 <Award size={24} />
                 <div>

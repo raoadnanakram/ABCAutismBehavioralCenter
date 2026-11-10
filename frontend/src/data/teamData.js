@@ -1,6 +1,5 @@
 import drAliRaza from "../assets/dr-AliRaza.jpeg";
 import drAtiya from "../assets/dr-Atiya.jpg";
-import drDua from "../assets/dr-Dua.jpg";
 import drMahnoor from "../assets/dr-Mahnoor.jpg";
 import drAlina from "../assets/dr-Alina.jpg";
 import drZobia from "../assets/dr-Zobia.jpeg";
@@ -28,7 +27,7 @@ export const teamMembers = [
     category: "Speech Therapy Department",
     image: drZobiaaba,
     qualification: "MS Speech & Language Pathology",
-    experience: "6+ Years",
+    experience: "3+ Years",
     specialization: "Pediatric Speech & Language Disorders",
     areasOfExpertise: [
       "Speech Delay & Articulation",
@@ -46,7 +45,7 @@ export const teamMembers = [
     category: "Speech Therapy Department",
     image: drAliRaza,
     qualification: "MA Special Education (IDD), Diploma in Behaviour Management (ASD), PGD Speech & Language Therapy",
-    experience: "7+ Years",
+    experience: "2+ Years",
     specialization: "Autism Spectrum Disorders & Behavior Management",
     areasOfExpertise: [
       "Special Education Planning",
@@ -64,7 +63,7 @@ export const teamMembers = [
     category: "Speech Therapy Department",
     image: drAlina,
     qualification: "BS Speech & Language Pathology",
-    experience: "3+ Years",
+    experience: "+ Years",
     specialization: "Early Intervention & Speech Clarity",
     areasOfExpertise: [
       "Early Language Acquisition",
@@ -74,33 +73,16 @@ export const teamMembers = [
     ],
     bio: "Ms. Alina Fatima is an aspiring Speech-Language Pathologist currently pursuing a Bachelor of Science in Speech-Language Pathology (BS-SLP). She is passionate about helping children and adults improve their speech, language, and communication skills, overcome communication difficulties, and express themselves with greater confidence in everyday life.\n\nShe completed a one-month clinical internship at Al-Rehman Hospital, where she gained practical exposure to speech and language therapy and patient care. She currently works as a Speech-Language Therapist at ABC Centre, providing therapy services while developing her clinical skills through hands-on experience.\n\nHer academic and clinical interests include the assessment, diagnosis, and treatment of speech, language, communication, and related disorders. She has a particular interest in working with children, learning new therapy techniques, and developing communication goals tailored to each individual's needs.\n\nHer professional goal is to become a skilled, confident, and compassionate Speech-Language Therapist. She is committed to continuous learning and to strengthening her professional knowledge and clinical expertise so that she can make a positive difference in the lives of people with communication difficulties."
   },
-  {
-    id: 4,
-    slug: "ms-dua-zainab",
-    name: "Ms. Dua Zainab",
-    designation: "Speech Language Pathologist",
-    category: "Speech Therapy Department",
-    image: drDua,
-    qualification: "MS Speech Therapy (UOL)",
-    experience: "3+ Years",
-    specialization: "Child Speech Development & Articulation",
-    areasOfExpertise: [
-      "Pediatric Speech Therapy",
-      "Receptive & Expressive Language",
-      "Fluency Building",
-      "Parental Coaching"
-    ],
-    bio: "Ms. Dua Zainab works closely with young learners to improve speech clarity, comprehension, and expressive abilities. She emphasizes structured home activities to reinforce progress made during clinic therapy."
-  },
+
   {
     id: 19,
     slug: "sania-qaisar",
-    name: "Sania Qaisar",
+    name: "Ms. Sania Qaisar",
     designation: "Speech Language Therapist (SLP)",
     category: "Speech Therapy Department",
     image: drSania,
     qualification: "BS Speech Language Therapy — Riphah International University",
-    experience: "4+ Years",
+    experience: "1+ Years",
     specialization: "Pediatric Speech & Articulation Rehabilitation",
     areasOfExpertise: [
       "Autism & ADHD Communication",
@@ -113,12 +95,12 @@ export const teamMembers = [
   {
     id: 20,
     slug: "taliya-speech-language-pathologist",
-    name: "Taliya",
+    name: "Ms. Taliya",
     designation: "Speech Language Pathologist (SLP)",
     category: "Speech Therapy Department",
     image: drTaliya,
     qualification: "BS Speech Language Pathology — Riphah International University",
-    experience: "3+ Years",
+    experience: "1+ Years",
     specialization: "Pediatric Communication & Developmental Care",
     areasOfExpertise: [
       "Autism Communication Therapy",
@@ -138,7 +120,7 @@ export const teamMembers = [
     category: "Occupational Therapy & Physiotherapy Department",
     image: drNaba,
     qualification: "MS Sports Physical Therapy, DPT",
-    experience: "8+ Years",
+    experience: "3+ Years",
     specialization: "Pediatric Physical Rehabilitation & Sensory Integration",
     areasOfExpertise: [
       "Sensory Processing Therapy",
@@ -156,7 +138,7 @@ export const teamMembers = [
     category: "Occupational Therapy & Physiotherapy Department",
     image: drMuhammadSaiulla,
     qualification: "DPT — King Edward Medical University / Mayo Hospital Lahore",
-    experience: "7 Years",
+    experience: "8+ Years",
     specialization: "Pediatric & Neurological Physical Rehabilitation",
     areasOfExpertise: [
       "Pediatric CP Physiotherapy",
@@ -174,7 +156,7 @@ export const teamMembers = [
     category: "Occupational Therapy & Physiotherapy Department",
     image: drAtiya,
     qualification: "BS Sports Sciences (GCU)",
-    experience: "4+ Years",
+    experience: "1+ Years",
     specialization: "Gross Motor Fitness & Physical Education",
     areasOfExpertise: [
       "Adaptive Sports Therapy",
@@ -194,7 +176,7 @@ export const teamMembers = [
     category: "ABA Therapy & Psychology Department",
     image: drZobia,
     qualification: "MS Clinical Psychology",
-    experience: "6+ Years",
+    experience: "3+ Years",
     specialization: "Cognitive Behavioral & Child Psychological Therapy",
     areasOfExpertise: [
       "Psychological Assessment",
@@ -212,7 +194,7 @@ export const teamMembers = [
     category: "ABA Therapy & Psychology Department",
     image: drqandeel,
     qualification: "BS Psychology, Certified ABA Practitioner",
-    experience: "4+ Years",
+    experience: "2+ Years",
     specialization: "Applied Behavior Analysis (ABA)",
     areasOfExpertise: [
       "ABA Early Intensive Behavioral Intervention",
@@ -225,12 +207,12 @@ export const teamMembers = [
   {
     id: 21,
     slug: "rafia-iqbal-applied-psychologist",
-    name: "Rafia Iqbal",
+    name: "Ms. Rafia Iqbal",
     designation: "Applied Psychologist / ABA Therapist",
     category: "ABA Therapy & Psychology Department",
     image: drRafia,
     qualification: "BS (Hons) Applied Psychology — University of the Punjab",
-    experience: "3+ Years",
+    experience: "2+ Years",
     specialization: "Psychological Assessment & Behavior Analysis",
     areasOfExpertise: [
       "Clinical Psychological Assessment",
@@ -250,7 +232,7 @@ export const teamMembers = [
     category: "Special Education Department",
     image: drRimsha,
     qualification: "MA Special Education",
-    experience: "6+ Years",
+    experience: "3+ Years",
     specialization: "Individualized Education Plans (IEP)",
     areasOfExpertise: [
       "Customized Learning Curriculum",
@@ -268,7 +250,7 @@ export const teamMembers = [
     category: "Special Education Department",
     image: drMahnoor,
     qualification: "MA Special Education",
-    experience: "4+ Years",
+    experience: "2+ Years",
     specialization: "Early Childhood Academic Adaptation",
     areasOfExpertise: [
       "Pre-Academic Skills Training",
@@ -288,7 +270,7 @@ export const teamMembers = [
     category: "Receptionists",
     image: "",
     qualification: "Bachelor of Arts",
-    experience: "3+ Years",
+    
     specialization: "Front Desk & Patient Coordination",
     areasOfExpertise: [
       "Client Management",
@@ -305,7 +287,6 @@ export const teamMembers = [
     category: "Receptionists",
     image: drSidra,
     qualification: "Bachelor of Commerce",
-    experience: "3+ Years",
     specialization: "Parent Guidance & Desk Operations",
     areasOfExpertise: [
       "Family Welcome Services",
@@ -324,7 +305,7 @@ export const teamMembers = [
     category: "Mentors",
     image: drGhafoor,
     qualification: "Senior Clinical Advisor",
-    experience: "15+ Years",
+    experience: "25+ Years",
     specialization: "Center Development & Staff Mentorship",
     areasOfExpertise: [
       "Clinical Program Supervision",
@@ -341,7 +322,7 @@ export const teamMembers = [
     category: "Mentors",
     image: sirBasit,
     qualification: "Consultant Medical Advisor",
-    experience: "12+ Years",
+    experience: "20+ Years",
     specialization: "Multidisciplinary Care Supervision",
     areasOfExpertise: [
       "Clinical Supervision",
@@ -358,7 +339,7 @@ export const teamMembers = [
     category: "Mentors",
     image: drMehmood,
     qualification: "Community Outreach Specialist",
-    experience: "10+ Years",
+    experience: "30+ Years",
     specialization: "Family Support & Community Integration",
     areasOfExpertise: [
       "Parent Empowerment",
@@ -377,7 +358,7 @@ export const teamMembers = [
     category: "Legal Advisor",
     image: raiShahzadImg,
     qualification: "LL.B, Advocate High Court",
-    experience: "10+ Years",
+    experience: "5+ Years",
     specialization: "Healthcare & Institutional Legal Consultancy",
     areasOfExpertise: [
       "Institutional Compliance",
