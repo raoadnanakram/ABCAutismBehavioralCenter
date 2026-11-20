@@ -277,7 +277,7 @@ export default function Contact() {
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-slate-600">Monday – Saturday</span>
-                  <span className="text-sm font-bold text-[#003B5C]">09 AM – 07 PM</span>
+                  <span className="text-sm font-bold text-[#003B5C]">09 AM – 09 PM</span>
                 </div>
                 <div className="h-px bg-slate-100" />
                 <p className="text-xs text-slate-400">{contactInfo.sundayHours}</p>

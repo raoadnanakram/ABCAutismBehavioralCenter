@@ -21,6 +21,226 @@ import {
   Palette,
 } from "lucide-react";
 
+/* =========================================================
+    HERO SHOWCASE (photo + floating cards) + EXTRA EFFECTS
+    -> Apni photo lagani ho to HERO_IMGS ki pehli entry ko
+       apne path se badal dein, e.g. "/images/hero.jpg"
+========================================================= */
+const HERO_IMGS = [
+  "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?auto=format&fit=crop&w=1600&q=80",
+];
+
+const SHOW_ICONS = {
+  heart: ["M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"],
+  sparkles: ["M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z", "M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"],
+  check: ["M22 11.08V12a10 10 0 1 1-5.93-9.14", "M22 4 12 14.01l-3-3"],
+  activity: ["M22 12h-4l-3 9L9 3l-3 9H2"],
+  shield: ["M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"],
+  message: ["M7.9 20A9 9 0 1 0 4 16.1L2 22Z"],
+  book: ["M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"],
+  utensils: ["M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2", "M7 2v20", "M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"],
+  smile: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z", "M8 14s1.5 2 4 2 4-2 4-2", "M9 9h.01", "M15 9h.01"],
+};
+
+const ShowIcon = ({ name }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {(SHOW_ICONS[name] || SHOW_ICONS.sparkles).map((d, i) => (
+      <path key={i} d={d} />
+    ))}
+  </svg>
+);
+
+const ShowBadge = ({ data, position }) => (
+  <div className={`fx-show-badge fx-show-badge-${position}`}>
+    <span className="fx-show-ico" style={{ color: data.color, background: `${data.color}1f` }}>
+      <ShowIcon name={data.icon} />
+    </span>
+    <div>
+      <strong>{data.title}</strong>
+      <span className="fx-sub">{data.sub}</span>
+    </div>
+  </div>
+);
+
+const HeroShowcase = ({ top, bottom, light = false, alt = "" }) => (
+  <div className={`fx-show ${light ? "fx-show-light" : ""}`}>
+    <div className="fx-show-frame">
+      <img
+        src={HERO_IMGS[0]}
+        alt={alt}
+        data-i="0"
+        onError={(e) => {
+          const next = Number(e.currentTarget.dataset.i || 0) + 1;
+          if (HERO_IMGS[next]) {
+            e.currentTarget.dataset.i = String(next);
+            e.currentTarget.src = HERO_IMGS[next];
+          } else {
+            e.currentTarget.style.display = "none";
+          }
+        }}
+      />
+    </div>
+    <ShowBadge data={top} position="top" />
+    <ShowBadge data={bottom} position="bottom" />
+  </div>
+);
+
+const FX_CSS = `
+        @keyframes fxKenBurns {
+          from { transform: scale(1.04) translate3d(0, 0, 0); }
+          to   { transform: scale(1.18) translate3d(-2.5%, -1.5%, 0); }
+        }
+        @keyframes fxFloat {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50%      { transform: translate3d(14px, -26px, 0) scale(1.15); }
+        }
+        @keyframes fxShimmer {
+          from { background-position: 0% 50%; }
+          to   { background-position: 100% 50%; }
+        }
+        @keyframes fxProgress {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+        @keyframes fxBob {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-8px); }
+        }
+
+        /* ---------- SCROLL PROGRESS BAR ---------- */
+        @supports (animation-timeline: scroll()) {
+          .fx-root::before {
+            content: ""; position: fixed; top: 0; left: 0;
+            width: 100%; height: 4px; z-index: 9999;
+            transform-origin: 0 50%; transform: scaleX(0);
+            background: linear-gradient(90deg, #00A8CD, #F5A623, #FF5271);
+            animation: fxProgress linear both;
+            animation-timeline: scroll(root block);
+          }
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          :root { scroll-behavior: smooth; }
+        }
+
+        @keyframes fxShowIn {
+          from { opacity: 0; transform: translateY(26px) scale(.96); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fxKeyframesDummy { from { opacity: 1; } to { opacity: 1; } }
+
+        /* ---------- HERO SHOWCASE (photo + floating cards) ---------- */
+        .fx-show {
+          position: relative; width: 100%; max-width: 520px;
+          margin: 0 auto; padding: 22px 0;
+          animation: fxShowIn .95s cubic-bezier(.22, 1, .36, 1) .15s both;
+        }
+        .fx-show-frame {
+          position: relative; aspect-ratio: 4 / 3.5; overflow: hidden;
+          border-radius: 36px; border: 3px solid rgba(255, 255, 255, .5);
+          background: linear-gradient(135deg, #0b5c7a, #1b8aa5);
+          box-shadow: 0 34px 70px -22px rgba(0, 0, 0, .6);
+        }
+        .fx-show-frame img {
+          width: 100%; height: 100%; object-fit: cover; display: block;
+          max-width: none; transition: transform 1.3s cubic-bezier(.22, 1, .36, 1);
+        }
+        .fx-show:hover .fx-show-frame img { transform: scale(1.07); }
+        .fx-show-frame::after {
+          content: ""; position: absolute; inset: 0; pointer-events: none;
+          background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, transparent 35%, rgba(0,20,40,.22) 100%);
+        }
+        .fx-show-light .fx-show-frame {
+          border-color: #fff; box-shadow: 0 34px 60px -22px rgba(15, 60, 90, .4);
+        }
+        .fx-show-badge {
+          position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px;
+          padding: 12px 20px 12px 12px; border-radius: 20px; background: #fff;
+          box-shadow: 0 24px 50px -14px rgba(0, 20, 40, .45);
+          animation: fxBob 4.6s ease-in-out infinite;
+          transition: box-shadow .35s ease;
+          cursor: default;
+        }
+        .fx-show-badge:hover { box-shadow: 0 30px 60px -12px rgba(0, 20, 40, .6); }
+        .fx-show-badge-top { top: 34px; left: -28px; }
+        .fx-show-badge-bottom { bottom: 38px; right: -28px; animation-delay: -2.3s; }
+        .fx-show-ico {
+          display: grid; place-items: center; width: 44px; height: 44px;
+          border-radius: 14px; flex: 0 0 44px;
+          transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .fx-show-badge:hover .fx-show-ico { transform: rotate(-10deg) scale(1.12); }
+        .fx-show-ico svg { width: 22px; height: 22px; }
+        .fx-show-badge strong {
+          display: block; color: #0f2f45; font-size: 14px; font-weight: 800; line-height: 1.25;
+        }
+        .fx-show-badge span.fx-sub {
+          display: block; margin-top: 2px; color: #6b7c88; font-size: 12px; font-weight: 500; line-height: 1.25;
+        }
+        @media (max-width: 640px) {
+          .fx-show-badge-top { left: -6px; top: 22px; }
+          .fx-show-badge-bottom { right: -6px; bottom: 26px; }
+          .fx-show-badge { padding: 9px 14px 9px 9px; }
+          .fx-show-ico { width: 38px; height: 38px; flex-basis: 38px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .fx-show, .fx-show-badge { animation: none !important; }
+        }
+
+        /* ---------- ANIMATED GRADIENT HEADLINES ---------- */
+        .fx-root .bg-clip-text {
+          background-size: 220% 100%;
+          animation: fxShimmer 5s ease-in-out infinite alternate;
+        }
+
+        /* ---------- CARD HOVER (glow + lift feel) ---------- */
+        .fx-root :is([class*="rounded-2xl"], [class*="rounded-3xl"], [class*="rounded-[2"], article)[class*="border"]:not([class*="transition"]) {
+          transition: box-shadow .4s ease, border-color .4s ease, background-color .4s ease;
+        }
+        .fx-root :is([class*="rounded-2xl"], [class*="rounded-3xl"], [class*="rounded-[2"], article)[class*="border"]:not([class*="transition"]):hover {
+          box-shadow: 0 26px 50px -16px rgba(0, 20, 40, .38), 0 0 34px -8px rgba(0, 168, 205, .45);
+        }
+
+        /* ---------- ICON WIGGLE ON CARD HOVER ---------- */
+        .fx-root .lucide:not([class*="transition"]):not([class*="animate"]) {
+          transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .fx-root :is([class*="rounded-2xl"], [class*="rounded-3xl"], [class*="rounded-[2"], article)[class*="border"]:hover .lucide:not([class*="transition"]):not([class*="animate"]) {
+          transform: scale(1.22) rotate(-9deg);
+        }
+
+        /* ---------- PILLS / CHIPS ---------- */
+        .fx-root :is([class*="rounded-full"], [class*="rounded-xl"])[class*="border"]:not([class*="transition"]):not(a):not(button) {
+          transition: box-shadow .35s ease, background-color .35s ease;
+        }
+        .fx-root :is([class*="rounded-full"], [class*="rounded-xl"])[class*="border"]:not([class*="transition"]):not(a):not(button):hover {
+          box-shadow: 0 10px 26px -8px rgba(0, 168, 205, .5);
+        }
+
+        /* ---------- BUTTON SHINE SWEEP ---------- */
+        .fx-root :is(a, button):is([class*="rounded-xl"], [class*="rounded-full"], [class*="rounded-2xl"], [class*="rounded-lg"])[class*="px-"] {
+          position: relative; overflow: hidden; isolation: isolate;
+        }
+        .fx-root :is(a, button):is([class*="rounded-xl"], [class*="rounded-full"], [class*="rounded-2xl"], [class*="rounded-lg"])[class*="px-"]::after {
+          content: ""; position: absolute; top: 0; left: -130%;
+          width: 55%; height: 100%; z-index: 1; pointer-events: none;
+          background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .42), transparent);
+          transform: skewX(-20deg);
+          transition: left .85s cubic-bezier(.22, 1, .36, 1);
+        }
+        .fx-root :is(a, button):is([class*="rounded-xl"], [class*="rounded-full"], [class*="rounded-2xl"], [class*="rounded-lg"])[class*="px-"]:hover::after {
+          left: 150%;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .fx-hero-photo img, .fx-orb, .fx-root .bg-clip-text { animation: none !important; }
+        }
+`;
+
+
+
 const MontessoriPage = () => {
   const [activeArea, setActiveArea] = useState(0);
 
@@ -236,7 +456,8 @@ const MontessoriPage = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden bg-white text-slate-900">
+    <div className="fx-root min-h-screen overflow-hidden bg-white text-slate-900">
+      <style>{FX_CSS}</style>
       {/* =========================================================
           HERO
       ========================================================= */}
@@ -421,244 +642,8 @@ const MontessoriPage = () => {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT VISUAL */}
-            <motion.div
-              variants={fadeRight}
-              initial="hidden"
-              animate="visible"
-              className="mx-auto w-full max-w-md"
-            >
-              <motion.div
-                animate={{
-                  y: [0, -8, 0],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                whileHover={{
-                  scale: 1.015,
-                }}
-                className="relative aspect-square rounded-[34px] border border-sky-100 bg-white p-6 shadow-2xl shadow-slate-200/60 transition-shadow duration-500 hover:shadow-2xl hover:shadow-sky-200/40"
-              >
-                {/* Decorative Circles */}
-                <motion.div
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 10, 0],
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-yellow-200/60"
-                />
+            <HeroShowcase light top={{ icon: "heart", title: "Child-Centered", sub: "Learning with purpose", color: "#E5484D" }} bottom={{ icon: "book", title: "Hands-On Learning", sub: "Montessori materials", color: "#0EA5E9" }} />
 
-                <motion.div
-                  animate={{
-                    scale: [1, 1.12, 1],
-                    rotate: [0, -10, 0],
-                  }}
-                  transition={{
-                    duration: 7,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute -bottom-5 -left-5 h-20 w-20 rounded-full bg-red-200/50"
-                />
-
-                {/* Main Circle */}
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      "0 20px 45px rgba(15,23,42,0.18)",
-                      "0 25px 60px rgba(14,165,233,0.18)",
-                      "0 20px 45px rgba(15,23,42,0.18)",
-                    ],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute left-1/2 top-1/2 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950"
-                >
-                  <div className="text-center">
-                    <motion.div
-                      animate={{
-                        rotate: [0, 8, -8, 0],
-                        scale: [1, 1.1, 1],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <Sparkles className="mx-auto mb-2 h-7 w-7 text-yellow-400" />
-                    </motion.div>
-
-                    <p className="text-[11px] font-black uppercase tracking-wider text-white">
-                      Montessori
-                    </p>
-
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-sky-400">
-                      Learning
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* TOP LEFT */}
-                <motion.div
-                  whileHover={{
-                    y: -7,
-                    scale: 1.04,
-                    rotate: -1,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                  className="absolute left-5 top-7 w-[42%] cursor-pointer rounded-2xl border border-yellow-100 bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-100">
-                    <Hand className="h-4 w-4 text-yellow-600" />
-                  </div>
-
-                  <p className="mt-3 text-xs font-bold text-slate-900 sm:text-sm">
-                    Practical Life
-                  </p>
-
-                  <p className="mt-1 text-[10px] leading-4 text-slate-500">
-                    Independence &amp; confidence
-                  </p>
-                </motion.div>
-
-                {/* TOP RIGHT */}
-                <motion.div
-                  whileHover={{
-                    y: -7,
-                    scale: 1.04,
-                    rotate: 1,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                  className="absolute right-5 top-7 w-[38%] cursor-pointer rounded-2xl border border-sky-100 bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100">
-                    <Shapes className="h-4 w-4 text-sky-600" />
-                  </div>
-
-                  <p className="mt-3 text-xs font-bold text-slate-900 sm:text-sm">
-                    Sensorial
-                  </p>
-
-                  <p className="mt-1 text-[10px] leading-4 text-slate-500">
-                    Explore &amp; discover
-                  </p>
-                </motion.div>
-
-                {/* BOTTOM LEFT */}
-                <motion.div
-                  whileHover={{
-                    y: 7,
-                    scale: 1.04,
-                    rotate: -1,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                  className="absolute bottom-7 left-5 w-[38%] cursor-pointer rounded-2xl border border-red-100 bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100">
-                    <BookOpen className="h-4 w-4 text-red-500" />
-                  </div>
-
-                  <p className="mt-3 text-xs font-bold text-slate-900 sm:text-sm">
-                    Language
-                  </p>
-
-                  <p className="mt-1 text-[10px] leading-4 text-slate-500">
-                    Communication &amp; literacy
-                  </p>
-                </motion.div>
-
-                {/* BOTTOM RIGHT */}
-                <motion.div
-                  whileHover={{
-                    y: 7,
-                    scale: 1.04,
-                    rotate: 1,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                  }}
-                  className="absolute bottom-7 right-5 w-[42%] cursor-pointer rounded-2xl border border-yellow-100 bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-100">
-                    <Calculator className="h-4 w-4 text-yellow-600" />
-                  </div>
-
-                  <p className="mt-3 text-xs font-bold text-slate-900 sm:text-sm">
-                    Mathematics
-                  </p>
-
-                  <p className="mt-1 text-[10px] leading-4 text-slate-500">
-                    Concrete learning
-                  </p>
-                </motion.div>
-
-                {/* Connection Dots */}
-                <motion.div
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="absolute left-[39%] top-[34%] h-2 w-2 rounded-full bg-yellow-400"
-                />
-
-                <motion.div
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{
-                    duration: 2,
-                    delay: 0.4,
-                    repeat: Infinity,
-                  }}
-                  className="absolute right-[39%] top-[34%] h-2 w-2 rounded-full bg-sky-400"
-                />
-
-                <motion.div
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{
-                    duration: 2,
-                    delay: 0.8,
-                    repeat: Infinity,
-                  }}
-                  className="absolute bottom-[34%] left-[39%] h-2 w-2 rounded-full bg-red-400"
-                />
-
-                <motion.div
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{
-                    duration: 2,
-                    delay: 1.2,
-                    repeat: Infinity,
-                  }}
-                  className="absolute bottom-[34%] right-[39%] h-2 w-2 rounded-full bg-yellow-400"
-                />
-              </motion.div>
-            </motion.div>
           </div>
 
           {/* HERO STATS */}

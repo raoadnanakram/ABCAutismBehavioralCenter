@@ -39,6 +39,289 @@ import {
 } from "lucide-react";
 
 /* =========================================================
+    HERO SHOWCASE (photo + floating cards) + EXTRA EFFECTS
+    -> Apni photo lagani ho to HERO_IMGS ki pehli entry ko
+       apne path se badal dein, e.g. "/images/hero.jpg"
+========================================================= */
+const HERO_IMGS = [
+  "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?auto=format&fit=crop&w=1600&q=80",
+  "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&w=1600&q=80",
+];
+
+const SHOW_ICONS = {
+  heart: ["M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"],
+  sparkles: ["M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z", "M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"],
+  check: ["M22 11.08V12a10 10 0 1 1-5.93-9.14", "M22 4 12 14.01l-3-3"],
+  activity: ["M22 12h-4l-3 9L9 3l-3 9H2"],
+  shield: ["M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"],
+  message: ["M7.9 20A9 9 0 1 0 4 16.1L2 22Z"],
+  book: ["M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"],
+  utensils: ["M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2", "M7 2v20", "M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"],
+  smile: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z", "M8 14s1.5 2 4 2 4-2 4-2", "M9 9h.01", "M15 9h.01"],
+};
+
+const ShowIcon = ({ name }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {(SHOW_ICONS[name] || SHOW_ICONS.sparkles).map((d, i) => (
+      <path key={i} d={d} />
+    ))}
+  </svg>
+);
+
+const ShowBadge = ({ data, position }) => (
+  <div className={`fx-show-badge fx-show-badge-${position}`}>
+    <span className="fx-show-ico" style={{ color: data.color, background: `${data.color}1f` }}>
+      <ShowIcon name={data.icon} />
+    </span>
+    <div>
+      <strong>{data.title}</strong>
+      <span className="fx-sub">{data.sub}</span>
+    </div>
+  </div>
+);
+
+const HeroShowcase = ({ top, bottom, light = false, alt = "" }) => (
+  <div className={`fx-show ${light ? "fx-show-light" : ""}`}>
+    <div className="fx-show-frame">
+      <img
+        src={HERO_IMGS[0]}
+        alt={alt}
+        data-i="0"
+        onError={(e) => {
+          const next = Number(e.currentTarget.dataset.i || 0) + 1;
+          if (HERO_IMGS[next]) {
+            e.currentTarget.dataset.i = String(next);
+            e.currentTarget.src = HERO_IMGS[next];
+          } else {
+            e.currentTarget.style.display = "none";
+          }
+        }}
+      />
+    </div>
+    <ShowBadge data={top} position="top" />
+    <ShowBadge data={bottom} position="bottom" />
+  </div>
+);
+
+const FX_CSS = `
+        @keyframes fxKenBurns {
+          from { transform: scale(1.04) translate3d(0, 0, 0); }
+          to   { transform: scale(1.18) translate3d(-2.5%, -1.5%, 0); }
+        }
+        @keyframes fxFloat {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50%      { transform: translate3d(14px, -26px, 0) scale(1.15); }
+        }
+        @keyframes fxShimmer {
+          from { background-position: 0% 50%; }
+          to   { background-position: 100% 50%; }
+        }
+        @keyframes fxProgress {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+        @keyframes fxBob {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-8px); }
+        }
+
+        /* ---------- SCROLL PROGRESS BAR ---------- */
+        @supports (animation-timeline: scroll()) {
+          .fx-root::before {
+            content: ""; position: fixed; top: 0; left: 0;
+            width: 100%; height: 4px; z-index: 9999;
+            transform-origin: 0 50%; transform: scaleX(0);
+            background: linear-gradient(90deg, #00A8CD, #F5A623, #FF5271);
+            animation: fxProgress linear both;
+            animation-timeline: scroll(root block);
+          }
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          :root { scroll-behavior: smooth; }
+        }
+
+        @keyframes fxShowIn {
+          from { opacity: 0; transform: translateY(26px) scale(.96); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fxKeyframesDummy { from { opacity: 1; } to { opacity: 1; } }
+
+        /* ---------- HERO SHOWCASE (photo + floating cards) ---------- */
+        .fx-show {
+          position: relative; width: 100%; max-width: 520px;
+          margin: 0 auto; padding: 22px 0;
+          animation: fxShowIn .95s cubic-bezier(.22, 1, .36, 1) .15s both;
+        }
+        .fx-show-frame {
+          position: relative; aspect-ratio: 4 / 3.5; overflow: hidden;
+          border-radius: 36px; border: 3px solid rgba(255, 255, 255, .5);
+          background: linear-gradient(135deg, #0b5c7a, #1b8aa5);
+          box-shadow: 0 34px 70px -22px rgba(0, 0, 0, .6);
+        }
+        .fx-show-frame img {
+          width: 100%; height: 100%; object-fit: cover; display: block;
+          max-width: none; transition: transform 1.3s cubic-bezier(.22, 1, .36, 1);
+        }
+        .fx-show:hover .fx-show-frame img { transform: scale(1.07); }
+        .fx-show-frame::after {
+          content: ""; position: absolute; inset: 0; pointer-events: none;
+          background: linear-gradient(180deg, rgba(255,255,255,.08) 0%, transparent 35%, rgba(0,20,40,.22) 100%);
+        }
+        .fx-show-light .fx-show-frame {
+          border-color: #fff; box-shadow: 0 34px 60px -22px rgba(15, 60, 90, .4);
+        }
+        .fx-show-badge {
+          position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px;
+          padding: 12px 20px 12px 12px; border-radius: 20px; background: #fff;
+          box-shadow: 0 24px 50px -14px rgba(0, 20, 40, .45);
+          animation: fxBob 4.6s ease-in-out infinite;
+          transition: box-shadow .35s ease;
+          cursor: default;
+        }
+        .fx-show-badge:hover { box-shadow: 0 30px 60px -12px rgba(0, 20, 40, .6); }
+        .fx-show-badge-top { top: 34px; left: -28px; }
+        .fx-show-badge-bottom { bottom: 38px; right: -28px; animation-delay: -2.3s; }
+        .fx-show-ico {
+          display: grid; place-items: center; width: 44px; height: 44px;
+          border-radius: 14px; flex: 0 0 44px;
+          transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .fx-show-badge:hover .fx-show-ico { transform: rotate(-10deg) scale(1.12); }
+        .fx-show-ico svg { width: 22px; height: 22px; }
+        .fx-show-badge strong {
+          display: block; color: #0f2f45; font-size: 14px; font-weight: 800; line-height: 1.25;
+        }
+        .fx-show-badge span.fx-sub {
+          display: block; margin-top: 2px; color: #6b7c88; font-size: 12px; font-weight: 500; line-height: 1.25;
+        }
+        @media (max-width: 640px) {
+          .fx-show-badge-top { left: -6px; top: 22px; }
+          .fx-show-badge-bottom { right: -6px; bottom: 26px; }
+          .fx-show-badge { padding: 9px 14px 9px 9px; }
+          .fx-show-ico { width: 38px; height: 38px; flex-basis: 38px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .fx-show, .fx-show-badge { animation: none !important; }
+        }
+
+        /* ---------- DAYCARE: photo cards (zoom on hover) ---------- */
+        .fx-root .dc-image-card, .fx-root .dc-play-image,
+        .fx-root .dc-nutrition-image, .fx-root .dc-parent-image {
+          overflow: hidden; border-radius: 26px;
+          box-shadow: 0 22px 50px rgba(23, 59, 77, .12);
+          transition: box-shadow .5s ease;
+        }
+        .fx-root .dc-image-card img, .fx-root .dc-play-image img,
+        .fx-root .dc-nutrition-image img, .fx-root .dc-parent-image img {
+          box-shadow: none; transition: transform 1.2s cubic-bezier(.22, 1, .36, 1);
+        }
+        .fx-root .dc-image-card:hover img, .fx-root .dc-play-image:hover img,
+        .fx-root .dc-nutrition-image:hover img, .fx-root .dc-parent-image:hover img {
+          transform: scale(1.09);
+        }
+        .fx-root .dc-image-card:hover, .fx-root .dc-play-image:hover,
+        .fx-root .dc-nutrition-image:hover, .fx-root .dc-parent-image:hover {
+          box-shadow: 0 30px 60px rgba(8, 127, 140, .25);
+        }
+
+        /* ---------- DAYCARE: cards ---------- */
+        .fx-root :is(.dc-offer-card, .dc-approach-item, .dc-development-card, .dc-program-card, .dc-professional-card, .dc-mini-card) {
+          transition: box-shadow .4s ease, border-color .4s ease, background-color .4s ease;
+        }
+        .fx-root :is(.dc-offer-card, .dc-approach-item, .dc-development-card, .dc-program-card, .dc-professional-card):hover {
+          border-color: rgba(8, 127, 140, .45);
+          box-shadow: 0 26px 50px -14px rgba(8, 127, 140, .32), 0 0 0 1px rgba(8, 127, 140, .12);
+        }
+        .fx-root .dc-mini-card:hover {
+          border-color: rgba(8, 127, 140, .4);
+          box-shadow: 0 14px 28px -8px rgba(8, 127, 140, .28);
+        }
+
+        /* icon boxes flip to teal */
+        .fx-root :is(.dc-offer-icon, .dc-approach-icon, .dc-development-icon, .dc-program-icon, .dc-professional-icon, .dc-mini-icon) {
+          transition: background-color .4s ease, color .4s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1), box-shadow .4s ease;
+        }
+        .fx-root :is(.dc-offer-card, .dc-approach-item, .dc-development-card, .dc-program-card, .dc-professional-card, .dc-mini-card):hover
+          :is(.dc-offer-icon, .dc-approach-icon, .dc-development-icon, .dc-program-icon, .dc-professional-icon, .dc-mini-icon) {
+          background: var(--teal); color: #fff;
+          transform: rotate(-8deg) scale(1.12);
+          box-shadow: 0 10px 22px rgba(8, 127, 140, .35);
+        }
+
+        /* link arrows slide, accent line grows */
+        .fx-root :is(.dc-card-link, .dc-program-link) svg { transition: transform .35s ease; }
+        .fx-root :is(.dc-offer-card, .dc-program-card):hover :is(.dc-card-link, .dc-program-link) svg { transform: translateX(6px); }
+        .fx-root .dc-professional-arrow { transition: transform .35s ease, color .35s ease; }
+        .fx-root .dc-professional-card:hover .dc-professional-arrow { transform: translateX(6px); color: var(--teal); }
+        .fx-root .dc-development-line { transition: width .5s cubic-bezier(.22, 1, .36, 1), background-color .4s ease; }
+        .fx-root .dc-development-card:hover .dc-development-line { width: 96px; background: var(--coral); }
+        .fx-root .dc-approach-number { transition: color .4s ease, transform .4s ease; }
+        .fx-root .dc-approach-item:hover .dc-approach-number { color: var(--coral); transform: translateX(4px); }
+
+        /* pills & small items */
+        .fx-root :is(.dc-activity-pill, .dc-social-pill-card, .dc-nutrition-item, .dc-parent-list div, .dc-routine-card) {
+          transition: box-shadow .35s ease, border-color .35s ease, background-color .35s ease;
+        }
+        .fx-root :is(.dc-activity-pill, .dc-social-pill-card, .dc-nutrition-item, .dc-parent-list div, .dc-routine-card):hover {
+          border-color: var(--teal); background: #fff;
+          box-shadow: 0 14px 28px -10px rgba(8, 127, 140, .35);
+        }
+        .fx-root :is(.dc-activity-pill, .dc-social-pill-card, .dc-nutrition-item, .dc-parent-list div, .dc-routine-card) svg {
+          transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), color .3s ease;
+        }
+        .fx-root :is(.dc-activity-pill, .dc-social-pill-card, .dc-nutrition-item, .dc-parent-list div, .dc-routine-card):hover svg {
+          transform: scale(1.25) rotate(-8deg); color: var(--coral);
+        }
+        .fx-root .dc-routine-number { transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), background-color .3s ease; }
+        .fx-root .dc-routine-step:hover .dc-routine-number { transform: scale(1.18); background: var(--coral); }
+
+        /* dark sections */
+        .fx-root :is(.dc-active-card, .dc-safety-card) {
+          transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+        }
+        .fx-root :is(.dc-active-card, .dc-safety-card):hover {
+          background: rgba(255, 255, 255, .17); border-color: var(--yellow);
+          box-shadow: 0 16px 34px -10px rgba(0, 0, 0, .4);
+        }
+        .fx-root :is(.dc-active-card, .dc-safety-card) svg { transition: transform .45s cubic-bezier(.34, 1.56, .64, 1); }
+        .fx-root :is(.dc-active-card, .dc-safety-card):hover svg { transform: scale(1.3) rotate(-10deg); }
+
+        /* floating hero + CTA icons */
+        .fx-root #programs { scroll-margin-top: 20px; }
+        .fx-root .dc-glass-icon { animation: fxBob 3.2s ease-in-out infinite; }
+        .fx-root .dc-cta-icon, .fx-root .dc-social-center-icon { animation: fxBob 3.6s ease-in-out infinite; }
+        .fx-root .dc-hero-content h1 .hero-pink, .fx-root .dc-hero-content h1 .hero-yellow {
+          background-size: 220% 100%;
+          -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+          animation: fxShimmer 5s ease-in-out infinite alternate;
+        }
+        .fx-root .dc-hero-content h1 .hero-pink { background-image: linear-gradient(90deg, #FF7A7A, #FFB199, #FF7A7A); }
+        .fx-root .dc-hero-content h1 .hero-yellow { background-image: linear-gradient(90deg, #F9C74F, #FFE89A, #F9C74F); }
+
+        /* button shine */
+        .fx-root .dc-btn::after {
+          content: ""; position: absolute; top: 0; left: -130%;
+          width: 55%; height: 100%; z-index: 1; pointer-events: none;
+          background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent);
+          transform: skewX(-20deg);
+          transition: left .85s cubic-bezier(.22, 1, .36, 1);
+        }
+        .fx-root .dc-btn:hover::after { left: 150%; }
+        .fx-root .dc-btn-primary:hover { box-shadow: 0 18px 36px rgba(8, 127, 140, .45); }
+        .fx-root .dc-btn-white:hover { box-shadow: 0 18px 40px rgba(0, 0, 0, .25); }
+
+        @media (prefers-reduced-motion: reduce) {
+          .fx-root .dc-glass-icon, .fx-root .dc-cta-icon, .fx-root .dc-social-center-icon,
+          .fx-root .dc-hero-content h1 .hero-pink, .fx-root .dc-hero-content h1 .hero-yellow,
+          .fx-hero-photo img, .fx-orb { animation: none !important; }
+        }
+`;
+
+
+
+/* =========================================================
     ANIMATION SYSTEM
 ========================================================= */
 
@@ -163,7 +446,12 @@ const Hero = () => {
             </motion.a>
 
             <motion.a 
-              href="#program" 
+              href="#programs"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById("programs");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
               className="dc-btn dc-btn-glass"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
@@ -185,37 +473,8 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        <motion.div
-          className="dc-hero-visual"
-          variants={scaleIn}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div 
-            className="dc-glass-card"
-            whileHover={{ y: -8, scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <div className="dc-glass-header">
-              <span className="dc-badge-tag">EXPERT CARE</span>
-              <div className="dc-glass-icon">
-                <MessageCircle size={22} />
-              </div>
-            </div>
+        <HeroShowcase top={{ icon: "shield", title: "Safe & Caring", sub: "Supervised environment", color: "#087F8C" }} bottom={{ icon: "smile", title: "Play-Based Learning", sub: "Growing through play", color: "#E5484D" }} />
 
-            <div className="dc-glass-body">
-              <h3>Unlock Potential</h3>
-              <p>Building confidence and clarity through specialized behavioral guidance.</p>
-            </div>
-
-            <div className="dc-glass-footer">
-              <div className="dc-footer-pill">
-                <Star size={14} />
-                <span>Active Support Program • Customized Milestones</span>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );
@@ -1192,6 +1451,7 @@ const CTA = () => {
 export default function DayCare() {
   return (
     <>
+      <style>{FX_CSS}</style>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -1773,7 +2033,7 @@ export default function DayCare() {
         }
       `}</style>
 
-      <main className="daycare-page">
+      <main className="daycare-page fx-root">
         <Hero />
         <IntroSection />
         <ApproachTimeline />
