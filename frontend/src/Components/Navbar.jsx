@@ -19,14 +19,14 @@ function Navbar() {
   // 1. Navigation Links Arrays
   const serviceDropdownLinks = [
     { name: 'Speech & Language Therapy', path: '/Pages/speech-therapy' },
+    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology' },
+    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy' },
+    { name: 'Physiotherapy', path: '/Pages/physiotherapy' },
     { name: 'Nutrition Therapy & Dietetics', path: '/Pages/nutrition-dietetics' },
     { name: 'Special Education', path: '/Pages/special-education' },
-    { name: 'Physiotherapy', path: '/Pages/physiotherapy' },
-    { name: 'Occupational Therapy & Sensory Integration', path: '/Pages/occupational-therapy' },
     { name: 'Day Care', path: '/Pages/day-care' },
     { name: 'Montessori & Early Childhood Education', path: '/Pages/montessori-education' },
     { name: 'Dysphagia Management & NG Tube Feeding', path: '/Pages/dysphagia-management' },
-    { name: 'ABA Therapy & Psychology', path: '/Pages/aba-psychology' },
   ];
 
   const aboutDropdownLinks = [
